@@ -1,0 +1,22 @@
+.row
+  form.form.form-horizontal(name='login-form', ng-submit='login(credentials)')
+    fieldset
+      // Form Name
+      .page-header Login
+      // Text input
+      .form-group
+        label.col-md-4.control-label(for='username') Username
+        .col-md-6
+          input.form-control.input-md(name='username', type='text', placeholder='Username',ng-model='credentials.username' required)
+          span.help-block Your LDAP credentials work here
+      // Password input
+      .form-group
+        label.col-md-4.control-label(for='password') Password
+        .col-md-6
+          input.form-control.input-md(name='password', type='password', placeholder='Password', ng-model='credentials.password' required)
+      // Button (Double)
+      .form-group
+        .col-md-4
+        .col-md-8
+          input.btn.btn-success(type='submit', value='Login')
+          a.btn.btn-warning(href='/') Cancel

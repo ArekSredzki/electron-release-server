@@ -1,0 +1,51 @@
+form(name='assetForm', role='form')
+  .modal-header
+    h3.modal-title Add an asset to {{ versionName }}
+  .modal-body
+    .form-horizontal
+      // Asset File
+      .form-group
+        label.col-md-4.control-label(for='name') Asset Name
+        .col-md-7
+          | {{ asset.file.name }}
+          span(ng-hide="asset.file.name.length").help-block Auto-populated with filename
+      // Select platform
+      .form-group
+        label.col-md-4.control-label(for='platform') Platform
+        .col-md-7
+          select.form-control(
+            ng-model='asset.platform',
+            name='platform',
+            ng-options='key as value for (key, value) in DataService.availablePlatforms',
+            required
+            )
+      // Select File
+      .form-group
+        label.col-md-4.control-label(for='file') File
+        .col-md-7
+          input.form-control(
+            type='file',
+            ngf-select='',
+            ngf-change='updateAssetName()',
+            ng-model='asset.file',
+            name='file',
+            ngf-accept="'.dmg,.zip,.deb,.exe,.nupkg'",
+            ngf-max-size='500MB',
+            required='',
+            )
+  .modal-footer
+    .modal-footer-note.col-md-7
+      span.text-gray(ng-show='!asset.file.progress')
+        | This file will be live once uploaded.
+      uib-progressbar.progress-striped.active(
+        type="success"
+        value='asset.file.progress',
+        ng-show='asset.file.progress >= 0'
+        )
+        strong {{ asset.file.progress }}%
+    div
+      button.btn.btn-warning(type='button', ng-disabled="!assetForm.$valid" ng-click='addAsset()') Upload
+      button.btn.btn-danger(type='button', ng-click='closeModal()') Cancel
+
+
+    

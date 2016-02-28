@@ -1,0 +1,43 @@
+{
+  "name": "electron-release-server",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "angular": "^1.5.0",
+    "bootstrap-sass-official": "^3.3.6",
+    "angular-animate": "^1.5.0",
+    "angular-messages": "^1.5.0",
+    "angular-resource": "^1.5.0",
+    "angular-route": "^1.5.0",
+    "angular-sanitize": "^1.5.0",
+    "angular-touch": "^1.5.0",
+    "angular-xeditable": "~0.1.10",
+    "lodash": "~4.5.0",
+    "angular-ui-notification": "~0.1.0",
+    "angular-bootstrap": "~1.2.1",
+    "angular-confirm-modal": "^1.2.3",
+    "angular-jwt": "^0.0.9",
+    "ngstorage": "^0.3.10",
+    "sails.io.js": "*",
+    "angular-sails": "^1.1.4",
+    "angular-moment": "^1.0.0-beta.3",
+    "components-font-awesome": "^4.5.0",
+    "ng-file-upload": "^12.0.1"
+  },
+  "devDependencies": {
+    "angular-mocks": "^1.5.0"
+  },
+  "appPath": "app",
+  "overrides": {
+    "angular-xeditable": {
+      "main": [
+        "dist/js/xeditable.min.js"
+      ]
+    },
+    "bootstrap-sass-official": {
+      "main": [
+        "assets/stylesheets/_bootstrap.scss"
+      ]
+    }
+  }
+}

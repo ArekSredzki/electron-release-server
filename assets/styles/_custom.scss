@@ -1,0 +1,214 @@
+.text-gray {
+  color: $gray-light;
+}
+
+.text-color-lock {
+  color: darken(desaturate($brand-primary, 50), 10);
+}
+// Input label position
+.form-horizontal .control-label {
+  padding-top: 0;
+}
+
+.align-right {
+  text-align: right;
+}
+
+.float-right {
+  float: right;
+}
+// Input status colours
+.form-control,
+input,
+textarea {
+  border-style: solid;
+}
+
+.has-success {
+  .form-control,
+  .form-control:focus {
+    border-color: $brand-success;
+    color: $brand-success;
+  }
+}
+
+.is-warning {
+  color: $brand-warning;
+}
+
+.has-warning {
+  .form-control,
+  .form-control:focus {
+    border-color: $brand-warning;
+    color: $brand-warning;
+  }
+}
+
+.has-error {
+  .form-control,
+  .form-control:focus {
+    border-color: $brand-danger;
+    color: $brand-danger;
+  }
+}
+// Fix radio & checkbox input positioning
+.radio input[type="radio"],
+.radio-inline input[type="radio"],
+.checkbox input[type="checkbox"],
+.checkbox-inline input[type="checkbox"] {
+  margin-left: 0;
+}
+// Navbar Logo
+.navbar-logo {
+  padding: 10px 15px;
+  height: 60px;
+}
+
+.browsehappy {
+  background: #ccc;
+  color: #000;
+  margin: 0.2em 0;
+  padding: 0.2em 0;
+}
+// Custom page footer
+.footer {
+  border-top: 1px solid #333;
+  color: #777;
+  margin: 30px 0;
+  padding-top: 10px;
+}
+// Panel header button
+.modal-header-button {
+  margin-right: -16px;
+  margin-top: -9px;
+}
+// Modal footnote
+.modal-footer-note {
+  float: left;
+  font-style: italic;
+  height: 45px;
+  line-height: 45px;
+  text-align: left;
+
+  .progress {
+    height: 45px;
+
+    .progress-bar {
+      font-size: 14px;
+      line-height: 45px;
+    }
+  }
+}
+// Editable table
+.table-custom {
+  td {
+    vertical-align: middle !important;
+    text-align: center;
+  }
+}
+
+.editable-wrap {
+  display: inline-block;
+  margin: 0;
+  white-space: nowrap;
+  width: 100%;
+
+  .editable-controls,
+  .editable-error {
+    margin-bottom: 4px;
+  }
+
+  .editable-controls {
+    &>input,
+    &>select,
+    &>textarea {
+      margin-bottom: 0;
+    }
+  }
+
+  .editable-input {
+    display: inline-block;
+  }
+}
+
+.editable-buttons {
+  display: inline-block;
+  vertical-align: top;
+
+  button {
+    margin-left: 5px;
+  }
+}
+
+.editable-input.editable-has-buttons {
+  width: auto;
+}
+
+.editable-bstime {
+  .editable-input input[type=text] {
+    width: 46px;
+  }
+
+  .well-small {
+    margin-bottom: 0;
+    padding: 10px;
+  }
+}
+
+.editable-range output {
+  display: inline-block;
+  min-width: 30px;
+  text-align: center;
+  vertical-align: top;
+}
+
+.editable-color input[type=color] {
+  width: 50px;
+}
+
+.editable-checkbox label span,
+.editable-checklist label span,
+.editable-radiolist label span {
+  margin-left: 7px;
+  margin-right: 10px;
+}
+
+.editable-hide {
+  display: none !important;
+}
+
+.editable-click,
+a.editable-click {
+  border-bottom: dashed 1px $brand-info;
+  color: $brand-info;
+  text-decoration: none;
+}
+
+.editable-click:hover,
+a.editable-click:hover {
+  border-bottom-color: darken($brand-info, 15);
+  color: darken($brand-info, 15);
+  text-decoration: none;
+}
+
+.editable-empty,
+.editable-empty:hover,
+.editable-empty:focus,
+a.editable-empty,
+a.editable-empty:hover,
+a.editable-empty:focus,
+.empty-cell {
+  color: $brand-danger;
+  font-style: italic;
+  text-decoration: none;
+}
+
+input[type="number"].ng-valid {
+  border-color: green;
+  color: green;
+}
+
+input[type="number"].ng-invalid {
+  border-color: red;
+  color: red;
+}

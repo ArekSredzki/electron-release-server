@@ -1,0 +1,28 @@
+form(editable-form='', name='assetForm', onaftersave='acceptEdit()', e-role='form')
+  .modal-header
+    h3.modal-title {{ asset.name }}
+  .modal-body
+    .form-horizontal
+      // Version Name
+      .form-group
+        label.col-md-4.control-label(for='name') Asset Name
+        .col-md-7
+          | {{ asset.name }}
+      // Select Platform
+      .form-group
+        label.col-md-4.control-label(for='platform') Platform
+        .col-md-7
+          span(
+            editable-select='asset.platform',
+            e-name='platform',
+            e-ng-options='key as value for (key, value) in DataService.availablePlatforms',
+            )
+            | {{ DataService.availablePlatforms[asset.platform] || 'Not set' }}
+  .modal-footer
+    div(ng-if='!assetForm.$visible')
+      button.btn.btn-warning(type='button', ng-click='assetForm.$show()') Edit
+      button.btn.btn-danger(type='button', ng-click='deleteAsset()', confirm='Are you sure that you want to delete this asset?') Delete
+      button.btn.btn-default(type='button', ng-click='closeModal()') Close
+    div(ng-if='assetForm.$visible')
+      button.btn.btn-warning(type='submit', ng-disable='assetForm.$waiting') Accept Changes
+      button.btn.btn-danger(type='button', ng-click='assetForm.$cancel()') Cancel

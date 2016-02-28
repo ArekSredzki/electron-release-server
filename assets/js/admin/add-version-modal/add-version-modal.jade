@@ -1,0 +1,35 @@
+.modal-header
+  h3.modal-title Add a New Version
+.modal-body
+  form.form-horizontal(novalidate='')
+    fieldset
+      // Version Name
+      .form-group
+        label.col-md-4.control-label(for='name') Version Name
+        .col-md-7
+          input.form-control.input-md(
+            ng-model='version.name',
+            minlength='1',
+            maxlength='12',
+            required
+            )
+          span.help-block This should match the semver format (ex. 1.0.1) You will not be able to change this later
+      // Change Notes
+      .form-group
+        label.col-md-4.control-label(for='notes') Change Notes
+        .col-md-7
+          textarea.form-control(ng-model='version.notes', name='notes')
+      // Select Channel
+      .form-group
+        label.col-md-4.control-label(for='channel') Channel
+        .col-md-7
+          select.form-control(
+            ng-model='version.channel.name',
+            name='channel',
+            ng-options='o as o for o in DataService.availableChannels',
+            required
+            )
+.modal-footer
+  div
+    button.btn.btn-warning(type='button', ng-click='addVersion()') Add Version
+    button.btn.btn-danger(type='button', ng-click='closeModal()') Cancel
