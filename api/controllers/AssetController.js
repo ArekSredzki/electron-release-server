@@ -92,7 +92,7 @@ module.exports = {
               return resolve();
             }
 
-            // sorting filename in ascending order prioritizes other files over
+            // Sorting filename in ascending order prioritizes other files over
             // zip archives is both are available and matched.
             return resolve(_.orderBy(
               version.assets, ['filetype', 'createdAt'], ['asc', 'desc']
