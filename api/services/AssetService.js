@@ -29,13 +29,28 @@ AssetService.serveFile = function(req, res, asset) {
       // point should only be handled internally (do not use the res object).
       //
       // Atomically increment the download count for analytics purposes
-      Asset.query(
-        'UPDATE asset SET download_count = download_count + 1 WHERE name = \'' + asset.name + '\';',
-        function(err) {
-          if (err) {
-            sails.log.error('An error occurred while logging asset download', err);
-          }
-        });
+      //
+      // Warning: not all adapters support queries
+      if (_.isFunction(Asset.query)) {
+        Asset.query(
+          'UPDATE asset SET download_count = download_count + 1 WHERE name = \'' + asset.name + '\';',
+          function(err) {
+            if (err) {
+              sails.log.error('An error occurred while logging asset download', err);
+            }
+          });
+      } else {
+        asset.download_count++;
+
+        Asset.update( {
+          name: asset.name
+        }, asset)
+        .exec(function (err) {
+            if (err) {
+              sails.log.error('An error occurred while logging asset download', err);
+            }
+          });
+      }
     })
     // Pipe to user
     .pipe(res);

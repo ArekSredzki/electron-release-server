@@ -62,26 +62,37 @@ module.exports = {
     Version
       .findOne(version)
       .then(function(currentVersion) {
-        if (!currentVersion) {
-          return res.notFound('The specified `version` does not exist');
+
+        var createdAtFilter;
+
+        if (_.isObject(currentVersion)) {
+          createdAtFilter = {
+            '>': currentVersion.createdAt
+          };
         }
+
+        sails.log.debug('Time Filter', createdAtFilter);
 
         return Version
           .find(UtilityService.getTruthyObject({
             channel: channel,
-            createdAt: {
-              '>': currentVersion.createdAt
-            }
+            createdAt: createdAtFilter
           }))
+          .sort({ createdAt: 'desc' })
           .populate('assets', {
             platform: platforms
           })
           .then(function(newerVersions) {
             var latestVersion;
+            sails.log.debug('Newer Versions', newerVersions);
 
             var releaseNotes = _.reduce(
               newerVersions,
               function(prevNotes, newVersion) {
+
+                newVersion.assets = _.filter(newVersion.assets, function (asset) {
+                  return asset.filetype === '.zip';
+                });
 
                 // If one of the assets for this verison apply to our desired
                 // platform then we will skip this version
@@ -111,11 +122,13 @@ module.exports = {
               return res.status(204).send('No updates.');
             }
 
+            console.log('Latest Version', latestVersion);
+
             return res.ok({
               url: url.resolve(
                 sails.config.appUrl,
                 '/download/version/' + latestVersion.name +
-                '/' + latestVersion.platform + '?filetype=zip'
+                '/' + latestVersion.assets[0].platform + '?filetype=zip'
               ),
               name: latestVersion.name,
               notes: releaseNotes,

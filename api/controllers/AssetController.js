@@ -76,7 +76,9 @@ module.exports = {
             name: version,
             channel: channel
           }))
-          .sort('createdAt', 'DESC')
+          .sort({
+            createdAt: 'desc'
+          })
           .limit(1)
           .populate('assets', assetOptions)
           .then(function(versions) {
@@ -90,12 +92,18 @@ module.exports = {
               return resolve();
             }
 
-            return resolve(_.orderBy(version.assets, ['createdAt'], ['desc'])[0]);
+            // sorting filename in ascending order prioritizes other files over
+            // zip archives is both are available and matched.
+            return resolve(_.orderBy(
+              version.assets, ['filetype', 'createdAt'], ['asc', 'desc']
+            )[0]);
           })
           .catch(reject);
       } else {
         Asset.find(assetOptions)
-          .sort('createdAt', 'DESC')
+          .sort({
+            createdAt: 'desc'
+          })
           .limit(1)
           .then(resolve)
           .catch(reject);
@@ -173,6 +181,7 @@ module.exports = {
           data.version.name + '-' +
           data.platform.replace('_', '-') +
           fileExt;
+
         sails.log.debug('Creating asset with name', name);
 
         var hashPromise;
