@@ -10,9 +10,13 @@ Install dependencies using:
 $ npm install
 ```
 
-There are various configuration options available in `config/local.js`
+*Action Step:* You must create a `config/local.js` file, which contains the configuration options required to run the server.
 
-In order for the server to work for you, please reference `config/local.template`
+To assist this process, you can copy `config/local.template` and edit it using:
+```bash
+cp config/local.template config/local.js
+vim config/local.js
+```
 
 Then start the application using:
 
