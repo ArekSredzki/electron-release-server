@@ -25,3 +25,7 @@ $ npm start
 ```
 
 Browse to `http://localhost:1337/`
+
+## PostgreSQL Specific Instructions
+If you choose to use PostgreSQL as your database for sessions, ensure that you follow the instructions listed [sails-pg-session](https://github.com/ravitej91/sails-pg-session).
+You must install some functions in your database for it to work for you.
