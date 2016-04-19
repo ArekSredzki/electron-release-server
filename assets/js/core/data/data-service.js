@@ -22,7 +22,6 @@ angular.module('app.core.data.service', [
         windows_64: 'Windows 64 bit',
         windows_32: 'Windows 32 bit',
         osx_64: 'OSX 64 bit',
-        osx_32: 'OSX 32 bit',
         linux_64: 'Linux 64 bit',
         linux_32: 'Linux 32 bit'
       };

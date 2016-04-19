@@ -33,8 +33,9 @@ module.exports.routes = {
 
   'GET /update': 'VersionController.redirect',
   'GET /update/:platform/:version': 'VersionController.general',
-  'GET /update/:platform/:version/:channel': 'VersionController.general',
+  'GET /update/:platform/:version/RELEASES': 'VersionController.windows',
   'GET /update/:platform/:version/:channel/RELEASES': 'VersionController.windows',
+  'GET /update/:platform/:version/:channel': 'VersionController.general',
   'GET /notes/:version?': 'VersionController.releaseNotes'
 
 };

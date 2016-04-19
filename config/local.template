@@ -34,10 +34,6 @@ module.exports = {
   // ex. 'http://my-site.com'
   appUrl: 'SITE_URL',
 
-  // Used for ensuring that the application name is part of served assets.
-  // should be lowercase & use dashes (ex. my-app)
-  appName: 'APP-NAME',
-
   auth: {
     ldap: {
       server: {

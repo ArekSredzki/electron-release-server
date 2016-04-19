@@ -1,5 +1,4 @@
 # Auto-updater on OS X
-
 Electron Release Server provides a backend for the [Squirrel.Mac](https://github.com/Squirrel/Squirrel.Mac) auto-updater. Squirrel.Mac is integrated by default in [Electron applications](https://github.com/atom/electron).
 
 ### Endpoint

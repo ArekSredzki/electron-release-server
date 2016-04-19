@@ -63,54 +63,54 @@ module.exports = {
     }
 
     var assetPromise = new Promise(function(resolve, reject) {
-      var assetOptions = UtilityService.getTruthyObject({
-        platform: platforms,
-        name: filename,
-        filetype: filetype
-      });
+        var assetOptions = UtilityService.getTruthyObject({
+          platform: platforms,
+          name: filename,
+          filetype: filetype
+        });
 
-      sails.log.debug('Asset requested with options', assetOptions);
+        sails.log.debug('Asset requested with options', assetOptions);
 
-      if (version || channel) {
-        Version.find(UtilityService.getTruthyObject({
-            name: version,
-            channel: channel
-          }))
-          .sort({
-            createdAt: 'desc'
-          })
-          .limit(1)
-          .populate('assets', assetOptions)
-          .then(function(versions) {
-            if (!versions || !versions.length) {
-              return resolve();
-            }
+        if (version || channel) {
+          Version
+            .find(UtilityService.getTruthyObject({
+              name: version,
+              channel: channel
+            }))
+            .sort({
+              createdAt: 'desc'
+            })
+            .limit(1)
+            .populate('assets', assetOptions)
+            .then(function(versions) {
+              if (!versions || !versions.length) {
+                return resolve();
+              }
 
-            var version = versions[0];
+              var version = versions[0];
 
-            if (!version.assets || !version.assets.length) {
-              return resolve();
-            }
+              if (!version.assets || !version.assets.length) {
+                return resolve();
+              }
 
-            // Sorting filename in ascending order prioritizes other files over
-            // zip archives is both are available and matched.
-            return resolve(_.orderBy(
-              version.assets, ['filetype', 'createdAt'], ['asc', 'desc']
-            )[0]);
-          })
-          .catch(reject);
-      } else {
-        Asset.find(assetOptions)
-          .sort({
-            createdAt: 'desc'
-          })
-          .limit(1)
-          .then(resolve)
-          .catch(reject);
-      }
-    });
-
-    assetPromise
+              // Sorting filename in ascending order prioritizes other files over
+              // zip archives is both are available and matched.
+              return resolve(_.orderBy(
+                version.assets, ['filetype', 'createdAt'], ['asc', 'desc']
+              )[0]);
+            })
+            .catch(reject);
+        } else {
+          Asset
+            .find(assetOptions)
+            .sort({
+              createdAt: 'desc'
+            })
+            .limit(1)
+            .then(resolve)
+            .catch(reject);
+        }
+      })
       .then(function(asset) {
         if (!asset || !asset.fd) {
           var noneFoundMessage = 'No download available';
@@ -175,14 +175,7 @@ module.exports = {
 
         var fileExt = path.extname(uploadedFile.filename);
 
-        // Normalize filename
-        var name =
-          sails.config.appName + '-' +
-          data.version.name + '-' +
-          data.platform.replace('_', '-') +
-          fileExt;
-
-        sails.log.debug('Creating asset with name', name);
+        sails.log.debug('Creating asset with name', uploadedFile.filename);
 
         var hashPromise;
 
@@ -198,7 +191,7 @@ module.exports = {
             // Create new instance of model using data from params
             Asset
               .create(_.merge({
-                name: name,
+                name: uploadedFile.filename,
                 hash: fileHash,
                 filetype: fileExt,
                 fd: uploadedFile.fd,

@@ -1,7 +1,9 @@
 # Electron Release Server
-A node web server which serves & manages releases of the your [Electron](http://electron.atom.io) App, and is fully compatible with [Squirrel](https://github.com/Squirrel) Auto-updater (which is built into Electron).
+>A node web server which serves & manages releases of the your [Electron](http://electron.atom.io) App, and is fully compatible with [Squirrel](https://github.com/Squirrel) Auto-updater (which is built into Electron).
 
-_Note: while I market this as a release server for Electron applications, it would work for **any application using Squirrel**._
+[![Electron Release Server Demo](https://j.gifs.com/wpyY1X.gif)](https://youtu.be/lvT7rfB01iA)
+
+_Note: Despite being advertised as release server for Electron applications, it would work for **any application using Squirrel**._
 
 If you host your project on your Github and do not need a UI for your app, then [Nuts](https://github.com/GitbookIO/nuts) is probably what you're looking for. Otherwise, you're in the same boat as I was, and you've found the right place!
 

@@ -77,6 +77,7 @@ PlatformsService.detect = function(platformName) {
 
   // Detect 64 bit
   if (
+    prefix === this.OSX ||
     _.includes(name, '64') ||
     _.includes(name, 'x64') ||
     _.includes(name, 'amd64')

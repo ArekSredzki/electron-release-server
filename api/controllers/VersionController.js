@@ -118,11 +118,14 @@ module.exports = {
               },
               '');
 
+            sails.log.debug('Latest Version', latestVersion);
+            sails.log.debug('Version', version);
+
             if (!latestVersion || latestVersion.name === version) {
               return res.status(204).send('No updates.');
             }
 
-            console.log('Latest Version', latestVersion);
+            sails.log.debug('Latest Version', latestVersion);
 
             return res.ok({
               url: url.resolve(
@@ -183,6 +186,9 @@ module.exports = {
               '>=': currentVersion.createdAt
             }
           }))
+          .sort({
+            createdAt: 'desc'
+          })
           .populate('assets', {
             platform: platforms
           })
@@ -190,6 +196,9 @@ module.exports = {
             var latestVersion = _.find(
               newerVersions,
               function(newVersion) {
+                _.remove(newVersion.assets, function(o) {
+                  return o.filetype !== '.nupkg' || !o.hash;
+                });
                 return newVersion.assets.length;
               });
 
