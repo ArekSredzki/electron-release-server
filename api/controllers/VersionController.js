@@ -49,7 +49,7 @@ module.exports = {
       return res.badRequest('Requires `platform` parameter');
     }
 
-    var platforms = PlatformService.detect(platform);
+    var platforms = PlatformService.detect(platform, true);
 
     sails.log.debug('Update Search Query', {
       platform: platforms,
@@ -162,7 +162,7 @@ module.exports = {
       return res.badRequest('Requires `platform` parameter');
     }
 
-    var platforms = PlatformService.detect(platform);
+    var platforms = PlatformService.detect(platform, true);
 
     sails.log.debug('Windows Update Search Query', {
       platform: platforms,

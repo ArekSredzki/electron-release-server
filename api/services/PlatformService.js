@@ -5,7 +5,7 @@
 var _ = require('lodash');
 var useragent = require('express-useragent');
 
-var PlatformsService = {
+var PlatformService = {
   LINUX: 'linux',
   LINUX_32: 'linux_32',
   LINUX_64: 'linux_64',
@@ -23,7 +23,7 @@ var PlatformsService = {
  * @param  {String} platform Platform ID
  * @return {String}          Platform type name
  */
-PlatformsService.toType = function(platform) {
+PlatformService.toType = function(platform) {
   return _.head(platform.split('_'));
 };
 
@@ -32,28 +32,30 @@ PlatformsService.toType = function(platform) {
  * @param  {Object} req An express request object
  * @return {String}     String representation of the detected platform
  */
-PlatformsService.detectFromRequest = function(req) {
+PlatformService.detectFromRequest = function(req) {
   var platform;
 
   var source = req.headers['user-agent'];
   var ua = useragent.parse(source);
 
   if (ua.isWindows) return [this.WINDOWS_32, this.WINDOWS_64];
-  if (ua.isMac) return [this.OSX_32, this.OSX_64];
-  if (ua.isLinux64) return [this.LINUX_32, this.LINUX_64];
+  if (ua.isMac) return [this.OSX_64];
+  if (ua.isLinux64) return [this.LINUX_64, this.LINUX_32];
   if (ua.isLinux) return [this.LINUX_32];
 };
 
 /**
  * Detect and normalize the platformID from platform name input string.
- * Used to handle unnormalized inputs from user agents
- * @param  {Object} platformName An Asset object
- * @return {String}              Full platform ID
+ * Used to handle unnormalized inputs from user agents.
+ * @param  {Object}  platformName An Asset object
+ * @param  {Boolean} strictMatch  Whether to only match to the current arch
+ *                                If false, 32 bit will be added for 64 bit
+ * @return {String}               Full platform ID
  */
-PlatformsService.detect = function(platformName) {
+PlatformService.detect = function(platformName, strictMatch) {
   var name = platformName.toLowerCase();
   var prefix = '';
-  var suffixes = ['32'];
+  var suffixes = [];
 
   // Detect prefix: osx, widnows or linux
   if (_.includes(name, 'win')) {
@@ -75,14 +77,20 @@ PlatformsService.detect = function(platformName) {
     prefix = this.OSX;
   }
 
-  // Detect 64 bit
+  // Detect architecture
   if (
     prefix === this.OSX ||
-    _.includes(name, '64') ||
-    _.includes(name, 'x64') ||
-    _.includes(name, 'amd64')
+    // _.includes(name, 'x64') ||
+    // _.includes(name, 'amd64') ||
+    _.includes(name, '64')
   ) {
-    suffixes.unshift('64'); // Order first
+    suffixes.push('64');
+
+    if (!strictMatch && prefix !== this.OSX) {
+      suffixes.unshift('32');
+    }
+  } else {
+    suffixes.unshift('32');
   }
 
   var result = [];
@@ -93,4 +101,4 @@ PlatformsService.detect = function(platformName) {
   return result;
 };
 
-module.exports = PlatformsService;
+module.exports = PlatformService;
