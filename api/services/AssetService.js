@@ -75,7 +75,7 @@ AssetService.getHash = function(fd) {
       })
       .on('end', function() {
         hash.end();
-        resolve(hash.read());
+        resolve(String.prototype.toUpperCase.call(hash.read()));
       })
       // Pipe to hash generator
       .pipe(hash);
