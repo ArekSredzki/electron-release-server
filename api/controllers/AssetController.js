@@ -31,7 +31,7 @@ module.exports = {
    * (GET /download/:platform?)
    */
   download: function(req, res) {
-    var channel = req.params.channel || 'stable';
+    var channel = req.params.channel;
     var version = req.params.version || undefined;
     var filename = req.params.filename;
     var filetype = req.query.filetype;
@@ -58,6 +58,8 @@ module.exports = {
           return res.serverError('No platform specified and impossible to detect one');
         }
       }
+
+      channel = channel || 'stable';
     } else {
       platforms = undefined;
     }

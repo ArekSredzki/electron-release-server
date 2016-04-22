@@ -2,21 +2,36 @@
   color: $gray-light;
 }
 
+.text-capitalize {
+  text-transform: capitalize;
+}
+
 .text-color-lock {
   color: darken(desaturate($brand-primary, 50), 10);
 }
+
+.pointer {
+  cursor: pointer;
+}
+
+.jumbotron p {
+  white-space: pre;
+  font-size: 13px !important;
+}
+
 // Input label position
 .form-horizontal .control-label {
   padding-top: 0;
 }
 
-.align-right {
-  text-align: right;
+.padding-20-0 {
+  padding: 20px 0;
 }
 
-.float-right {
-  float: right;
+.padding-top-20 {
+  padding-top: 20px;
 }
+
 // Input status colours
 .form-control,
 input,

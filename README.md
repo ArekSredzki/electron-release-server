@@ -46,3 +46,6 @@ I highly recommend using [electron-builder](https://github.com/loopline-systems/
 This project has been built from the SailsJs base up by Arek Sredzki, with inspiration from [nuts](https://github.com/GitbookIO/nuts).
 
 I've also borrowed some of their documentation! Thanks!
+
+## License
+[MIT License](LICENSE.md)

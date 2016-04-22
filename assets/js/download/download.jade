@@ -1,0 +1,106 @@
+.row.text-center
+  .col-md-12
+    h2 Download our Electron App 
+      small.pull-right
+        | Channel: 
+        select(
+          ng-model='vm.channel'
+          ng-options='channel for channel in vm.availableChannels'
+          ng-change='vm.getLatestReleases()'
+          )
+.row.text-center.padding-top-20(ng-if="vm.latestReleases")
+  .col-md-12(ng-if="vm.platform === 'osx'")
+    .jumbotron
+      h4 OS X 
+        span.text-muted 64 bit
+      a.btn.btn-success.btn-lg(
+        ng-click="vm.download(vm.latestReleases['64'])"
+        )
+        i.fa.fa-download.fa-5x
+        h5 {{ vm.latestReleases['64'].version }} 
+          label.label.label-info(
+            ng-show="vm.latestReleases['64'].channel !== 'stable'"
+            )
+            | {{ vm.latestReleases['64'].channel }}
+      div.padding-top-20(ng-show="vm.latestReleases['64'].notes")
+        h4 Change Notes
+        p.text-muted(ng-bind="vm.latestReleases['64'].notes")
+  div(ng-if="vm.platform !== 'osx'")
+    .row
+      .col-md-12
+        h4.text-capitalize {{ vm.platform }}
+    .row
+      div(
+        ng-if="vm.latestReleases['32']",
+        ng-class="vm.latestReleases['64'] ? 'col-sm-6' : 'col-sm-12'"
+        )
+        h5.text-muted 32 bit
+        a.btn.btn-success.btn-lg(
+          ng-click="vm.download(vm.latestReleases['32'])"
+          )
+          i.fa.fa-download.fa-5x
+          h5 {{ vm.latestReleases['32'].version }} 
+            label.label.label-info(
+              ng-show="vm.latestReleases['32'].channel !== 'stable'"
+              )
+              | {{ vm.latestReleases['32'].channel }}
+        div.padding-top-20(ng-show="vm.latestReleases['32'].notes")
+          h4 Change Notes
+          p.text-muted(ng-bind-html="vm.latestReleases['32'].notes")
+      div(
+        ng-if="vm.latestReleases['64']",
+        ng-class="vm.latestReleases['32'] ? 'col-sm-6' : 'col-sm-12'"
+        )
+        h5.text-muted 64 bit
+        a.btn.btn-success.btn-lg(
+          ng-click="vm.download(vm.latestReleases['64'])"
+          )
+          i.fa.fa-download.fa-5x
+          h5 {{ vm.latestReleases['64'].version }} 
+            label.label.label-info(
+              ng-show="vm.latestReleases['64'].channel !== 'stable'"
+              )
+              | {{ vm.latestReleases['64'].channel }}
+        div.padding-top-20(ng-show="vm.latestReleases['64'].notes")
+          h4 Change Notes
+          p.text-muted(ng-bind-html="vm.latestReleases['64'].notes")
+
+.row.text-center.padding-top-20(ng-if="!vm.latestReleases")
+  .col-md-12
+    h5.text-muted
+      | There are no {{ vm.channel }} releases available for {{ vm.platform }}.
+      
+.row.text-center.padding-20-0
+  .col-sm-8.col-sm-offset-2
+    h5.pointer(
+      ng-click="vm.showAllVersions = !vm.showAllVersions"
+      )
+      span(ng-show="vm.showAllVersions") Hide
+      span(ng-hide="vm.showAllVersions") Show
+      |  all versions
+    div(ng-show="vm.showAllVersions")
+      .jumbotron(ng-repeat='version in vm.versions')
+        h4 {{ version.name }} 
+          label.label(
+            ng-class="version.channel.name === 'stable' ? 'label-success' : 'label-info'"
+            )
+            | {{ version.channel.name }}
+        p.text-muted(
+          ng-show="version.notes"
+          ng-bind-html="version.notes"
+          )
+        button.btn.btn-sm.btn-success(
+          ng-repeat="asset in version.assets"
+          ng-click="vm.download(asset, version.name)"
+          ng-if="asset.filetype === vm.filetypes[asset.platform]"
+          )
+          | {{ vm.availablePlatforms[asset.platform] }}
+
+iframe(
+  style="display:none;"
+  ng-if="vm.downloadUrl"
+  width="1"
+  height="1"
+  frameborder="0"
+  src="{{vm.downloadUrl}}"
+  )

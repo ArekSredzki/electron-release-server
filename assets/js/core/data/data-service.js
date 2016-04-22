@@ -1,18 +1,23 @@
 angular.module('app.core.data.service', [
     'ngSails'
   ])
-  .service('DataService', ['$sails', '$q', '$log', '$http', 'AuthService', 'Notification', 'Upload',
-    function($sails, $q, $log, $http, AuthService, Notification, Upload) {
+  .service('DataService', [
+    '$sails', '$q', '$log', '$http', 'Notification', 'Upload', 'PubSub',
+    'AuthService',
+    function(
+      $sails, $q, $log, $http, Notification, Upload, PubSub,
+      AuthService
+    ) {
       var self = this;
 
       /**
        * Main Data object, containing all of the version objects and their
        * nested assets
-       * @type {Object}
+       * @type {array}
        */
-      self.data = {};
+      self.data = [];
 
-      var UNKNOWN_ERROR_MESSAGE = 'An Unkown Error Occurred';
+      var UNKNOWN_ERROR_MESSAGE = 'An Unkown Error Occurred.';
 
       /**
        * A relation between valid platforms & their pretty names
@@ -21,10 +26,18 @@ angular.module('app.core.data.service', [
       self.availablePlatforms = {
         windows_64: 'Windows 64 bit',
         windows_32: 'Windows 32 bit',
-        osx_64: 'OSX 64 bit',
+        osx_64: 'OS X 64 bit',
         linux_64: 'Linux 64 bit',
         linux_32: 'Linux 32 bit'
       };
+
+     self.filetypes = {
+       windows_64: '.exe',
+       windows_32: '.exe',
+       osx_64: '.dmg',
+       linux_64: '.deb',
+       linux_32: '.deb'
+     };
 
       /**
        * An array of all available release channels
@@ -103,26 +116,19 @@ angular.module('app.core.data.service', [
           throw new Error('A version object is required for creation');
         }
 
-        var deferred = $q.defer();
-
-        $http.post('/api/version', version)
+        return $http.post('/api/version', version)
           .then(function success(response) {
-            // Resolve the promise immediately as we already know it succeeded
-            deferred.resolve(response);
+            Notification.success('Version Created Successfully.');
 
-            Notification.success({
-              message: 'Version Created Successfully.'
-            });
+            return response;
           }, function error(response) {
-            // Reject the promise immediately as we already know it failed
-            deferred.reject(response);
 
             var errorTitle = 'Unable to Create Version';
 
             showErrors(response, errorTitle);
-          });
 
-        return deferred.promise;
+            return $q.reject(response);
+          });
       };
 
       /**
@@ -144,29 +150,21 @@ angular.module('app.core.data.service', [
           throw new Error('A version name is required for updating');
         }
 
-        var deferred = $q.defer();
-
-        $http.post(
+        return $http.post(
             '/api/version/' + versionName,
             _.omit(version, ['assets'])
           )
           .then(function success(response) {
-            // Resolve the promise immediately as we already know it succeeded
-            deferred.resolve(response);
+            Notification.success('Version Updated Successfully.');
 
-            Notification.success({
-              message: 'Version Updated Successfully.'
-            });
+            return response;
           }, function error(response) {
-            // Reject the promise immediately as we already know it failed
-            deferred.reject(response);
-
             var errorTitle = 'Unable to Update Version';
 
             showErrors(response, errorTitle);
-          });
 
-        return deferred.promise;
+            return $q.reject(response);
+          });
       };
 
       /**
@@ -183,26 +181,18 @@ angular.module('app.core.data.service', [
           throw new Error('A version name is required for deletion');
         }
 
-        var deferred = $q.defer();
-
-        $http.delete('/api/version/' + versionName)
+        return $http.delete('/api/version/' + versionName)
           .then(function success(response) {
-            // Resolve the promise immediately as we already know it succeeded
-            deferred.resolve(response);
+            Notification.success('Version Deleted Successfully.');
 
-            Notification.success({
-              message: 'Version Deleted Successfully.'
-            });
+            return response;
           }, function error(response) {
-            // Reject the promise immediately as we already know it failed
-            deferred.reject(response);
-
             var errorTitle = 'Unable to Delete Version';
 
             showErrors(response, errorTitle);
-          });
 
-        return deferred.promise;
+            return $q.reject(response);
+          });
       };
 
       /**
@@ -265,6 +255,9 @@ angular.module('app.core.data.service', [
           });
 
           if (index > -1) {
+            if (!version.assets || !version.assets.length) {
+              version.assets = self.data[index].assets;
+            }
             self.data[index] = version;
           }
 
@@ -286,6 +279,8 @@ angular.module('app.core.data.service', [
 
           $log.log('Sails removed a version.');
         }
+
+        PubSub.publish('data-change');
       });
 
       /**
@@ -360,26 +355,18 @@ angular.module('app.core.data.service', [
           throw new Error('The passed asset object must have been submitted to the database in order to be updated');
         }
 
-        var deferred = $q.defer();
-
-        $http.post('/api/asset/' + asset.name, asset)
+        return $http.post('/api/asset/' + asset.name, asset)
           .then(function success(response) {
-            // Resolve the promise immediately as we already know it succeeded
-            deferred.resolve(response);
+            Notification.success('Asset Updated Successfully.');
 
-            Notification.success({
-              message: 'Asset Updated Successfully.'
-            });
+            return response;
           }, function error(response) {
-            // Reject the promise immediately as we already know it failed
-            deferred.reject(response);
-
             var errorTitle = 'Unable to Update Asset';
 
             showErrors(response, errorTitle);
-          });
 
-        return deferred.promise;
+            return $q.reject(response);
+          });
       };
 
       /**
@@ -396,26 +383,18 @@ angular.module('app.core.data.service', [
           throw new Error('A asset name is required for deletion');
         }
 
-        var deferred = $q.defer();
-
-        $http.delete('/api/asset/' + name)
+        return $http.delete('/api/asset/' + name)
           .then(function success(response) {
-            // Resolve the promise immediately as we already know it succeeded
-            deferred.resolve(response);
+            Notification.success('Asset Deleted Successfully.');
 
-            Notification.success({
-              message: 'Asset Deleted Successfully.'
-            });
+            return response;
           }, function error(response) {
-            // Reject the promise immediately as we already know it failed
-            deferred.reject(response);
-
             var errorTitle = 'Unable to Delete Asset';
 
             showErrors(response, errorTitle);
-          });
 
-        return deferred.promise;
+            return $q.reject(response);
+          });
       };
 
       /**
@@ -516,7 +495,7 @@ angular.module('app.core.data.service', [
           });
 
           if (versionIndex === -1 || index === -1) {
-            // Our version of the database is out of sync from the remote, re-init
+            // Our version of the database is out of sync from remote, re-init
             $log.log('Data out of sync, reloading.');
             return self.initialize();
           }
@@ -533,8 +512,14 @@ angular.module('app.core.data.service', [
 
           $log.log('Sails removed an asset.');
         }
+
+        PubSub.publish('data-change');
       });
 
+      /**
+       * Retrieve & subscribe to all version & asset data.
+       * @return {Promise} Resolved once data has been retrieved
+       */
       self.initialize = function() {
         var deferred = $q.defer();
         // Get the initial set of releases from the server.
@@ -543,6 +528,8 @@ angular.module('app.core.data.service', [
           .success(function(data) {
             self.data = data;
             deferred.resolve(true);
+
+            PubSub.publish('data-change');
           })
           .error(function(data, status) {
             deferred.reject(data);
@@ -555,6 +542,75 @@ angular.module('app.core.data.service', [
           });
 
         return deferred.promise;
+      };
+
+      /**
+       * Returns information about the latest release available for a given
+       * platform + architecture and channel.
+       * @param  {String} platform Target platform (osx, windows, linux)
+       * @param  {Array}  archs    Target architectures ('32', '64')
+       * @param  {String} channel  Target release channel
+       * @return {Object}          Latest release data object
+       */
+      self.getLatestReleases = function(platform, archs, channel) {
+
+        var channelIndex = self.availableChannels.indexOf(channel);
+
+        if (channelIndex === -1) {
+          return;
+        }
+
+        var applicableChannels = self.availableChannels.slice(
+          0,
+          channelIndex + 1
+        );
+
+        var versions = _
+          .chain(self.data)
+          .filter(function(version) {
+            var versionChannel =  _.get(version, 'channel.name');
+            return applicableChannels.indexOf(versionChannel) !== -1;
+          })
+          .value();
+
+        var latestReleases = {};
+
+        _.forEach(archs, function(arch) {
+          var platformName = platform + '_' + arch;
+
+          var filetype = self.filetypes[platformName];
+
+          if (!filetype) {
+            return;
+          }
+          _.forEach(versions, function(version) {
+            _.forEach(version.assets, function(asset) {
+              if (
+                asset.platform === platformName &&
+                asset.filetype === filetype
+              ) {
+                var matchedAsset = _.clone(asset);
+                matchedAsset.version = version.name;
+                matchedAsset.notes = version.notes;
+                matchedAsset.channel = _.get(version, 'channel.name');
+                latestReleases[arch] = matchedAsset;
+
+                return false;
+              }
+            });
+
+            if (latestReleases[arch]) {
+              return false;
+            }
+          });
+        });
+
+        // If no archs matched, return undefined
+        if (_.size(latestReleases) === 0) {
+          return;
+        }
+
+        return latestReleases;
       };
     }
   ]);

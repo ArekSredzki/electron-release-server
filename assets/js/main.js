@@ -1,27 +1,16 @@
 angular.module('app', [
-    'ngRoute',
-    'ngAnimate',
-    'ngMessages',
-    'ngResource',
-    'ngRoute',
-    'ngSanitize',
-    'ngTouch',
-    'ngFileUpload',
-    'ui-notification',
-    'ui.bootstrap',
-    'angular-confirm',
-    'xeditable',
     'app.core',
     'app.admin',
-    'app.release'
+    'app.home',
+    'app.releases'
   ])
   .config(['$routeProvider', '$locationProvider', 'NotificationProvider',
     function($routeProvider, $locationProvider, NotificationProvider) {
       $routeProvider.otherwise({
-        redirectTo: '/release'
+        redirectTo: '/home'
       });
 
-      // use the HTML5 History API
+      // Use the HTML5 History API
       $locationProvider.html5Mode(true);
 
       NotificationProvider.setOptions({

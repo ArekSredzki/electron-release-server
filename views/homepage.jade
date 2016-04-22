@@ -28,6 +28,9 @@ html
             ul.nav.navbar-nav
               li(ng-class="{ active: isActive('/')}")
                 a(href='/') Home
+            ul.nav.navbar-nav
+              li(ng-class="{ active: isActive('/releases')}")
+                a(href='/releases') Download
             auth-toolbar
     .container
       div(ng-view='')
@@ -44,10 +47,8 @@ html
     script(src='/bower_components/jquery/dist/jquery.js')
     script(src='/bower_components/angular-animate/angular-animate.js')
     script(src='/bower_components/angular-messages/angular-messages.js')
-    script(src='/bower_components/angular-resource/angular-resource.js')
     script(src='/bower_components/angular-route/angular-route.js')
     script(src='/bower_components/angular-sanitize/angular-sanitize.js')
-    script(src='/bower_components/angular-touch/angular-touch.js')
     script(src='/bower_components/angular-xeditable/dist/js/xeditable.min.js')
     script(src='/bower_components/lodash/lodash.js')
     script(src='/bower_components/angular-ui-notification/dist/angular-ui-notification.js')
@@ -60,6 +61,9 @@ html
     script(src='/bower_components/moment/moment.js')
     script(src='/bower_components/angular-moment/angular-moment.js')
     script(src='/bower_components/ng-file-upload/ng-file-upload.js')
+    script(src='/bower_components/angular-PubSub/src/angular-pubsub.js')
+    script(src='/bower_components/re-tree/re-tree.js')
+    script(src='/bower_components/ng-device-detector/ng-device-detector.js')
     // endbower
 
     // SCRIPTS
@@ -77,6 +81,8 @@ html
     script(src="/js/core/core.js")
     script(src="/js/core/data/data-service.js")
     script(src="/js/core/data/data.js")
+    script(src="/js/core/dependencies/dependencies.js")
     script(src="/js/core/nav-controller.js")
-    script(src="/js/release/release-controller.js")
+    script(src="/js/download/download-controller.js")
+    script(src="/js/home/home-controller.js")
     // SCRIPTS END
