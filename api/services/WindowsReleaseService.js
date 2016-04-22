@@ -108,7 +108,7 @@ WindowsReleaseService.generate = function(assets) {
   return _.map(assets, function(asset) {
       return [
         asset.hash,
-        asset.name,
+        asset.name.replace('-ia32', ''),
         asset.size
       ].join(' ');
     })
