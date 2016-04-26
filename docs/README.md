@@ -6,7 +6,7 @@ There are questions that are asked quite often, [check this out before creating 
 
 ### Guides
 - [Deploy it!](deploy.md)
-- [Upload assets](assets.md))
+- [Upload assets](assets.md)
 - [Available URLs](urls.md)
 - [OS X Auto-Updater](update-osx.md)
 - [Windows Auto-Updater](update-windows.md)
