@@ -62,8 +62,11 @@ module.exports = {
     Version
       .findOne(version)
       .then(function(currentVersion) {
+        var applicableChannels, createdAtFilter;
 
-        var createdAtFilter;
+        applicableChannels = ChannelService.getApplicableChannels(channel);
+
+        sails.log.debug('Applicable Channels', applicableChannels);
 
         if (_.isObject(currentVersion)) {
           createdAtFilter = {
@@ -75,7 +78,7 @@ module.exports = {
 
         return Version
           .find(UtilityService.getTruthyObject({
-            channel: channel,
+            channel: applicableChannels,
             createdAt: createdAtFilter
           }))
           .sort({ createdAt: 'desc' })
@@ -118,14 +121,15 @@ module.exports = {
               },
               '');
 
-            sails.log.debug('Latest Version', latestVersion);
-            sails.log.debug('Version', version);
+            sails.log.debug('Version candidate', latestVersion);
+            sails.log.debug('Current version', currentVersion.name);
 
-            if (!latestVersion || latestVersion.name === version) {
+            if (!latestVersion || latestVersion.name === currentVersion.name) {
+              sails.log.debug('Version candidate denied');
               return res.status(204).send('No updates.');
             }
 
-            sails.log.debug('Latest Version', latestVersion);
+            sails.log.debug('Version candidate accepted');
 
             return res.ok({
               url: url.resolve(
@@ -179,9 +183,13 @@ module.exports = {
           return res.notFound('The specified `version` does not exist');
         }
 
+        var applicableChannels = ChannelService.getApplicableChannels(channel);
+
+        sails.log.debug('Applicable Channels', applicableChannels);
+
         return Version
           .find(UtilityService.getTruthyObject({
-            channel: channel,
+            channel: applicableChannels,
             createdAt: {
               '>=': currentVersion.createdAt
             }

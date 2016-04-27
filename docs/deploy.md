@@ -2,7 +2,7 @@
 
 Electron Release Server can be easily be deployed to your own server.
 
-### On your own server:
+## General Configuration:
 
 Install dependencies using:
 
@@ -21,14 +21,23 @@ vim config/local.js
 Then start the application using:
 
 ```
-$ npm start
+npm start
 ```
 
 Browse to `http://localhost:1337/`
 
-## PostgreSQL Specific Instructions
-If you choose to use PostgreSQL as your database for sessions, ensure that you follow the instructions listed [sails-pg-session](https://github.com/ravitej91/sails-pg-session).
-You must install some functions in your database for it to work for you.
+## Database setup
+See the [database setup guide](database.md).
 
 ## Authentication
-There is a good chance that you will want to modify the authentication method used for controlling access to the admin interface. You can do so by modifying the file found here: `api/controllers/AuthController.js`.
+See the [authentication guide](authentication.md).
+
+## Deployment
+See the [Sails deployment documentation](http://sailsjs.org/documentation/concepts/deployment).
+
+To start the server in deployment mode use:
+```
+npm start --prod
+```
+
+> Note: In production you should use a process manager such as [pm2](http://pm2.keymetrics.io/)

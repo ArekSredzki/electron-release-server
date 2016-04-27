@@ -1,47 +1,88 @@
 /**
- * Simple LDAP authentication service
+ * Simple Authentication Service
+ *
+ * Currently supported methods:
+ *  - static
+ *  - LDAP
  */
+var _ = require('lodash');
 var LdapAuth = require('ldapauth-fork');
 
-var LDAPService = {};
+var AuthService = {};
 
-/**
- * Add default values to options
- *
- * @param   options
- * @returns {*}
- */
-var setDefaults = function(options) {
-  options.usernameField = (options.usernameField || 'username');
-  options.passwordField = (options.passwordField || 'password');
-  return options;
+AuthService.authenticate = function(req, options, cb) {
+  var username, password, ldap;
+  if (!options) {
+    throw new Error('Authentication requires options');
+  }
+
+  username = req.param('username');
+  password = req.param('password');
+
+  if (!username || !password) {
+    return cb({
+      message: options.badRequestMessage || 'Missing credentials',
+      code: 400
+    });
+  }
+
+  if (_.has(options, 'static')) {
+    if (_.has(options, 'ldap')) {
+      var originalCb = cb;
+
+      cb = function(err, user) {
+        if (err) {
+          return AuthService._authenticateLDAP(
+            username,
+            password,
+            options.ldap,
+            function(secondErr, user) {
+              if (secondErr) {
+                return originalCb(err);
+              }
+
+              originalCb(null, user);
+            }
+          );
+        }
+
+        originalCb(null, user);
+      };
+    }
+
+    AuthService._authenticateStatic(username, password, options.static, cb);
+  } else if (_.has(options, 'ldap')) {
+    AuthService._authenticateLDAP(username, password, options.ldap, cb);
+  } else {
+    throw new Error('Authentication options incomplete.');
+  }
+};
+
+AuthService._authenticateStatic = function(username, password, options, cb) {
+  var ldap;
+  if (!options) {
+    throw new Error('LDAP authentication requires options');
+  }
+
+  if (
+    username !== options.username ||
+    password !== options.password
+  ) {
+    return cb({
+      message: 'Invalid username/password',
+      code: 401
+    });
+  } else {
+    return cb(
+      null, {
+        username: username
+      }
+    );
+  }
 };
 
 /**
- * Get value for given field from given object. Taken from passport-local,
- * copyright 2011-2013 Jared Hanson
- */
-var lookup = function(obj, field) {
-  var i, len, chain, prop;
-  if (!obj) {
-    return null;
-  }
-  chain = field.split(']').join('').split('[');
-  for (i = 0, len = chain.length; i < len; i++) {
-    prop = obj[chain[i]];
-    if (typeof(prop) === 'undefined') {
-      return null;
-    }
-    if (typeof(prop) !== 'object') {
-      return prop;
-    }
-    obj = prop;
-  }
-  return null;
-};
-
-/**
- * LDAPService authentication
+ * LDAP authentication
  *
  * The LDAP authentication strategy authenticates requests based on the
  * credentials submitted through an HTML-based login form.
@@ -63,37 +104,20 @@ var lookup = function(obj, field) {
  *
  * Example:
  *
- *     LDAPService.authenticate({
- *         server: {
- *           url: 'ldap://localhost:389',
- *           bindDn: 'cn=root',
- *           bindCredentials: 'secret',
- *           searchBase: 'ou=passport-ldapauth',
- *           searchFilter: '(uid={{username}})'
- *         }
- *       },
+ *     AuthService._authenticateLDAP(
+ *     	'myusername',
+ *     	'mypassword',
+ *     	sails.config.auth,
  *       function(err, user) {
  *       	 if (err) return;
- *         console.log('User ' + user.sAMAccountName + ' has been authenticated');
+ *         console.log('User ' + user.username + ' has been authenticated');
  *       }
  *     ));
  */
-LDAPService.authenticate = function(req, options, cb) {
-  var username, password, ldap;
+AuthService._authenticateLDAP = function(username, password, options, cb) {
+  var ldap;
   if (!options) {
     throw new Error('LDAP authentication requires options');
-  }
-
-  options = setDefaults(options);
-
-  username = lookup(req.body, options.usernameField) || lookup(req.query, options.usernameField);
-  password = lookup(req.body, options.passwordField) || lookup(req.query, options.passwordField);
-
-  if (!username || !password) {
-    return cb({
-      message: options.badRequestMessage || 'Missing credentials',
-      code: 400
-    });
   }
 
   /**
@@ -162,8 +186,10 @@ LDAPService.authenticate = function(req, options, cb) {
       });
     }
 
+    _.set(user, 'username', _.get(user, options.usernameField));
+
     return cb(null, user);
   });
 };
 
-module.exports = LDAPService;
+module.exports = AuthService;

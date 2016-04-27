@@ -6,6 +6,8 @@ There are questions that are asked quite often, [check this out before creating 
 
 ### Guides
 - [Deploy it!](deploy.md)
+  - [Database setup](database.md)
+  - [Admin authentication](authentication.md)
 - [Upload assets](assets.md)
 - [Available URLs](urls.md)
 - [OS X Auto-Updater](update-osx.md)

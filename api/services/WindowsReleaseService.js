@@ -6,13 +6,16 @@ var _ = require('lodash');
 var semver = require('semver');
 var stripBom = require('strip-bom');
 
+var ChannelService = require('./ChannelService');
+
 var WindowsReleaseService = {};
 
 // Ordered list of supported pre-release channels
 var PRERELEASE_CHANNEL_MAGINITUDE = 1000;
-var PRERELEASE_CHANNELS = [
-  'alpha', 'beta', 'unstable', 'rc'
-];
+var PRERELEASE_CHANNELS = _(ChannelService.availableChannels)
+  .without('stable')
+  .reverse()
+  .value();
 
 // RELEASES parsing
 var releaseRegex = /^([0-9a-fA-F]{40})\s+(\S+)\s+(\d+)[\r]*$/;

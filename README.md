@@ -39,16 +39,23 @@ If you host your project on your Github and do not need a UI for your app, then 
 This server provides an endpoint for [Squirrel auto-updater](https://github.com/atom/electron/blob/master/docs/api/auto-updater.md), it supports both [OS X](docs/update-osx.md) and [Windows](docs/update-windows.md).
 
 ## Documentation
-
 [Check out the documentation](docs/) for more details.
 
 ## Building Releases
 I highly recommend using [electron-builder](https://github.com/loopline-systems/electron-builder) for packaging & releasing your applications. Once you have built your app with that, you can upload the artifacts for your users right away!
 
-## Credit
-This project has been built from the SailsJs base up by Arek Sredzki, with inspiration from [nuts](https://github.com/GitbookIO/nuts).
+## Maintenance
+You should keep your fork up to date with the electron-release-server master.
 
-I've also borrowed some of their documentation! Thanks!
+Doing so is simple, rebase your repo using the commands below.
+```bash
+git remote add upstream https://github.com/ArekSredzki/electron-release-server.git
+git fetch upstream
+git rebase upstream/master
+```
+
+## Credit
+This project has been built from the Sails.js up by Arek Sredzki, with inspiration from [nuts](https://github.com/GitbookIO/nuts).
 
 ## License
 [MIT License](LICENSE.md)

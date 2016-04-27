@@ -35,18 +35,27 @@ module.exports = {
   appUrl: 'SITE_URL',
 
   auth: {
-    ldap: {
-      server: {
-        url: 'ldap://LDAP_SERVER_FQDN:389',
-        bindDn: 'INSERT_LDAP_SERVICE_ACCOUNT_USERNAME_HERE',
-        bindCredentials: 'INSERT_PASSWORD_HERE',
-        searchBase: 'USER_SEARCH_SPACE', // ex: ou=Our Users,dc=companyname,dc=com
-        searchFilter: '(USERNAME_FIELD={{username}})'
-      }
-    }
+    // Provide a set of credentials that can be used to access the admin interface.
+    static: {
+      username: 'STATIC_USERNAME',
+      password: 'STATIC_PASSWORD'
+    //},
+    // You can also specify an ldap connection that can be used for authentication.
+    //ldap: {
+    //  usernameField: 'USERNAME_FIELD', // Key at which the username is stored
+    //  server: {
+    //    url: 'ldap://LDAP_SERVER_FQDN:389',
+    //    bindDn: 'INSERT_LDAP_SERVICE_ACCOUNT_USERNAME_HERE',
+    //    bindCredentials: 'INSERT_PASSWORD_HERE',
+    //    searchBase: 'USER_SEARCH_SPACE', // ex: ou=Our Users,dc=companyname,dc=com
+    //    searchFilter: '(USERNAME_FIELD={{username}})'
+    //  }
+    //}
   },
 
   jwt: {
+    // Recommended: 63 random alpha-numeric characters
+    // Generate using: https://www.grc.com/passwords.htm
     token_secret: 'INSERT_RANDOM_TOKEN_KEY'
   },
 
@@ -61,6 +70,8 @@ module.exports = {
   },
 
   session: {
+    // Recommended: 63 random alpha-numeric characters
+    // Generate using: https://www.grc.com/passwords.htm
     secret: 'SESSION_SECRET',
     database: 'SESSION_DATABASE_NAME',
     host: 'DATABASE_HOST',

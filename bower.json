@@ -1,6 +1,5 @@
 {
   "name": "electron-release-server",
-  "version": "0.3.2",
   "private": true,
   "dependencies": {
     "angular": "^1.5.5",

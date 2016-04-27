@@ -5,8 +5,9 @@
 
 var AuthController = {
   login: function(req, res) {
-    LDAPService.authenticate(
-      req, (sails.config.auth || {}).ldap,
+    AuthService.authenticate(
+      req,
+      sails.config.auth,
       function(err, user) {
 
         if (err) {
@@ -19,9 +20,9 @@ var AuthController = {
         }
 
         return res.json({
-          user: user.sAMAccountName,
+          user: user.username,
           token: AuthToken.issueToken({
-            sub: user.sAMAccountName
+            sub: user.username
           })
         });
       });
