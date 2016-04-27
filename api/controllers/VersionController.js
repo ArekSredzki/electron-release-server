@@ -62,6 +62,10 @@ module.exports = {
     Version
       .findOne(version)
       .then(function(currentVersion) {
+        if (!currentVersion) {
+          return res.notFound('The specified version does not exist');
+        }
+        
         var applicableChannels, createdAtFilter;
 
         applicableChannels = ChannelService.getApplicableChannels(channel);
