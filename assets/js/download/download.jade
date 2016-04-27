@@ -22,7 +22,9 @@
             ng-show="vm.latestReleases['64'].channel !== 'stable'"
             )
             | {{ vm.latestReleases['64'].channel }}
-      div.padding-top-20(ng-show="vm.latestReleases['64'].notes")
+      .padding-top-20.text-muted
+        span(am-time-ago="vm.latestReleases['64'].createdAt")
+      .padding-top-20(ng-show="vm.latestReleases['64'].notes")
         h4 Change Notes
         p.text-muted(ng-bind="vm.latestReleases['64'].notes")
   div(ng-if="vm.platform !== 'osx'")
@@ -44,7 +46,9 @@
               ng-show="vm.latestReleases['32'].channel !== 'stable'"
               )
               | {{ vm.latestReleases['32'].channel }}
-        div.padding-top-20(ng-show="vm.latestReleases['32'].notes")
+        .padding-top-20.text-muted
+          span(am-time-ago="vm.latestReleases['64'].createdAt")
+        .padding-top-20(ng-show="vm.latestReleases['32'].notes")
           h4 Change Notes
           p.text-muted(ng-bind-html="vm.latestReleases['32'].notes")
       div(
@@ -61,7 +65,9 @@
               ng-show="vm.latestReleases['64'].channel !== 'stable'"
               )
               | {{ vm.latestReleases['64'].channel }}
-        div.padding-top-20(ng-show="vm.latestReleases['64'].notes")
+        .padding-top-20.text-muted
+          span(am-time-ago="vm.latestReleases['64'].createdAt")
+        .padding-top-20(ng-show="vm.latestReleases['64'].notes")
           h4 Change Notes
           p.text-muted(ng-bind-html="vm.latestReleases['64'].notes")
 
@@ -80,11 +86,12 @@
       |  all versions
     div(ng-show="vm.showAllVersions")
       .jumbotron(ng-repeat='version in vm.versions')
+        p.text-muted(am-time-ago="vm.latestReleases['64'].createdAt")
         h4 {{ version.name }} 
           label.label(
             ng-class="version.channel.name === 'stable' ? 'label-success' : 'label-info'"
             )
-            | {{ version.channel.name }}
+            | {{ version.channel.name }}            
         p.text-muted(
           ng-show="version.notes"
           ng-bind-html="version.notes"
