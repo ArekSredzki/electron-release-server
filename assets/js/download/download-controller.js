@@ -49,9 +49,6 @@ angular.module('app.releases', [])
       // Update knowledge of the latest available versions.
       self.getLatestReleases();
 
-      // self.baseUrl = $location.protocol() + "://" + location.host;
-      // if ()
-
       self.download = function(asset, versionName) {
         if (!asset) {
           return;

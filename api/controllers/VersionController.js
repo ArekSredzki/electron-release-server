@@ -62,20 +62,18 @@ module.exports = {
     Version
       .findOne(version)
       .then(function(currentVersion) {
-        if (!currentVersion) {
-          return res.notFound('The specified version does not exist');
-        }
-        
+
         var applicableChannels, createdAtFilter;
 
         applicableChannels = ChannelService.getApplicableChannels(channel);
-
         sails.log.debug('Applicable Channels', applicableChannels);
 
-        if (_.isObject(currentVersion)) {
+        if (currentVersion) {
           createdAtFilter = {
             '>': currentVersion.createdAt
           };
+        } else {
+          sails.log.debug('The specified `version` does not exist');
         }
 
         sails.log.debug('Time Filter', createdAtFilter);
@@ -85,11 +83,14 @@ module.exports = {
             channel: applicableChannels,
             createdAt: createdAtFilter
           }))
-          .sort({ createdAt: 'desc' })
           .populate('assets', {
             platform: platforms
           })
           .then(function(newerVersions) {
+            // Sort versions which were added after the current one by semver in
+            // descending order.
+            newerVersions.sort(UtilityService.compareVersion);
+
             var latestVersion;
             sails.log.debug('Newer Versions', newerVersions);
 
@@ -125,10 +126,12 @@ module.exports = {
               },
               '');
 
-            sails.log.debug('Version candidate', latestVersion);
-            sails.log.debug('Current version', currentVersion.name);
+            var currentVersionName = _.get(currentVersion, 'name');
 
-            if (!latestVersion || latestVersion.name === currentVersion.name) {
+            sails.log.debug('Version candidate', latestVersion);
+            sails.log.debug('Current version', currentVersionName);
+
+            if (!latestVersion || latestVersion.name === currentVersionName) {
               sails.log.debug('Version candidate denied');
               return res.status(204).send('No updates.');
             }
@@ -183,28 +186,34 @@ module.exports = {
     Version
       .findOne(version)
       .then(function(currentVersion) {
-        if (!currentVersion) {
-          return res.notFound('The specified `version` does not exist');
+        var applicableChannels, createdAtFilter;
+
+        applicableChannels = ChannelService.getApplicableChannels(channel);
+        sails.log.debug('Applicable Channels', applicableChannels);
+
+        if (currentVersion) {
+          createdAtFilter = {
+            '>=': currentVersion.createdAt
+          };
+        } else {
+          sails.log.debug('The specified `version` does not exist');
         }
 
-        var applicableChannels = ChannelService.getApplicableChannels(channel);
-
-        sails.log.debug('Applicable Channels', applicableChannels);
+        sails.log.debug('Time Filter', createdAtFilter);
 
         return Version
           .find(UtilityService.getTruthyObject({
             channel: applicableChannels,
-            createdAt: {
-              '>=': currentVersion.createdAt
-            }
+            createdAt: createdAtFilter
           }))
-          .sort({
-            createdAt: 'desc'
-          })
           .populate('assets', {
             platform: platforms
           })
           .then(function(newerVersions) {
+            // Sort versions which were added after the current one by semver in
+            // descending order.
+            newerVersions.sort(UtilityService.compareVersion);
+
             var latestVersion = _.find(
               newerVersions,
               function(newVersion) {
@@ -217,6 +226,8 @@ module.exports = {
             if (!latestVersion) {
               return res.status(404).send('No updates.');
             }
+            
+            sails.log.debug('Latest Windows Version', latestVersion);
 
             // Change asset name to use full download link
             assets = _.map(latestVersion.assets, function(asset) {

@@ -13,12 +13,22 @@
             maxlength='12',
             required
             )
-          span.help-block This should match the semver format (ex. 1.0.1) You will not be able to change this later
-      // Change Notes
-      .form-group
-        label.col-md-4.control-label(for='notes') Change Notes
-        .col-md-7
-          textarea.form-control(ng-model='version.notes', name='notes')
+          span.help-block This must match the 
+            a(href='http://semver.org/') semver format
+            | . 
+            em ex. 1.0.1
+          span.help-block(
+            ng-hide="version.channel.name === 'stable'"
+            ) You are using a 
+            span.text-warning pre-release channel
+            | , it 
+            strong.text-success must
+            |  follow the version triple, preceded by a dash. It may additionally be followed by a 
+            span.text-info whole number.
+            br
+            em ex. 1.0.1
+              span.text-warning -{{version.channel.name}}
+              span.text-info 1
       // Select Channel
       .form-group
         label.col-md-4.control-label(for='channel') Channel
@@ -29,6 +39,13 @@
             ng-options='o as o for o in DataService.availableChannels',
             required
             )
+          hr
+          span.help-block You will not be able to change the above later.
+      // Change Notes
+      .form-group
+        label.col-md-4.control-label(for='notes') Change Notes
+        .col-md-7
+          textarea.form-control(ng-model='version.notes', name='notes')
 .modal-footer
   div
     button.btn.btn-warning(type='button', ng-click='addVersion()') Add Version

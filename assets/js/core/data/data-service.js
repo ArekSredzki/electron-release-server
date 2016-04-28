@@ -31,13 +31,13 @@ angular.module('app.core.data.service', [
         linux_32: 'Linux 32 bit'
       };
 
-     self.filetypes = {
-       windows_64: '.exe',
-       windows_32: '.exe',
-       osx_64: '.dmg',
-       linux_64: '.deb',
-       linux_32: '.deb'
-     };
+      self.filetypes = {
+        windows_64: '.exe',
+        windows_32: '.exe',
+        osx_64: '.dmg',
+        linux_64: '.deb',
+        linux_32: '.deb'
+      };
 
       /**
        * An array of all available release channels
@@ -47,10 +47,27 @@ angular.module('app.core.data.service', [
       self.availableChannels = [
         'stable',
         'rc',
-        'unstable',
         'beta',
         'alpha'
       ];
+
+      /**
+       * Compare version objects using semantic versioning.
+       * Pass to Array.sort for a descending array
+       * @param  {Object} v1 Version object one
+       * @param  {Object} v2 Version object two
+       * @return {-1|0|1}    Whether one is is less than or greater
+       */
+      self.compareVersion = function(v1, v2) {
+        return -compareVersions(v1.name, v2.name);
+      };
+
+      /**
+       * Sort version data in descending order
+       */
+      self.sortVersions = function() {
+        self.data.sort(self.compareVersion);
+      };
 
       /**
        * Shows an appropriate error notification method for every invalid
@@ -117,11 +134,11 @@ angular.module('app.core.data.service', [
         }
 
         return $http.post('/api/version', version)
-          .then(function success(response) {
+          .then(function(response) {
             Notification.success('Version Created Successfully.');
 
             return response;
-          }, function error(response) {
+          }, function(response) {
 
             var errorTitle = 'Unable to Create Version';
 
@@ -154,11 +171,11 @@ angular.module('app.core.data.service', [
             '/api/version/' + versionName,
             _.omit(version, ['assets'])
           )
-          .then(function success(response) {
+          .then(function(response) {
             Notification.success('Version Updated Successfully.');
 
             return response;
-          }, function error(response) {
+          }, function(response) {
             var errorTitle = 'Unable to Update Version';
 
             showErrors(response, errorTitle);
@@ -236,6 +253,7 @@ angular.module('app.core.data.service', [
         if (msg.verb === 'created') {
 
           self.data.unshift(version);
+          self.sortVersions();
 
           $log.log('Sails sent a new version.');
 
@@ -356,11 +374,11 @@ angular.module('app.core.data.service', [
         }
 
         return $http.post('/api/asset/' + asset.name, asset)
-          .then(function success(response) {
+          .then(function(response) {
             Notification.success('Asset Updated Successfully.');
 
             return response;
-          }, function error(response) {
+          }, function(response) {
             var errorTitle = 'Unable to Update Asset';
 
             showErrors(response, errorTitle);
@@ -524,9 +542,10 @@ angular.module('app.core.data.service', [
         var deferred = $q.defer();
         // Get the initial set of releases from the server.
         // XXX This will also subscribe us to future changes regarding releases
-        $sails.get('/api/version?sort=createdAt%20DESC')
+        $sails.get('/api/version')
           .success(function(data) {
             self.data = data;
+            self.sortVersions();
             deferred.resolve(true);
 
             PubSub.publish('data-change');
@@ -568,7 +587,7 @@ angular.module('app.core.data.service', [
         var versions = _
           .chain(self.data)
           .filter(function(version) {
-            var versionChannel =  _.get(version, 'channel.name');
+            var versionChannel = _.get(version, 'channel.name');
             return applicableChannels.indexOf(versionChannel) !== -1;
           })
           .value();

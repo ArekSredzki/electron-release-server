@@ -5,9 +5,12 @@ form(editable-form='', name='versionForm', onaftersave='acceptEdit()', e-role='f
     .form-horizontal
       // Version Name
       .form-group
-        label.col-md-4.control-label(for='name') Version Name
-        .col-md-7
-          | {{ version.name }}
+        label.col-md-4.control-label Version Name
+        .col-md-7 {{ version.name }}
+      // Select Channel
+      .form-group
+        label.col-md-4.control-label Channel
+        .col-md-7 {{ version.channel.name || 'Not set' }}
       // Notes
       .form-group
         label.col-md-4.control-label(for='notes') Change Notes
@@ -19,16 +22,6 @@ form(editable-form='', name='versionForm', onaftersave='acceptEdit()', e-role='f
             e-cols='60'
             )
             p {{ version.notes || 'Not set' }}
-      // Select Channel
-      .form-group
-        label.col-md-4.control-label(for='channel') Channel
-        .col-md-7
-          span(
-            editable-select='version.channel.name',
-            e-name='channel',
-            e-ng-options='o as o for o in DataService.availableChannels'
-            )
-            | {{ version.channel.name || 'Not set' }}
       
       h4 Assets
       table.table.table-bordered.table-hover.table-condensed.table-custom(ng-cloak)

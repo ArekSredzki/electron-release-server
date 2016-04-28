@@ -9,7 +9,6 @@ var ChannelService = {
   availableChannels: [
     'stable',
     'rc',
-    'unstable',
     'beta',
     'alpha'
   ]

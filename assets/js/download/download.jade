@@ -86,7 +86,7 @@
       |  all versions
     div(ng-show="vm.showAllVersions")
       .jumbotron(ng-repeat='version in vm.versions')
-        p.text-muted(am-time-ago="vm.latestReleases['64'].createdAt")
+        p.text-muted(am-time-ago="version.createdAt")
         h4 {{ version.name }} 
           label.label(
             ng-class="version.channel.name === 'stable' ? 'label-success' : 'label-info'"
