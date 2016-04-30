@@ -8,6 +8,7 @@
 var actionUtil = require('sails/lib/hooks/blueprints/actionUtil');
 var url = require('url');
 var Promise = require('bluebird');
+var semver = require('semver');
 
 module.exports = {
 
@@ -108,7 +109,7 @@ module.exports = {
                   return prevNotes;
                 }
 
-                if (!latestVersion) {
+                if (!latestVersion && semver.lt(version, newVersion.name)) {
                   latestVersion = newVersion;
                 }
 
@@ -220,13 +221,14 @@ module.exports = {
                 _.remove(newVersion.assets, function(o) {
                   return o.filetype !== '.nupkg' || !o.hash;
                 });
-                return newVersion.assets.length;
+                return newVersion.assets.length && semver.lte(version, newVersion.name);
               });
 
             if (!latestVersion) {
-              return res.status(404).send('No updates.');
+              sails.log.debug('No new versions');
+              return res.status(200).send('\n');
             }
-            
+
             sails.log.debug('Latest Windows Version', latestVersion);
 
             // Change asset name to use full download link

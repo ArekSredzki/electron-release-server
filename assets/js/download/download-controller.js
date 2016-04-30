@@ -1,15 +1,16 @@
 angular.module('app.releases', [])
   .config(['$routeProvider', function($routeProvider) {
     $routeProvider
-      .when('/releases', {
+      .when('/releases/:channel?', {
         templateUrl: 'js/download/download.html',
         controller: 'DownloadController as vm'
       });
   }])
   .controller('DownloadController', [
-    '$scope', 'PubSub', 'deviceDetector', 'DataService',
+    '$scope', '$routeParams', '$route', 'PubSub', 'deviceDetector',
+    'DataService',
     function(
-      $scope, PubSub, deviceDetector, DataService
+      $scope, $routeParams, $route, PubSub, deviceDetector, DataService
     ) {
       var self = this;
       self.showAllVersions = false;
@@ -22,15 +23,28 @@ angular.module('app.releases', [])
         self.archs = ['32', '64'];
       }
 
+      self.setChannelParams = function(channel) {
+        $route.updateParams({
+          channel: channel
+        });
+
+        return channel;
+      };
+
       self.availablePlatforms = DataService.availablePlatforms;
       self.filetypes = DataService.filetypes;
       self.availableChannels = DataService.availableChannels;
-      self.channel = self.availableChannels[0]; // stable
+
+      // Get selected channel from route or set to default (stable)
+      self.channel = $routeParams.channel || self.setChannelParams(
+        self.availableChannels[0]
+      );
 
       self.latestReleases = null;
       self.downloadUrl = null;
 
       self.getLatestReleases = function() {
+        self.setChannelParams(self.channel);
         self.latestReleases = DataService.getLatestReleases(
           self.platform,
           self.archs,

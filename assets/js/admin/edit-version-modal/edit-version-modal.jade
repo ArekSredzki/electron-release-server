@@ -21,7 +21,7 @@ form(editable-form='', name='versionForm', onaftersave='acceptEdit()', e-role='f
             e-rows='3',
             e-cols='60'
             )
-            p {{ version.notes || 'Not set' }}
+            p.release-notes {{ version.notes || 'Not set' }}
       
       h4 Assets
       table.table.table-bordered.table-hover.table-condensed.table-custom(ng-cloak)

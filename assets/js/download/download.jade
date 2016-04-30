@@ -23,10 +23,12 @@
             )
             | {{ vm.latestReleases['64'].channel }}
       .padding-top-20.text-muted
-        span(am-time-ago="vm.latestReleases['64'].createdAt")
+        span.timestamp(am-time-ago="vm.latestReleases['64'].createdAt")
       .padding-top-20(ng-show="vm.latestReleases['64'].notes")
         h4 Change Notes
-        p.text-muted(ng-bind="vm.latestReleases['64'].notes")
+        p.release-notes.text-muted(
+          ng-bind="vm.latestReleases['64'].notes"
+          )
   div(ng-if="vm.platform !== 'osx'")
     .row
       .col-md-12
@@ -47,10 +49,12 @@
               )
               | {{ vm.latestReleases['32'].channel }}
         .padding-top-20.text-muted
-          span(am-time-ago="vm.latestReleases['64'].createdAt")
+          span.timestamp(am-time-ago="vm.latestReleases['64'].createdAt")
         .padding-top-20(ng-show="vm.latestReleases['32'].notes")
           h4 Change Notes
-          p.text-muted(ng-bind-html="vm.latestReleases['32'].notes")
+          p.release-notes.text-muted(
+            ng-bind-html="vm.latestReleases['32'].notes"
+            )
       div(
         ng-if="vm.latestReleases['64']",
         ng-class="vm.latestReleases['32'] ? 'col-sm-6' : 'col-sm-12'"
@@ -66,10 +70,12 @@
               )
               | {{ vm.latestReleases['64'].channel }}
         .padding-top-20.text-muted
-          span(am-time-ago="vm.latestReleases['64'].createdAt")
+          span.timestamp(am-time-ago="vm.latestReleases['64'].createdAt")
         .padding-top-20(ng-show="vm.latestReleases['64'].notes")
           h4 Change Notes
-          p.text-muted(ng-bind-html="vm.latestReleases['64'].notes")
+          p.release-notes.text-muted(
+            ng-bind-html="vm.latestReleases['64'].notes"
+            )
 
 .row.text-center.padding-top-20(ng-if="!vm.latestReleases")
   .col-md-12
@@ -86,13 +92,13 @@
       |  all versions
     div(ng-show="vm.showAllVersions")
       .jumbotron(ng-repeat='version in vm.versions')
-        p.text-muted(am-time-ago="version.createdAt")
+        p.timestamp.text-muted(am-time-ago="version.createdAt")
         h4 {{ version.name }} 
           label.label(
             ng-class="version.channel.name === 'stable' ? 'label-success' : 'label-info'"
             )
-            | {{ version.channel.name }}            
-        p.text-muted(
+            | {{ version.channel.name }}
+        p.release-notes.text-muted(
           ng-show="version.notes"
           ng-bind-html="version.notes"
           )
