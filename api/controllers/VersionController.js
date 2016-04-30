@@ -225,8 +225,8 @@ module.exports = {
               });
 
             if (!latestVersion) {
-              sails.log.debug('No new versions');
-              return res.status(200).send('\n');
+              sails.log.debug('Version not found');
+              return res.status(500).send('Version not found');
             }
 
             sails.log.debug('Latest Windows Version', latestVersion);
