@@ -39,7 +39,7 @@ module.exports = {
     static: {
       username: 'STATIC_USERNAME',
       password: 'STATIC_PASSWORD'
-    //},
+    },
     // You can also specify an ldap connection that can be used for authentication.
     //ldap: {
     //  usernameField: 'USERNAME_FIELD', // Key at which the username is stored
