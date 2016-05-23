@@ -15,7 +15,7 @@ If you host your project on your Github and do not need a UI for your app, then 
     - Authenticates with LDAP, easy to modify to another authentication method if needed
 - :sparkles: Store assets on server disk, or Amazon S3 (with minor modifications)
     - Use pretty much any database for persistence, thanks to [Sails](http://sailsjs.org) & [Waterline](http://waterlinejs.org)
-- :sparkles: Simple but powerful download urls
+- :sparkles: Simple but powerful download urls(**NOTE:** when no assets are uploaded, server returns `404` by default):
     - `/download/latest`
     - `/download/latest/:os`
     - `/download/:version`
@@ -23,9 +23,10 @@ If you host your project on your Github and do not need a UI for your app, then 
     - `/download/channel/:channel`
     - `/download/channel/:channel/:os`
 - :sparkles: Support pre-release channels (`beta`, `alpha`, ...)
-- :sparkles: Auto-updates with [Squirrel](https://github.com/Squirrel)
-    - For Mac using `/update?version=<x.x.x>&platform=osx`
-    - For Windows using Squirrel.Windows and Nugets packages
+- :sparkles: Auto-updates with [Squirrel](https://github.com/Squirrel): 
+    - Update URLs provided: `/update/:platform/:version[/:channel]`
+    - Mac uses `*.dmg` and `*.zip`
+    - Windows uses `*.exe` and `*.nuget`
 - :sparkles: Serve the perfect type of assets: `.zip` for Squirrel.Mac, `.nupkg` for Squirrel.Windows, `.dmg` for Mac users, ...
 - :sparkles: Release notes endpoint
     - `/notes/:version`
