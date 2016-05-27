@@ -15,6 +15,17 @@ Electron Release Server provides a variety of urls to access release assets.
 #### Specific channel for specific platform:
 `http://download.myapp.com/download/channel/beta/osx`
 
+## Windows
+`http://download.myapp.com/download/windows_32`
+
+`http://download.myapp.com/download/windows_64`
+
+## Linux
+
+`http://download.myapp.com/download/linux_32`
+
+`http://download.myapp.com/download/linux_64`
+
 ## Update endpoints
 These are detailed separately for [OSX](update-osx.md) and [Windows](update-windows.md).
 
