@@ -80,7 +80,7 @@ After completeing this section, you should now have
 Originally described [here](https://github.com/ravitej91/sails-pg-session)
 
 ```bash
-psql electron_release_server_sessions < ./sql/sails-pg-session-support.sql
+psql electron_release_server_sessions < ./sql/sails-pg-session-support.sql postgres
 ```
 > Hint: Use the same **process** as mentioned above to generate the session & JWT secret keys stored in `config/local.js`
 
