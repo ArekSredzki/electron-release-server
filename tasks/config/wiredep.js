@@ -4,7 +4,7 @@ module.exports = function(grunt) {
             // Point to the files that should be updated when
             // you run 'grunt wiredep'
             src: [
-                'views/**/*.jade',   // .jade support...
+                'views/**/*.pug',   // .pug support...
             ],
 
             // We need this line so injection is correct path
