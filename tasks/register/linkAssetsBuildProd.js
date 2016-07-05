@@ -3,8 +3,8 @@ module.exports = function (grunt) {
 		'sails-linker:prodJsRelative',
 		'sails-linker:prodStylesRelative',
 		'sails-linker:devTpl',
-		'sails-linker:prodJsRelativeJade',
-		'sails-linker:prodStylesRelativeJade',
-		'sails-linker:devTplJade'
+		'sails-linker:prodJsRelativePug',
+		'sails-linker:prodStylesRelativePug',
+		'sails-linker:devTplPug'
 	]);
 };
