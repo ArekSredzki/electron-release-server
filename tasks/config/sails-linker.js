@@ -147,7 +147,7 @@ module.exports = function(grunt) {
 			}
 		},
 
-		devJsJade: {
+		devJsPug: {
 			options: {
 				startTag: '// SCRIPTS',
 				endTag: '// SCRIPTS END',
@@ -155,36 +155,11 @@ module.exports = function(grunt) {
 				appRoot: '.tmp/public'
 			},
 			files: {
-				'views/**/*.jade': require('../pipeline').jsFilesToInject
+				'views/**/*.pug': require('../pipeline').jsFilesToInject
 			}
 		},
 
-		devJsRelativeJade: {
-			options: {
-				startTag: '// SCRIPTS',
-				endTag: '// SCRIPTS END',
-				fileTmpl: 'script(src="%s")',
-				appRoot: '.tmp/public',
-				relative: true
-			},
-			files: {
-				'views/**/*.jade': require('../pipeline').jsFilesToInject
-			}
-		},
-
-		prodJsJade: {
-			options: {
-				startTag: '// SCRIPTS',
-				endTag: '// SCRIPTS END',
-				fileTmpl: 'script(src="%s")',
-				appRoot: '.tmp/public'
-			},
-			files: {
-				'views/**/*.jade': ['.tmp/public/min/production.min.js']
-			}
-		},
-
-		prodJsRelativeJade: {
+		devJsRelativePug: {
 			options: {
 				startTag: '// SCRIPTS',
 				endTag: '// SCRIPTS END',
@@ -193,11 +168,36 @@ module.exports = function(grunt) {
 				relative: true
 			},
 			files: {
-				'views/**/*.jade': ['.tmp/public/min/production.min.js']
+				'views/**/*.pug': require('../pipeline').jsFilesToInject
 			}
 		},
 
-		devStylesJade: {
+		prodJsPug: {
+			options: {
+				startTag: '// SCRIPTS',
+				endTag: '// SCRIPTS END',
+				fileTmpl: 'script(src="%s")',
+				appRoot: '.tmp/public'
+			},
+			files: {
+				'views/**/*.pug': ['.tmp/public/min/production.min.js']
+			}
+		},
+
+		prodJsRelativePug: {
+			options: {
+				startTag: '// SCRIPTS',
+				endTag: '// SCRIPTS END',
+				fileTmpl: 'script(src="%s")',
+				appRoot: '.tmp/public',
+				relative: true
+			},
+			files: {
+				'views/**/*.pug': ['.tmp/public/min/production.min.js']
+			}
+		},
+
+		devStylesPug: {
 			options: {
 				startTag: '// STYLES',
 				endTag: '// STYLES END',
@@ -206,11 +206,11 @@ module.exports = function(grunt) {
 			},
 
 			files: {
-				'views/**/*.jade': require('../pipeline').cssFilesToInject
+				'views/**/*.pug': require('../pipeline').cssFilesToInject
 			}
 		},
 
-		devStylesRelativeJade: {
+		devStylesRelativePug: {
 			options: {
 				startTag: '// STYLES',
 				endTag: '// STYLES END',
@@ -220,11 +220,11 @@ module.exports = function(grunt) {
 			},
 
 			files: {
-				'views/**/*.jade': require('../pipeline').cssFilesToInject
+				'views/**/*.pug': require('../pipeline').cssFilesToInject
 			}
 		},
 
-		prodStylesJade: {
+		prodStylesPug: {
 			options: {
 				startTag: '// STYLES',
 				endTag: '// STYLES END',
@@ -232,11 +232,11 @@ module.exports = function(grunt) {
 				appRoot: '.tmp/public'
 			},
 			files: {
-				'views/**/*.jade': ['.tmp/public/min/production.min.css']
+				'views/**/*.pug': ['.tmp/public/min/production.min.css']
 			}
 		},
 
-		prodStylesRelativeJade: {
+		prodStylesRelativePug: {
 			options: {
 				startTag: '// STYLES',
 				endTag: '// STYLES END',
@@ -245,12 +245,12 @@ module.exports = function(grunt) {
 				relative: true
 			},
 			files: {
-				'views/**/*.jade': ['.tmp/public/min/production.min.css']
+				'views/**/*.pug': ['.tmp/public/min/production.min.css']
 			}
 		},
 
 		// Bring in JST template object
-		devTplJade: {
+		devTplPug: {
 			options: {
 				startTag: '// TEMPLATES',
 				endTag: '// TEMPLATES END',
@@ -258,7 +258,7 @@ module.exports = function(grunt) {
 				appRoot: '.tmp/public'
 			},
 			files: {
-				'views/**/*.jade': ['.tmp/public/jst.js']
+				'views/**/*.pug': ['.tmp/public/jst.js']
 			}
 		}
 	});

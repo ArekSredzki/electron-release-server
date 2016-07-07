@@ -36,7 +36,7 @@ var jsFilesToInject = [
 // (uses Grunt-style wildcard/glob/splat expressions)
 //
 // By default, Sails uses JST templates and precompiles them into
-// functions for you.  If you want to use jade, handlebars, dust, etc.,
+// functions for you.  If you want to use pug, handlebars, dust, etc.,
 // with the linker, no problem-- you'll just want to make sure the precompiled
 // templates get spit out to the same file.  Be sure and check out `tasks/README.md`
 // for information on customizing and installing new tasks.

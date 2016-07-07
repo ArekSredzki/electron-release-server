@@ -21,7 +21,7 @@ module.exports.views = {
   * Sails+Express supports all view engines which implement TJ Holowaychuk's  *
   * `consolidate.js`, including, but not limited to:                          *
   *                                                                           *
-  * ejs, jade, handlebars, mustache underscore, hogan, haml, haml-coffee,     *
+  * ejs, pug, handlebars, mustache underscore, hogan, haml, haml-coffee,     *
   * dust atpl, eco, ect, jazz, jqtpl, JUST, liquor, QEJS, swig, templayed,    *
   * toffee, walrus, & whiskers                                                *
   *                                                                           *
@@ -30,7 +30,11 @@ module.exports.views = {
   *                                                                           *
   ****************************************************************************/
 
-  engine: 'jade',
+  engine: {
+    name: 'jade',
+    module: 'pug',
+    ext: 'pug'
+  },
   layout: false
 
 };

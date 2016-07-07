@@ -34,7 +34,7 @@ Runs the `build` task (`tasks/register/build.js`).
 Runs the `buildProd` task (`tasks/register/buildProd.js`).
 
 
-### Can I customize this for SASS, Angular, client-side Jade templates, etc?
+### Can I customize this for SASS, Angular, client-side Pug templates, etc?
 
 You can modify, omit, or replace any of these Grunt tasks to fit your requirements. You can also add your own Grunt tasks- just add a `someTask.js` file in the `grunt/config` directory to configure the new task, then register it with the appropriate parent task(s) (see files in `grunt/register/*.js`).
 
