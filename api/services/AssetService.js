@@ -16,7 +16,7 @@ var AssetService = {};
 AssetService.serveFile = function(req, res, asset) {
   var fileAdapter = SkipperDisk();
   // Sent file properties in header
-  res.setHeader('Content-disposition', 'attachment; filename=' + asset.name);
+  res.setHeader('Content-disposition', 'attachment; filename="' + asset.name + '"');
   res.setHeader('Content-type', mime.lookup(asset.fd));
 
   // Stream the file to the user
