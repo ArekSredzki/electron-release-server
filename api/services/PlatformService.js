@@ -94,11 +94,26 @@ PlatformService.detect = function(platformName, strictMatch) {
   }
 
   var result = [];
-  _.forEach(suffixes, function (suffix) {
+  _.forEach(suffixes, function(suffix) {
     result.push(prefix + '_' + suffix);
   });
 
   return result;
 };
+
+PlatformService.sanitize = function(platforms) {
+  var self = this;
+  return _.map(platforms, function(platform) {
+    switch (platform) {
+      case self.OSX:
+      case self.OSX_32:
+        platform = self.OSX_64;
+        break;
+      default:
+    }
+
+    return platform;
+  });
+}
 
 module.exports = PlatformService;

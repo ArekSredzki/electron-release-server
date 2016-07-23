@@ -99,7 +99,7 @@ module.exports = {
               newerVersions,
               function(prevNotes, newVersion) {
 
-                newVersion.assets = _.filter(newVersion.assets, function (asset) {
+                newVersion.assets = _.filter(newVersion.assets, function(asset) {
                   return asset.filetype === '.zip';
                 });
 
@@ -221,7 +221,9 @@ module.exports = {
                 _.remove(newVersion.assets, function(o) {
                   return o.filetype !== '.nupkg' || !o.hash;
                 });
-                return newVersion.assets.length && semver.lte(version, newVersion.name);
+                return newVersion.assets.length && semver.lte(
+                  version, newVersion.name
+                );
               });
 
             if (!latestVersion) {
@@ -233,8 +235,11 @@ module.exports = {
 
             // Change asset name to use full download link
             assets = _.map(latestVersion.assets, function(asset) {
-              asset.name = url.resolve(sails.config.appUrl,
-                '/download/' + latestVersion.name + '/' + asset.name);
+              asset.name = url.resolve(
+                sails.config.appUrl,
+                '/download/' + asset.platform + '/' + latestVersion.name + '/' +
+                latestVersion.channel + '/' + asset.name
+              );
 
               return asset;
             });

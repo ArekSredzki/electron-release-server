@@ -22,7 +22,8 @@ AssetService.serveFile = function(req, res, asset) {
   // Stream the file to the user
   var fileStream = fileAdapter.read(asset.fd)
     .on('error', function(err) {
-      throw err;
+      sails.log.error('An error occurred while accessing update asset.', err);
+      res.serverError('An error occurred while accessing update asset.');
     })
     .on('end', function complete() {
       // After we have sent the file, log analytics, failures experienced at this

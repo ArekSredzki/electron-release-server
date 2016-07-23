@@ -31,7 +31,8 @@ module.exports.policies = {
   AssetController: {
     create: 'authToken',
     update: 'authToken',
-    delete: 'authToken'
+    delete: 'authToken',
+    download: 'noCache'
   },
 
   ChannelController: {
@@ -43,6 +44,10 @@ module.exports.policies = {
   VersionController: {
     create: 'authToken',
     update: 'authToken',
-    delete: 'authToken'
+    delete: 'authToken',
+    redirect: 'noCache',
+    general: 'noCache',
+    windows: 'noCache',
+    releaseNotes: 'noCache'
   }
 };

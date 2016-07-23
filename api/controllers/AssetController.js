@@ -25,9 +25,13 @@ module.exports = {
   /**
    * Download a release artifact
    *
+   * Note: if a filename is specified, nothing but the filetype is used.
+   * This is because Squirrel.Windows does a poor job of parsing the filename,
+   * and so we must fake the filenames of x32 and x64 versions to be the same.
+   *
    * (GET /download/channel/:channel/:platform?)
    * (GET /download/version/:version/:platform?)
-   * (GET /download/:version/:filename)
+   * (GET /download/:platform/:version/:filename)
    * (GET /download/:platform?)
    */
   download: function(req, res) {
@@ -46,28 +50,30 @@ module.exports = {
     // Normalize filetype by prepending with period
     if (_.isString(filetype) && filetype[0] !== '.') {
       filetype = '.' + filetype;
+    } else if (filename) {
+      filetype = filename.substr(filename.lastIndexOf('.'));
     }
 
-    // When serving a specific file, platform is not required
-    if (!filename) {
-      // Detect platform from useragent
+    // Detect platform from useragent
+    if (!platforms) {
+      platforms = PlatformService.detectFromRequest(req);
+
       if (!platforms) {
-        platforms = PlatformService.detectFromRequest(req);
-
-        if (!platforms) {
-          return res.serverError('No platform specified and impossible to detect one');
-        }
+        return res.serverError(
+          'No platform specified and detecting one was unsuccessful.'
+        );
       }
-
-      channel = channel || 'stable';
     } else {
-      platforms = undefined;
+      platforms = PlatformService.sanitize(platforms);
+    }
+
+    if (!version) {
+      channel = channel || 'stable';
     }
 
     var assetPromise = new Promise(function(resolve, reject) {
         var assetOptions = UtilityService.getTruthyObject({
           platform: platforms,
-          name: filename,
           filetype: filetype
         });
 
@@ -95,8 +101,8 @@ module.exports = {
                 return resolve();
               }
 
-              // Sorting filename in ascending order prioritizes other files over
-              // zip archives is both are available and matched.
+              // Sorting filename in ascending order prioritizes other files
+              // over zip archives is both are available and matched.
               return resolve(_.orderBy(
                 version.assets, ['filetype', 'createdAt'], ['asc', 'desc']
               )[0]);
@@ -162,13 +168,17 @@ module.exports = {
       return res.badRequest('Invalid version provided.');
     }
 
+    // Set upload request timeout to 10 minutes
+    req.setTimeout(10 * 60 * 1000);
+
     req.file('file').upload(sails.config.files,
       function whenDone(err, uploadedFiles) {
         if (err) {
           return res.negotiate(err);
         }
 
-        // If an unexpected number of files were uploaded, respond with an error.
+        // If an unexpected number of files were uploaded, respond with an
+        // error.
         if (uploadedFiles.length !== 1) {
           return res.badRequest('No file was uploaded');
         }
@@ -182,7 +192,8 @@ module.exports = {
         var hashPromise;
 
         if (fileExt === '.nupkg') {
-          // Calculate the hash of the file, as it is necessary for windows files
+          // Calculate the hash of the file, as it is necessary for windows
+          // files
           hashPromise = AssetService.getHash(uploadedFile.fd);
         } else {
           hashPromise = Promise.resolve('');
@@ -206,8 +217,8 @@ module.exports = {
                 // validation error is encountered, w/ validation info.
                 if (err) return res.negotiate(err);
 
-                // If we have the pubsub hook, use the model class's publish method
-                // to notify all subscribers about the created item
+                // If we have the pubsub hook, use the model class's publish
+                // method to notify all subscribers about the created item.
                 if (req._sails.hooks.pubsub) {
                   if (req.isSocket) {
                     Asset.subscribe(req, newInstance);
@@ -231,7 +242,9 @@ module.exports = {
     query.populate('version');
     query
       .then(function foundRecord(record) {
-        if (!record) return res.notFound('No record found with the specified `name`.');
+        if (!record) return res.notFound(
+          'No record found with the specified `name`.'
+        );
 
         // Delete the file & remove from db
         return Promise.join(
