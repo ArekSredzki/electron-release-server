@@ -298,7 +298,9 @@ module.exports = {
     query.populate('assets');
     query.exec(function foundRecord(err, record) {
       if (err) return res.serverError(err);
-      if (!record) return res.notFound('No record found with the specified `name`.');
+      if (!record) return res.notFound(
+        'No record found with the specified `name`.'
+      );
 
       var deletePromises = _.map(record.assets, function(asset) {
         return Promise.join(
