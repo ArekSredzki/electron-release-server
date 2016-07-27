@@ -29,6 +29,7 @@ module.exports.routes = {
   'GET /download/channel/:channel/:platform?': 'AssetController.download',
   'GET /download/version/:version/:platform?': 'AssetController.download',
   'GET /download/:platform/:version/:filename': 'AssetController.download',
+  'GET /download/:platform/:version/:channel/:filename': 'AssetController.download',
   'GET /download/:platform?': 'AssetController.download',
 
   'GET /update': 'VersionController.redirect',

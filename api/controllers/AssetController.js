@@ -31,6 +31,7 @@ module.exports = {
    *
    * (GET /download/channel/:channel/:platform?)
    * (GET /download/version/:version/:platform?)
+   * (GET /download/:platform/:version/:channel/:filename)
    * (GET /download/:platform/:version/:filename)
    * (GET /download/:platform?)
    */
