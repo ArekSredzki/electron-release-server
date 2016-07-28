@@ -69,7 +69,7 @@ angular.module('app.releases', [])
         }
 
         self.downloadUrl = '/download/' + (asset.version || versionName) +
-          '/' + asset.name;
+          '/' + asset.platform + '/' + asset.name;
       };
 
       $scope.$on('$destroy', function() {

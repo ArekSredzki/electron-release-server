@@ -5,6 +5,8 @@
  */
 
 var mime = require('mime');
+var path = require('path');
+
 var fsx = require('fs-extra');
 var crypto = require('crypto');
 var Promise = require('bluebird');
@@ -14,21 +16,24 @@ var SkipperDisk = require('skipper-disk');
 var AssetService = {};
 
 AssetService.serveFile = function(req, res, asset) {
-  var fileAdapter = SkipperDisk();
-  // Sent file properties in header
-  res.setHeader('Content-Disposition', 'attachment; filename="' + asset.name + '"');
-  res.setHeader('Content-Length', asset.size);
-  res.setHeader('Content-Type', mime.lookup(asset.fd));
-
   // Stream the file to the user
-  var fileStream = fileAdapter.read(asset.fd)
+  var fileStream = fsx.createReadStream(asset.fd)
     .on('error', function(err) {
-      sails.log.error('An error occurred while accessing update asset.', err);
-      res.serverError('An error occurred while accessing update asset.');
+      res.serverError('An error occurred while accessing asset.', err);
+      sails.log.error('Unable to access asset:', asset.fd);
+    })
+    .on('open', function() {
+      // Send file properties in header
+      res.setHeader(
+        'Content-Disposition', 'attachment; filename="' + asset.name + '"'
+      );
+      res.setHeader('Content-Length', asset.size);
+      res.setHeader('Content-Type', mime.lookup(asset.fd));
     })
     .on('end', function complete() {
-      // After we have sent the file, log analytics, failures experienced at this
-      // point should only be handled internally (do not use the res object).
+      // After we have sent the file, log analytics, failures experienced at
+      // this point should only be handled internally (do not use the res
+      // object).
       //
       // Atomically increment the download count for analytics purposes
       //
@@ -38,18 +43,22 @@ AssetService.serveFile = function(req, res, asset) {
           'UPDATE asset SET download_count = download_count + 1 WHERE name = \'' + asset.name + '\';',
           function(err) {
             if (err) {
-              sails.log.error('An error occurred while logging asset download', err);
+              sails.log.error(
+                'An error occurred while logging asset download', err
+              );
             }
           });
       } else {
         asset.download_count++;
 
-        Asset.update( {
-          name: asset.name
-        }, asset)
-        .exec(function (err) {
+        Asset.update({
+            name: asset.name
+          }, asset)
+          .exec(function(err) {
             if (err) {
-              sails.log.error('An error occurred while logging asset download', err);
+              sails.log.error(
+                'An error occurred while logging asset download', err
+              );
             }
           });
       }
@@ -66,12 +75,10 @@ AssetService.serveFile = function(req, res, asset) {
 AssetService.getHash = function(fd) {
   return new Promise(function(resolve, reject) {
 
-    var fileAdapter = SkipperDisk();
-
     var hash = crypto.createHash('sha1');
     hash.setEncoding('hex');
 
-    var fileStream = fileAdapter.read(fd)
+    var fileStream = fsx.createReadStream(asset.fd)
       .on('error', function(err) {
         reject(err);
       })

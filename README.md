@@ -17,16 +17,17 @@ If you host your project on your Github **and** do not need a UI for your app, t
     - Use pretty much any database for persistence, thanks to [Sails](http://sailsjs.org) & [Waterline](http://waterlinejs.org)
 - :sparkles: Simple but powerful download urls (**NOTE:** when no assets are uploaded, server returns `404` by default):
     - `/download/latest`
-    - `/download/latest/:os`
-    - `/download/:version`
-    - `/download/:version/:os`
-    - `/download/channel/:channel`
-    - `/download/channel/:channel/:os`
+    - `/download/latest/:platform`
+    - `/download/:version
+    - `/download/:version/:platform
+    - `/download/:version/:platform/:filename
+    - `/download/channel/:channel
+    - `/download/channel/:channel/:platform
 - :sparkles: Support pre-release channels (`beta`, `alpha`, ...)
 - :sparkles: Auto-updates with [Squirrel](https://github.com/Squirrel):
     - Update URLs provided: `/update/:platform/:version[/:channel]`
     - Mac uses `*.dmg` and `*.zip`
-    - Windows uses `*.exe` and `*.nuget`
+    - Windows uses `*.exe` and `*.nupkg`
 - :sparkles: Serve the perfect type of assets: `.zip` for Squirrel.Mac, `.nupkg` for Squirrel.Windows, `.dmg` for Mac users, ...
 - :sparkles: Release notes endpoint
     - `/notes/:version`

@@ -3,13 +3,17 @@
 Electron Release Server provides a variety of urls to access release assets.
 
 #### Latest version for detected platform:
-`http://download.myapp.com/download/latest` or `http://download.myapp.com/download`
+`http://download.myapp.com/download/latest`
 #### Latest version for specific platform:
-`http://download.myapp.com/download/latest/osx` or `http://download.myapp.com/download/osx`
+`http://download.myapp.com/download/latest/osx`
 #### Specific version for detected platform:
 `http://download.myapp.com/download/1.1.0`
 #### Specific version for a specific platform:
 `http://download.myapp.com/download/1.2.0/osx`
+#### Specific file for a version for a specific platform:
+_Note that only the file extension is used._
+
+`http://download.myapp.com/download/1.2.0/windows_64/MyApp-0.1.1-full.nupkg`
 #### Specific channel:
 `http://download.myapp.com/download/channel/beta`
 #### Specific channel for specific platform:
