@@ -1,5 +1,5 @@
 # Who is using it?
 
-Using Electron Release Server for your application? Post a Pull-Request!
+Using Electron Release Server for your application? Create a Pull-Request!
 
 - Tesla Motors (internal use)

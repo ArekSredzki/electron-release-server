@@ -11,7 +11,7 @@ Electron Release Server provides a variety of urls to access release assets.
 #### Specific version for a specific platform:
 `http://download.myapp.com/download/1.2.0/osx`
 #### Specific file for a version for a specific platform:
-_Note that only the file extension is used._
+> Note that only the file extension is used.
 
 `http://download.myapp.com/download/1.2.0/windows_64/MyApp-0.1.1-full.nupkg`
 #### Specific channel:
@@ -19,13 +19,12 @@ _Note that only the file extension is used._
 #### Specific channel for specific platform:
 `http://download.myapp.com/download/channel/beta/osx`
 
-## Windows
+### Windows
 `http://download.myapp.com/download/windows_32`
 
 `http://download.myapp.com/download/windows_64`
 
-## Linux
-
+### Linux
 `http://download.myapp.com/download/linux_32`
 
 `http://download.myapp.com/download/linux_64`
@@ -33,5 +32,8 @@ _Note that only the file extension is used._
 ## Update endpoints
 These are detailed separately for [OSX](update-osx.md) and [Windows](update-windows.md).
 
-## Metadata endpoints
+## Notes endpoint
+`http://download.myapp.com/notes/:version`
+
+## Data endpoints
 These are detailed separately [here](api.md).

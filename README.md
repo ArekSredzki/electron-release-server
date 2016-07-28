@@ -18,11 +18,11 @@ If you host your project on your Github **and** do not need a UI for your app, t
 - :sparkles: Simple but powerful download urls (**NOTE:** when no assets are uploaded, server returns `404` by default):
     - `/download/latest`
     - `/download/latest/:platform`
-    - `/download/:version
-    - `/download/:version/:platform
-    - `/download/:version/:platform/:filename
-    - `/download/channel/:channel
-    - `/download/channel/:channel/:platform
+    - `/download/:version`
+    - `/download/:version/:platform`
+    - `/download/:version/:platform/:filename`
+    - `/download/channel/:channel`
+    - `/download/channel/:channel/:platform`
 - :sparkles: Support pre-release channels (`beta`, `alpha`, ...)
 - :sparkles: Auto-updates with [Squirrel](https://github.com/Squirrel):
     - Update URLs provided: `/update/:platform/:version[/:channel]`
