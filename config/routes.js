@@ -26,11 +26,9 @@ module.exports.routes = {
     view: 'homepage'
   },
 
+  'GET /download/latest/:platform?': 'AssetController.download',
+  'GET /download/:version/:platform?/:filename?': 'AssetController.download',
   'GET /download/channel/:channel/:platform?': 'AssetController.download',
-  'GET /download/version/:version/:platform?': 'AssetController.download',
-  'GET /download/:platform/:version/:filename': 'AssetController.download',
-  'GET /download/:platform/:version/:channel/:filename': 'AssetController.download',
-  'GET /download/:platform?': 'AssetController.download',
 
   'GET /update': 'VersionController.redirect',
   'GET /update/:platform/:version': 'VersionController.general',

@@ -1,7 +1,7 @@
 doctype html
 html
   head
-    title Unexpected Error Occurred
+    title Page not found
 
     // STYLES
     link(rel="stylesheet", href="/min/production.min.css")
@@ -12,7 +12,7 @@ html
         .container-fluid
           .navbar-header
             a.pull-left(href='/')
-              img.navbar-logo(src='images/logo.svg')
+              img.navbar-logo(src='/images/logo.svg')
             a.navbar-brand(href='/') Electron App
           .collapse.navbar-collapse
             ul.nav.navbar-nav
@@ -24,24 +24,8 @@ html
       .jumbotron
         h1
           span.glyphicon.glyphicon-fire.red
-          |  500 
+          |  404
         p.lead
-          | The web server is returning an internal error
-          | .
-        a.btn.btn-default.btn-lg.text-center(href='javascript:document.location.reload(true);')
-          span.green Try This Page Again
-    .container
-      .body-content
-        .row
-          .col-md-6
-            h2 What happened?
-            p.lead
-              | A 500 error status implies there is a problem with the web server's software causing it to malfunction.
-          .col-md-6
-            h2 What can I do?
-            p.lead If you're a site vistor
-            p
-              | Nothing you can do at the moment. If you need immediate assistance, please send us an email instead. We apologize for any inconvenience.
-            p.lead If you're the site owner
-            p
-              | This error can only be fixed by server admins, please contact your website provider.
+          | The requested page is not available.
+        a.btn.btn-default.btn-lg.text-center(href='/')
+          span.green Go Home
