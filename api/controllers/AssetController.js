@@ -29,11 +29,9 @@ module.exports = {
    * This is because Squirrel.Windows does a poor job of parsing the filename,
    * and so we must fake the filenames of x32 and x64 versions to be the same.
    *
-   * (GET /download/channel/:channel/:platform?)
-   * (GET /download/version/:version/:platform?)
-   * (GET /download/:platform/:version/:channel/:filename)
-   * (GET /download/:platform/:version/:filename)
-   * (GET /download/:platform?)
+   * (GET /download/latest/:platform?': 'AssetController.download')
+   * (GET /download/:version/:platform?/:filename?': 'AssetController.download')
+   * (GET /download/channel/:channel/:platform?': 'AssetController.download')
    */
   download: function(req, res) {
     var channel = req.params.channel;
