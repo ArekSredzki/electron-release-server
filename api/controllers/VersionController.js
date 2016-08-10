@@ -70,19 +70,19 @@ module.exports = {
         sails.log.debug('Applicable Channels', applicableChannels);
 
         if (currentVersion) {
-          createdAtFilter = {
-            '>': currentVersion.createdAt
+          nameFilter = {
+            '>': currentVersion.name
           };
         } else {
           sails.log.debug('The specified `version` does not exist');
         }
 
-        sails.log.debug('Time Filter', createdAtFilter);
+        sails.log.debug('Name Filter', nameFilter);
 
         return Version
           .find(UtilityService.getTruthyObject({
             channel: applicableChannels,
-            createdAt: createdAtFilter
+            name: nameFilter
           }))
           .populate('assets', {
             platform: platforms
@@ -193,19 +193,19 @@ module.exports = {
         sails.log.debug('Applicable Channels', applicableChannels);
 
         if (currentVersion) {
-          createdAtFilter = {
-            '>=': currentVersion.createdAt
+          nameFilter = {
+            '>=': currentVersion.name
           };
         } else {
           sails.log.debug('The specified `version` does not exist');
         }
 
-        sails.log.debug('Time Filter', createdAtFilter);
+        sails.log.debug('Name Filter', createdAtFilter);
 
         return Version
           .find(UtilityService.getTruthyObject({
             channel: applicableChannels,
-            createdAt: createdAtFilter
+            name: nameFilter
           }))
           .populate('assets', {
             platform: platforms
