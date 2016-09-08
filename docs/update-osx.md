@@ -9,12 +9,12 @@ This url requires different parameters to return a correct version: `version` an
 
 ### Electron Example
 
-For example with Electron's `auto-updater` module:
+For example with Electron's [`autoUpdater`](https://github.com/electron/electron/blob/master/docs/api/auto-updater.md) module:
 
 ```js
 var app = require('app');
 var os = require('os');
-var autoUpdater = require('auto-updater');
+var autoUpdater = require('electron').autoUpdater;
 
 var platform = os.platform() + '_' + os.arch();  // usually returns darwin_64
 var version = app.getVersion();
