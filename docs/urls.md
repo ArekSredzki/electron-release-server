@@ -32,6 +32,8 @@ Electron Release Server provides a variety of urls to access release assets.
 ## Update endpoints
 These are detailed separately for [OSX](update-osx.md) and [Windows](update-windows.md).
 
+When an update is not available, the update endpoints will return a 204 response. This happens when the version you are requesting is newer than or equal to the last available version on the server, but also when the appropriate file type is not present for Squirrel to be able to update your application (`.zip` for Squirrel.Mac, `.nupkg` for Squirrel.Windows).
+
 ## Notes endpoint
 `http://download.myapp.com/notes/:version`
 

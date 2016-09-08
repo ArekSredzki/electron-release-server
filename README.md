@@ -32,6 +32,8 @@ If you host your project on your Github **and** do not need a UI for your app, t
 - :sparkles: Release notes endpoint
     - `/notes/:version`
 
+**NOTE:** if you don't provide the appropriate type of file for Squirrel you won't be able to update your app since the update endpoint will not return a JSON. (`.zip` for Squirrel.Mac, `.nupkg` for Squirrel.Windows).
+
 ## Deploy it / Start it
 
 [Follow our guide to deploy Electron Release Server](docs/deploy.md).
