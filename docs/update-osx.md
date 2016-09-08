@@ -16,7 +16,7 @@ var app = require('app');
 var os = require('os');
 var autoUpdater = require('auto-updater');
 
-var platform = os.platform() + '_' + os.arch(); // usually returns darwin_64
+var platform = os.platform() + '_' + os.arch();  // usually returns darwin_64
 var version = app.getVersion();
 
 autoUpdater.setFeedURL('http://download.myapp.com/update/'+platform+'/'+version);
