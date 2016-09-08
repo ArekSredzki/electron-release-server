@@ -3,7 +3,7 @@ Electron Release Server provides a backend for the [Squirrel.Mac](https://github
 
 ### Endpoint
 
-The endpoint for **Squirrel.Mac** is `http://download.myapp.com/update/osx/:currentVersion`.
+The endpoint for **Squirrel.Mac** is `http://download.myapp.com/update/osx/:currentVersion`. The server is smart enough to also match the platform to `darwin`,`darwin_64`,`macos`, and `mac`.
 
 This url requires different parameters to return a correct version: `version` and `platform`.
 
@@ -16,7 +16,7 @@ var app = require('app');
 var os = require('os');
 var autoUpdater = require('auto-updater');
 
-var platform = os.platform() + '_' + os.arch();
+var platform = os.platform() + '_' + os.arch(); // usually returns darwin_64
 var version = app.getVersion();
 
 autoUpdater.setFeedURL('http://download.myapp.com/update/'+platform+'/'+version);
