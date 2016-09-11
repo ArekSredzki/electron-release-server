@@ -1,0 +1,23 @@
+version: '2'
+services:
+  web:
+    build: .
+    environment:
+      APP_USERNAME: username
+      APP_PASSWORD: password
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USERNAME: releaseserver
+      DB_NAME: releaseserver
+      DB_PASSWORD: secret
+      SECRET: ${SECRET}
+      LOG_LEVEL: debug
+    depends_on:
+      - db
+    ports:
+      - "5000:80"
+  db:
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: secret
+      POSTGRES_USER: releaseserver
