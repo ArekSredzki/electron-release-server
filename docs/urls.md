@@ -41,4 +41,4 @@ When an update is not available, the update endpoints will return a 204 response
 These are detailed separately [here](api.md).
 
 ## About using HTTPS
-If you are using HTTPS on your server be sure to configure the base URL in `config/local.js` because by default the download URLs will come from HTTP even if the update URL has been called from HTTPS.
+If you are using HTTPS on your server be sure to configure the base URL (`appUrl`) in `config/local.js` to use it as well since by default the download URLs will come from HTTP even if the update URL has been called from HTTPS.
