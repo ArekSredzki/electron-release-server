@@ -21,6 +21,7 @@ module.exports = {
       password: process.env['APP_PASSWORD']
     }
   },
+  appUrl: process.env['APP_URL'],
   connections: {
     postgresql: {
       adapter: 'sails-postgresql',

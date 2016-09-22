@@ -12,6 +12,7 @@ services:
       DB_PASSWORD: secret
       SECRET: ${SECRET}
       LOG_LEVEL: debug
+      APP_URL: 'localhost:5000'
     depends_on:
       - db
     ports:
