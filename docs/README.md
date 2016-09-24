@@ -12,6 +12,7 @@ There are questions that are asked quite often, [check this out before creating 
 - [Available URLs](urls.md)
 - [OS X Auto-Updater](update-osx.md)
 - [Windows Auto-Updater](update-windows.md)
+- [Docker](docker.md)
 - (Coming soon) [Use it as a node module](module.md)
 
 Using Electron Release Server for your application? [Add it to the list](using-it.md).
