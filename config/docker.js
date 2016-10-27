@@ -35,7 +35,7 @@ module.exports = {
   jwt: {
     // Recommended: 63 random alpha-numeric characters
     // Generate using: https://www.grc.com/passwords.htm
-    token_secret: process.env['SECRET'],
+    token_secret: process.env['TOKEN_SECRET'],
   },
   files: {
     dirname: '/tmp/',
@@ -43,7 +43,7 @@ module.exports = {
   session: {
     // Recommended: 63 random alpha-numeric characters
     // Generate using: https://www.grc.com/passwords.htm
-    token_secret: process.env['SECRET'],
+    token_secret: process.env['TOKEN_SECRET'],
     database: process.env['DB_NAME'],
     host: process.env['DB_HOST'],
     user: process.env['DB_USERNAME'],

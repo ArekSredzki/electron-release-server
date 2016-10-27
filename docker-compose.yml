@@ -10,7 +10,7 @@ services:
       DB_USERNAME: releaseserver
       DB_NAME: releaseserver
       DB_PASSWORD: secret
-      SECRET: ${SECRET}
+      TOKEN_SECRET: change_me_in_production
       LOG_LEVEL: debug
       APP_URL: 'localhost:5000'
     depends_on:
