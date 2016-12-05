@@ -48,3 +48,12 @@ form(editable-form='', name='versionForm', onaftersave='acceptEdit()', e-role='f
     div(ng-if='versionForm.$visible')
       button.btn.btn-warning(type='submit', ng-disable='versionForm.$waiting') Accept Changes
       button.btn.btn-danger(type='button', ng-click='versionForm.$cancel()') Cancel
+      
+    div
+      h4 Required files:
+      p
+        strong Windows:
+      p You must upload both the .exe and the .nupkg files.
+      p 
+        strong OSX:
+      p You must upload both the .zip and the .dmg files.
