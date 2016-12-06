@@ -40,6 +40,25 @@ form(editable-form='', name='versionForm', onaftersave='acceptEdit()', e-role='f
               button.btn.btn-default.btn-sm(type='button', ng-click="openEditAssetModal(asset)")
                 | More
       button.btn.btn-success(type='button', ng-click='openAddAssetModal()') Add Asset
+      
+      div.text-left
+        h4 Required Assets:
+        p
+          strong Windows:
+          span
+            |  New installs require 
+            code .exe
+            |  assets. While updates require 
+            code .nupkg
+            | . You probably want both.
+        p
+          strong OSX:
+          span
+            |  New installs require 
+            code .dmg
+            |  assets. While updates require 
+            code .zip
+            | . You probably want both.
   .modal-footer
     div(ng-if='!versionForm.$visible')
       button.btn.btn-warning(type='button', ng-click='versionForm.$show()') Edit
