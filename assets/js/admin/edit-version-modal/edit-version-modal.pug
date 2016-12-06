@@ -40,6 +40,15 @@ form(editable-form='', name='versionForm', onaftersave='acceptEdit()', e-role='f
               button.btn.btn-default.btn-sm(type='button', ng-click="openEditAssetModal(asset)")
                 | More
       button.btn.btn-success(type='button', ng-click='openAddAssetModal()') Add Asset
+      
+      div.text-left
+        h4 Required files:
+        p
+          strong Windows:
+          span You must upload both the .exe and the .nupkg files.
+        p
+          strong OSX:
+          span You must upload both the .zip and the .dmg files.
   .modal-footer
     div(ng-if='!versionForm.$visible')
       button.btn.btn-warning(type='button', ng-click='versionForm.$show()') Edit
@@ -48,12 +57,3 @@ form(editable-form='', name='versionForm', onaftersave='acceptEdit()', e-role='f
     div(ng-if='versionForm.$visible')
       button.btn.btn-warning(type='submit', ng-disable='versionForm.$waiting') Accept Changes
       button.btn.btn-danger(type='button', ng-click='versionForm.$cancel()') Cancel
-      
-    div
-      h4 Required files:
-      p
-        strong Windows:
-      p You must upload both the .exe and the .nupkg files.
-      p 
-        strong OSX:
-      p You must upload both the .zip and the .dmg files.
