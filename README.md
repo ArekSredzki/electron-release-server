@@ -11,6 +11,7 @@ _Note: Despite being advertised as a release server for Electron applications, i
 If you host your project on your Github **and** do not need a UI for your app, then [Nuts](https://github.com/GitbookIO/nuts) is probably what you're looking for. Otherwise, you're in the same boat as I was, and you've found the right place!
 
 ## Features
+- :sparkles: Docker :whale: support (thanks to EvgeneOskin)!
 - :sparkles: Awesome release management interface powered by [AngularJS](https://angularjs.org)
     - Authenticates with LDAP, easy to modify to another authentication method if needed
 - :sparkles: Store assets on server disk, or Amazon S3 (with minor modifications)
