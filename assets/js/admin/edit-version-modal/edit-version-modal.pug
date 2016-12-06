@@ -45,10 +45,20 @@ form(editable-form='', name='versionForm', onaftersave='acceptEdit()', e-role='f
         h4 Required Assets:
         p
           strong Windows:
-          span  You must upload both the .exe and the .nupkg files.
+          span
+            |  New installs require 
+            code .exe
+            |  assets. While updates require 
+            code .nupkg
+            | . You probably want both.
         p
           strong OSX:
-          span  You must upload both the .zip and the .dmg files.
+          span
+            |  New installs require 
+            code .dmg
+            |  assets. While updates require 
+            code .zip
+            | . You probably want both.
   .modal-footer
     div(ng-if='!versionForm.$visible')
       button.btn.btn-warning(type='button', ng-click='versionForm.$show()') Edit
