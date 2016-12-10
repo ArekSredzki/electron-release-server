@@ -10,6 +10,9 @@ _Note: Despite being advertised as a release server for Electron applications, i
 
 If you host your project on your Github **and** do not need a UI for your app, then [Nuts](https://github.com/GitbookIO/nuts) is probably what you're looking for. Otherwise, you're in the same boat as I was, and you've found the right place!
 
+## Advisory Notice
+**IMPORTANT:** The release of Angular `1.6.0` has broken all `electron-release-server` versions prior to `1.4.2`. Please use the instructions under the `Maintenance` heading below to update your fork! Sorry for the inconvenience.
+
 ## Features
 - :sparkles: Docker :whale: support (thanks to EvgeneOskin)!
 - :sparkles: Awesome release management interface powered by [AngularJS](https://angularjs.org)

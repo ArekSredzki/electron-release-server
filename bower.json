@@ -4,25 +4,25 @@
   "dependencies": {
     "angular": "^1.5.9",
     "bootstrap-sass-official": "^3.3.7",
-    "angular-animate": "^1.5.9",
-    "angular-messages": "^1.5.9",
-    "angular-route": "^1.5.9",
-    "angular-sanitize": "^1.5.9",
+    "angular-animate": "~1.5.9",
+    "angular-messages": "~1.5.9",
+    "angular-route": "~1.5.9",
+    "angular-sanitize": "~1.5.9",
     "angular-xeditable": "~0.5.0",
     "lodash": "~4.17.2",
     "angular-ui-notification": "~0.2.0",
     "angular-bootstrap": "~1.3.3",
-    "angular-confirm-modal": "^1.2.6",
-    "angular-jwt": "^0.1.8",
-    "ngstorage": "^0.3.11",
+    "angular-confirm-modal": "~1.2.6",
+    "angular-jwt": "~0.1.8",
+    "ngstorage": "~0.3.11",
     "sails.io.js": "*",
-    "angular-sails": "^1.1.4",
-    "angular-moment": "^1.0.1",
-    "components-font-awesome": "^4.7.0",
-    "ng-file-upload": "^12.2.13",
+    "angular-sails": "~1.1.4",
+    "angular-moment": "~1.0.1",
+    "components-font-awesome": "~4.7.0",
+    "ng-file-upload": "~12.2.13",
     "angular-PubSub": "angular.pubsub#*",
-    "ng-device-detector": "^3.0.1",
-    "compare-versions": "^3.0.0"
+    "ng-device-detector": "~3.0.1",
+    "compare-versions": "~3.0.0"
   },
   "appPath": "app",
   "overrides": {
@@ -38,6 +38,6 @@
     }
   },
   "resolutions": {
-    "angular": "^1.5.9"
+    "angular": "~1.5.9"
   }
 }
