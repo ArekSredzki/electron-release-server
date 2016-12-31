@@ -6,9 +6,9 @@ WORKDIR /usr/src/electron-release-server
 
 # Install app dependencies
 COPY package.json .bowerrc bower.json /usr/src/electron-release-server/
-RUN npm install
-RUN ./node_modules/.bin/bower install --allow-root
-RUN npm cache clean
+RUN npm install \
+  && ./node_modules/.bin/bower install --allow-root \
+  && npm cache clean
 
 # Bundle app source
 COPY . /usr/src/electron-release-server
