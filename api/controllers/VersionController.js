@@ -221,7 +221,16 @@ module.exports = {
                 _.remove(newVersion.assets, function(o) {
                   return o.filetype !== '.nupkg' || !o.hash;
                 });
-                return newVersion.assets.length && semver.lte(
+
+                // Make sure the last version is a version with full asset
+                // so RELEASES contains at least one full asset (which is mandatory for Squirrel.Windows)
+                let v = _.filter(
+                    newVersion.assets,
+                    function(o) {
+                      return _.includes(o.name.toLowerCase(), '-full');
+                    }
+                  );
+                return v.length && semver.lte(
                   version, newVersion.name
                 );
               });
@@ -231,13 +240,34 @@ module.exports = {
               return res.status(500).send('Version not found');
             }
 
+            // Add Delta assets from other versions
+            var deltaAssets = _.reduce(
+              newerVersions,
+              function(assets, newVersion) {
+                return assets.concat(
+                  _.filter(
+                    newVersion.assets,
+                    function(asset) {
+                      return asset.filetype === '.nupkg'
+                        && _.includes(asset.name.toLowerCase(), '-delta')
+                        && semver.lte(version, asset.version)
+                        && semver.gt(latestVersion.name, asset.version);
+                    }));
+              }, []);
+
+            Array.prototype.unshift.apply(latestVersion.assets, deltaAssets);
+
+            latestVersion.assets.sort(function(a1, a2) {
+              return semver.compare(a1.version, a2.version);
+            });
+
             sails.log.debug('Latest Windows Version', latestVersion);
 
             // Change asset name to use full download link
             assets = _.map(latestVersion.assets, function(asset) {
               asset.name = url.resolve(
                 sails.config.appUrl,
-                '/download/' + latestVersion.name + '/' + asset.platform + '/' +
+                '/download/' + asset.version + '/' + asset.platform + '/' +
                 asset.name
               );
 
