@@ -28,7 +28,7 @@ angular.module('app.admin.edit-version-modal', [])
         var modalInstance = $uibModal.open({
           animation: true,
           templateUrl: 'js/admin/add-version-asset-modal/add-version-asset-modal.html',
-          controller: 'AddVersionAssetModalController',
+          controller: 'AddVersionAssetModalController as vm',
           resolve: {
             versionName: function() {
               return version.name;

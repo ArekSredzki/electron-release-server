@@ -32,7 +32,7 @@ angular.module('app.releases', [])
       };
 
       self.availablePlatforms = DataService.availablePlatforms;
-      self.filetypes = DataService.filetypes;
+      self.installerFiletypes = DataService.installerFiletypes;
       self.availableChannels = DataService.availableChannels;
 
       // Get selected channel from route or set to default (stable)

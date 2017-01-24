@@ -63,7 +63,7 @@ git rebase upstream/master
 ```
 
 ## Credit
-This project has been built from the Sails.js up by Arek Sredzki, with inspiration from [nuts](https://github.com/GitbookIO/nuts).
+This project has been built from Sails.js up by Arek Sredzki, with inspiration from [nuts](https://github.com/GitbookIO/nuts).
 
 ## License
 [MIT License](LICENSE.md)

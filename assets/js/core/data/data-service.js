@@ -31,12 +31,20 @@ angular.module('app.core.data.service', [
         linux_32: 'Linux 32 bit'
       };
 
-      self.filetypes = {
-        windows_64: '.exe',
-        windows_32: '.exe',
-        osx_64: '.dmg',
-        linux_64: '.deb',
-        linux_32: '.deb'
+      self.installerFiletypes = {
+        windows_64: ['.exe'],
+        windows_32: ['.exe'],
+        osx_64: ['.dmg'],
+        linux_64: ['.AppImage', '.deb', '.rpm', '.tar.gz'],
+        linux_32: ['.AppImage', '.deb', '.rpm', '.tar.gz']
+      };
+
+      self.updateFiletypes = {
+        windows_64: ['.nupkg'],
+        windows_32: ['.nupkg'],
+        osx_64: ['.zip'],
+        linux_64: [],
+        linux_32: []
       };
 
       /**
@@ -543,20 +551,20 @@ angular.module('app.core.data.service', [
         // Get the initial set of releases from the server.
         // XXX This will also subscribe us to future changes regarding releases
         $sails.get('/api/version')
-          .success(function(data) {
-            self.data = data;
+          .then(function(jwr) {
+
+            self.data = jwr.body;
             self.sortVersions();
             deferred.resolve(true);
 
             PubSub.publish('data-change');
-          })
-          .error(function(data, status) {
-            deferred.reject(data);
+          }, function(jwr) {
+            deferred.reject(jwr.body);
           });
 
         // Only sent to watch for asset updates
         $sails.get('/api/asset')
-          .success(function(data) {
+          .then(function() {
             $log.log('Should be subscribed!');
           });
 
@@ -597,16 +605,16 @@ angular.module('app.core.data.service', [
         _.forEach(archs, function(arch) {
           var platformName = platform + '_' + arch;
 
-          var filetype = self.filetypes[platformName];
+          var filetypes = self.installerFiletypes[platformName];
 
-          if (!filetype) {
+          if (!filetypes) {
             return;
           }
           _.forEach(versions, function(version) {
             _.forEach(version.assets, function(asset) {
               if (
                 asset.platform === platformName &&
-                asset.filetype === filetype
+                filetypes.indexOf(asset.filetype) !== -1
               ) {
                 var matchedAsset = _.clone(asset);
                 matchedAsset.version = version.name;
