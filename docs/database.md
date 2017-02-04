@@ -75,8 +75,29 @@ After completeing this section, you should now have
         port: 5432
     }
 ```
+## MySQL
+Edit your local.js like this.
+```javascript
+session: {
+    // Recommended: 63 random alpha-numeric characters
+    // Generate using: https://www.grc.com/passwords.htm
+    secret: 'EfWv5EqDoUYnelfFiLDWKNDsXwxkXjtTdSzmgoFq6x48jBiPeA4frOfFUZydgc6',
+    store:new MySQLSessionStore({
+        host: 'localhost',
+        port: '3306',
+        user: '<username>',
+        password: '<password>',
+        database: '<dbname>',
+        createDatabaseTable: true
+    })
+},
+```
+Don't forget to install the package:
+```shell
+npm install express-mysql-session --save
+```
 
-### Session adapter requirements
+## Session adapter requirements
 Originally described [here](https://github.com/ravitej91/sails-pg-session)
 
 ```bash
