@@ -29,15 +29,20 @@ module.exports = {
    * This is because Squirrel.Windows does a poor job of parsing the filename,
    * and so we must fake the filenames of x32 and x64 versions to be the same.
    *
-   * (GET /download/latest/:platform?': 'AssetController.download')
-   * (GET /download/:version/:platform?/:filename?': 'AssetController.download')
-   * (GET /download/channel/:channel/:platform?': 'AssetController.download')
+   * (GET /download/:application/latest/:platform?': 'AssetController.download')
+   * (GET /download/:application/:version/:platform?/:filename?': 'AssetController.download')
+   * (GET /download/:application/channel/:channel/:platform?': 'AssetController.download')
    */
   download: function(req, res) {
+    var application = req.params.application;
     var channel = req.params.channel;
     var version = req.params.version || undefined;
     var filename = req.params.filename;
     var filetype = req.query.filetype;
+
+    if (!application) {
+      return res.badRequest('Requires "application" parameter');
+    }
 
     // We accept multiple platforms (x64 implies x32)
     var platforms;
@@ -82,7 +87,8 @@ module.exports = {
           Version
             .find(UtilityService.getTruthyObject({
               name: version,
-              channel: channel
+              channel: channel,
+              application: application
             }))
             .sort({
               createdAt: 'desc'
@@ -110,6 +116,7 @@ module.exports = {
         } else {
           Asset
             .find(assetOptions)
+            .populate('version', {application: application})
             .sort({
               createdAt: 'desc'
             })
@@ -120,7 +127,7 @@ module.exports = {
       })
       .then(function(asset) {
         if (!asset || !asset.fd) {
-          var noneFoundMessage = 'No download available';
+          var noneFoundMessage = 'No download of ' + application + ' available';
 
           if (platforms) {
             if (platforms.length > 1) {
@@ -149,6 +156,10 @@ module.exports = {
     // Omit the blacklisted params (like JSONP callback param, etc.)
     var data = actionUtil.parseValues(req);
 
+    if (!data.application) {
+      return res.badRequest('An application is required.');
+    }
+
     if (!data.version) {
       return res.badRequest('A version is required.');
     }
@@ -156,16 +167,24 @@ module.exports = {
     if (_.isString(data.version)) {
       // Only a name was provided, normalize
       data.version = {
-        name: data.version
+        name: data.version,
+        application: {
+          name: application
+        }
       };
     } else if (_.isObjectLike(data.version) && _.has(data.version, 'name')) {
       // Valid request, but we only want the name
       data.version = {
-        name: data.version.name
+        name: data.version.name,
+        application: {
+          name: application
+        }
       };
     } else {
       return res.badRequest('Invalid version provided.');
     }
+
+
 
     // Set upload request timeout to 10 minutes
     req.setTimeout(10 * 60 * 1000);

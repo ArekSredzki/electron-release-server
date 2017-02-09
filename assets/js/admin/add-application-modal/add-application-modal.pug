@@ -1,0 +1,19 @@
+.modal-header
+  h3.modal-title Add a New Application
+.modal-body
+  form.form-horizontal(novalidate='')
+    fieldset
+      // Application Name
+      .form-group
+        label.col-md-4.control-label(for='name') Application Slug
+        .col-md-7
+          label {{application.description | slugify}}
+      // Description
+      .form-group
+        label.col-md-4.control-label(for='description') Application Name
+        .col-md-7
+          textarea.form-control(ng-model='application.description', name='description')
+.modal-footer
+  div
+    button.btn.btn-warning(type='button', ng-click='addApplication()') Add Application
+    button.btn.btn-danger(type='button', ng-click='closeModal()') Cancel

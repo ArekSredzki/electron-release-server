@@ -535,6 +535,99 @@ angular.module('app.core.data.service', [
       });
 
       /**
+       * Creates an application using the api.
+       * Requires authentication (token is auto-injected).
+       * @param  {Object}  application A object containing all of the parameters
+       *                               we would like to create the app with.
+       * @return {Promise}             A promise which is resolve/rejected as
+       *                               soon as we know the result of the operation
+       *                               Contains the response object.
+       */
+      self.createApp = function(application) {
+        if (!application) {
+          throw new Error('An application object is required for creation');
+        }
+
+        return $http.post('/api/application', application)
+          .then(function(response) {
+            Notification.success('Application Created Successfully.');
+
+            return response;
+          }, function(response) {
+
+            var errorTitle = 'Unable to Create Application';
+
+            showErrors(response, errorTitle);
+
+            return $q.reject(response);
+          });
+      };
+
+      /**
+       * Updates an application using the api.
+       * Requires authentication (token is auto-injected).
+       * @param  {Object}  application A object containing all of the parameters
+       *                               we would like to update the application with.
+       * @param  {String}  appName     The application's original name (in case we
+       *                               are trying to change it)
+       * @return {Promise}             A promise which is resolve/rejected as
+       *                               soon as we know the result of the operation
+       *                               Contains the response object.
+       */
+      self.updateApp = function(application, appName) {
+        if (!application) {
+          throw new Error('A application object is required for updating');
+        }
+        if (!appName) {
+          throw new Error('A application name is required for updating');
+        }
+
+        return $http.post(
+            '/api/version/' + appName,
+            _.omit(application, ['versions'])
+          )
+          .then(function(response) {
+            Notification.success('Application Updated Successfully.');
+
+            return response;
+          }, function(response) {
+            var errorTitle = 'Unable to Update Application';
+
+            showErrors(response, errorTitle);
+
+            return $q.reject(response);
+          });
+      };
+
+      /**
+       * Deletes an application using the api.
+       * Requires authentication (token is auto-injected).
+       * @param  {Object}  appName     The name of the application that we would
+       *                               like to delete.
+       * @return {Promise}             A promise which is resolve/rejected as
+       *                               soon as we know the result of the operation
+       *                               Contains the response object.
+       */
+      self.deleteApp = function(appName) {
+        if (!appName) {
+          throw new Error('A version name is required for deletion');
+        }
+
+        return $http.delete('/api/version/' + appName)
+          .then(function success(response) {
+            Notification.success('Application Deleted Successfully.');
+
+            return response;
+          }, function error(response) {
+            var errorTitle = 'Unable to Delete Application';
+
+            showErrors(response, errorTitle);
+
+            return $q.reject(response);
+          });
+      };
+
+      /**
        * Retrieve & subscribe to all version & asset data.
        * @return {Promise} Resolved once data has been retrieved
        */

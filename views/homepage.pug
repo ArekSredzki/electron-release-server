@@ -23,14 +23,15 @@ html
           .navbar-header
             a.pull-left(href='/')
               img.navbar-logo(src='/images/logo.svg')
-            a.navbar-brand(href='/') Electron App
+            a.navbar-brand(href='/') Electron Release Server
           .collapse.navbar-collapse
             ul.nav.navbar-nav
               li(ng-class="{ active: isActive('/')}")
                 a(href='/') Home
-            ul.nav.navbar-nav
-              li(ng-class="{ active: isActive('/releases')}")
-                a(href='/releases') Download
+            span(ng-show="isAuthenticated()")
+                ul.nav.navbar-nav
+                    li
+                        a.btn(ng-click="openAddModal()") Add New Application
             auth-toolbar
     .container
       div(ng-view='')
@@ -65,6 +66,7 @@ html
     script(src='/bower_components/re-tree/re-tree.js')
     script(src='/bower_components/ng-device-detector/ng-device-detector.js')
     script(src='/bower_components/compare-versions/index.js')
+    script(src='/bower_components/angular-slugify/angular-slugify.js')
     // endbower
 
     // SCRIPTS

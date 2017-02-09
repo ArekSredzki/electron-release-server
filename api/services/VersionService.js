@@ -24,4 +24,37 @@ VersionService.compare = function(v1, v2) {
   return 0;
 };
 
+VersionService.destroy = function(version, req) {
+  var deletePromises = _.map(version.assets, function(asset) {
+    return Promise.join(
+      AssetService.destroy(asset, req),
+      AssetService.deleteFile(asset),
+      function() {
+        sails.log.info('Destroyed asset: ', asset);
+      });
+  });
+
+  return Promise.all(deletePromises)
+    .then(function allDeleted() {
+      return Version.destroy(pk)
+        .then(function destroyedRecord() {
+
+          if (sails.hooks.pubsub) {
+            Version.publishDestroy(
+              pk, !req._sails.config.blueprints.mirror && req, {
+                previous: version
+              }
+              );
+
+            if (req.isSocket) {
+              Version.unsubscribe(req, version);
+              Version.retire(version);
+            }
+          }
+
+          sails.log.info('Destroyed version: ', version);
+        });
+    });
+}
+
 module.exports = VersionService;

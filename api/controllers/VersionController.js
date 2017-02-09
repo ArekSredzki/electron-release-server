@@ -19,7 +19,11 @@ module.exports = {
   redirect: function(req, res) {
     var platform = req.param('platform');
     var version = req.param('version');
+    var application = req.param('application');
 
+    if (!application) {
+      return res.badRequest('Requires "application" parameter');
+    }
     if (!version) {
       return res.badRequest('Requires "version" parameter');
     }
@@ -27,7 +31,7 @@ module.exports = {
       return res.badRequest('Requires "platform" parameter');
     }
 
-    return res.redirect('/update/' + platform + '/' + version);
+    return res.redirect('/update/' + platform + '/' + application + '/' + version);
   },
 
   /**
@@ -35,12 +39,17 @@ module.exports = {
    *
    * Assumes stable channel unless specified
    *
-   * (GET /update/:platform/:version/:channel)
+   * (GET /update/:platform/:application/:version/:channel)
    */
   general: function(req, res) {
     var platform = req.param('platform');
+    var application = req.param('application');
     var version = req.param('version');
     var channel = req.param('channel') || 'stable';
+
+    if (!application) {
+      return res.badRequest('Requires `application` parameter');
+    }
 
     if (!version) {
       return res.badRequest('Requires `version` parameter');
@@ -54,6 +63,7 @@ module.exports = {
 
     sails.log.debug('Update Search Query', {
       platform: platforms,
+      application: application,
       version: version,
       channel: channel
     });
@@ -61,7 +71,7 @@ module.exports = {
     // Get specified version object, it's time will be used for the general
     // cutoff.
     Version
-      .findOne(version)
+      .findOne({name: version, application: application})
       .then(function(currentVersion) {
 
         var applicableChannels, createdAtFilter;
@@ -81,6 +91,7 @@ module.exports = {
 
         return Version
           .find(UtilityService.getTruthyObject({
+            application: application,
             channel: applicableChannels,
             createdAt: createdAtFilter
           }))
@@ -159,12 +170,17 @@ module.exports = {
    * Currently, it will only serve a full.nupkg of the latest release with a
    * normalized filename (for pre-release)
    *
-   * (GET /update/:platform/:version/:channel/RELEASES)
+   * (GET /update/:platform/:application/:version/:channel/RELEASES)
    */
   windows: function(req, res) {
+    var application = req.param('application');
     var platform = req.param('platform');
     var version = req.param('version');
     var channel = req.param('channel') || 'stable';
+
+    if (!application) {
+      return res.badRequest('Requires `application` parameter');
+    }
 
     if (!version) {
       return res.badRequest('Requires `version` parameter');
@@ -178,6 +194,7 @@ module.exports = {
 
     sails.log.debug('Windows Update Search Query', {
       platform: platforms,
+      application: application,
       version: version,
       channel: channel
     });
@@ -185,7 +202,7 @@ module.exports = {
     // Get specified version object, it's time will be used for the general
     // cutoff.
     Version
-      .findOne(version)
+      .findOne({ name: version, application: application })
       .then(function(currentVersion) {
         var applicableChannels, createdAtFilter;
 
@@ -267,7 +284,7 @@ module.exports = {
             assets = _.map(latestVersion.assets, function(asset) {
               asset.name = url.resolve(
                 sails.config.appUrl,
-                '/download/' + asset.version + '/' + asset.platform + '/' +
+                '/download/' + application + '/' + asset.version + '/' + asset.platform + '/' +
                 asset.name
               );
 
@@ -286,13 +303,14 @@ module.exports = {
 
   /**
    * Get release notes for a specific version
-   * (GET /notes/:version?)
+   * (GET /notes/:application/:version?)
    */
   releaseNotes: function(req, res) {
+    var application = req.params.application;
     var version = req.params.version;
 
     Version
-      .findOne(version)
+      .findOne({ name: version, application: application})
       .then(function(currentVersion) {
         if (!currentVersion) {
           return res.notFound('The specified version does not exist');
@@ -326,45 +344,18 @@ module.exports = {
 
     var query = Version.findOne(pk);
     query.populate('assets');
-    query.exec(function foundRecord(err, record) {
-      if (err) return res.serverError(err);
-      if (!record) return res.notFound(
-        'No record found with the specified `name`.'
-      );
+    query
+      .then(function foundRecord(err, record) {
+        if (err) return res.serverError(err);
+        if (!record) return res.notFound(
+          'No record found with the specified `name`.'
+        );
 
-      var deletePromises = _.map(record.assets, function(asset) {
-        return Promise.join(
-          AssetService.destroy(asset, req),
-          AssetService.deleteFile(asset),
-          function() {
-            sails.log.info('Destroyed asset: ', asset);
-          });
-      });
-
-      Promise.all(deletePromises)
-        .then(function allDeleted() {
-          return Version.destroy(pk)
-            .then(function destroyedRecord() {
-
-              if (sails.hooks.pubsub) {
-                Version.publishDestroy(
-                  pk, !req._sails.config.blueprints.mirror && req, {
-                    previous: record
-                  }
-                );
-
-                if (req.isSocket) {
-                  Version.unsubscribe(req, record);
-                  Version.retire(record);
-                }
-              }
-
-              sails.log.info('Destroyed version: ', record);
-
-              return res.ok(record);
-            });
-        })
-        .error(res.negotiate);
-    });
+        return VersionService.destroy(record, req)
+        .then(function destroyedRecord() {
+          return res.ok(record);
+        });
+    })
+    .error(res.negotiate);
   }
 };

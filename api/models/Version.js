@@ -10,8 +10,6 @@ module.exports = {
   attributes: {
     name: {
       type: 'string',
-      primaryKey: true,
-      unique: true,
       required: true
     },
 
@@ -25,10 +23,15 @@ module.exports = {
       required: true
     },
 
+    application: {
+      model: 'application',
+      required: true
+    },
+
     notes: {
       type: 'string'
     }
   },
-  autoPK: false
+  autoPK: true
 
 };

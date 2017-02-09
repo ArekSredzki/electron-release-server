@@ -27,8 +27,18 @@ angular.module('app', [
       editableOptions.theme = 'bs3'; // bootstrap3 theme. Can be also 'bs2', 'default'
     }
   ])
-  .controller('MainController', ['$scope', 'AuthService',
-    function($scope, AuthService) {
+  .controller('MainController', ['$scope', 'AuthService', '$uibModal',
+    function($scope, AuthService, $uibModal) {
       $scope.isAuthenticated = AuthService.isAuthenticated;
+
+      $scope.openAddModal = function() {
+          var modalInstance = $uibModal.open({
+            animation: true,
+            templateUrl: 'js/admin/add-application-modal/add-application-modal.html',
+            controller: 'AddApplicationModalController'
+          });
+
+          modalInstance.result.then(function() {}, function() {});
+        };
     }
   ]);

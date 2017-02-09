@@ -22,7 +22,8 @@
     "ng-file-upload": "~12.2.13",
     "angular-PubSub": "angular.pubsub#*",
     "ng-device-detector": "~3.0.1",
-    "compare-versions": "~3.0.0"
+    "compare-versions": "~3.0.0",
+    "angular-slugify": "^1.0.1"
   },
   "appPath": "app",
   "overrides": {
