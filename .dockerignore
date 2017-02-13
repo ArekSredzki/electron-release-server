@@ -19,3 +19,4 @@ nbproject
 .node_history
 Dockerfile
 docker-compose.json
+docker-data

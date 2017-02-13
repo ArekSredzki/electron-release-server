@@ -1,6 +1,9 @@
 version: '2'
 services:
   web:
+    restart: always
+    volumes:
+      - ./docker-data:/tmp
     build: .
     environment:
       APP_USERNAME: username
