@@ -345,8 +345,7 @@ module.exports = {
     var query = Version.findOne(pk);
     query.populate('assets');
     query
-      .then(function foundRecord(err, record) {
-        if (err) return res.serverError(err);
+      .then(function foundRecord(record) {
         if (!record) return res.notFound(
           'No record found with the specified `name`.'
         );

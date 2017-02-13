@@ -1,23 +1,25 @@
 .row
   h3 Version Management
         
-  table.table.table-bordered.table-hover.table-condensed.table-custom(ng-if='DataService.data.length' ng-cloak)
-    thead
-      tr
-        td Name
-        td Channel
-        td Asset Count
-        td Date
-        td
-    tbody
-      tr(data-ng-repeat='version in DataService.data')
-        td {{ version.name }}
-        td {{ version.channel.name }}
-        td {{ version.assets.length }}
-        td(am-time-ago="version.createdAt")
-        td(style="white-space: nowrap")
-          button.btn.btn-default.btn-sm(ng-click="openEditModal(version)")
-            | More
+  div(data-ng-repeat='app in DataService.data')
+    h4 {{ app.description }}
+    table.table.table-bordered.table-hover.table-condensed.table-custom(ng-cloak)
+      thead
+        tr
+          td Name
+          td Channel
+          td Asset Count
+          td Date
+          td
+      tbody
+        tr(data-ng-repeat='version in app.versions')
+          td {{ version.name }}
+          td {{ version.channel.name }}
+          td {{ version.assets.length }}
+          td(am-time-ago="version.createdAt")
+          td(style="white-space: nowrap")
+            button.btn.btn-default.btn-sm(ng-click="openEditModal(version)")
+              | More
   .jumbotron(ng-hide="DataService.data.length")
     h5.text-gray No Versions Available
 

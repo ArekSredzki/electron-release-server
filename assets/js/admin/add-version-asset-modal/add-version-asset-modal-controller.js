@@ -1,5 +1,5 @@
 angular.module('app.admin.add-version-asset-modal', [])
-  .controller('AddVersionAssetModalController', ['$scope', 'DataService', '$uibModalInstance', 'versionName',
+  .controller('AddVersionAssetModalController', ['$scope', 'DataService', '$uibModalInstance', 'version',
     function($scope, DataService, $uibModalInstance, versionName) {
       $scope.DataService = DataService;
 

@@ -4,6 +4,7 @@ angular.module('app.admin.add-version-modal', [])
       $scope.DataService = DataService;
 
       $scope.version = {
+        application: '',
         name: '',
         notes: '',
         channel: {

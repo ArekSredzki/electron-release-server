@@ -3,6 +3,16 @@
 .modal-body
   form.form-horizontal(novalidate='')
     fieldset
+      // Application
+      .form-group
+        label.col-md-4.control-label(for='application') Application
+        .col-md-7
+          select.form-control(
+            ng-model='version.application',
+            name='application',
+            ng-options='o.name as o.description for o in DataService.data',
+            required
+            )
       // Version Name
       .form-group
         label.col-md-4.control-label(for='name') Version Name

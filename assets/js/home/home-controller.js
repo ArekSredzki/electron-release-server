@@ -8,5 +8,6 @@ angular.module('app.home', [])
   }])
   .controller('HomeController', ['$scope', 'PubSub', 'DataService',
     function($scope, PubSub, DataService) {
+      $scope.DataService = DataService;
     }
   ]);

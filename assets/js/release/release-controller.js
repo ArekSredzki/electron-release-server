@@ -1,16 +1,16 @@
 angular.module('app.releases', [])
   .config(['$routeProvider', function($routeProvider) {
     $routeProvider
-      .when('/releases/:channel?', {
-        templateUrl: 'js/download/download.html',
+      .when('/:application/releases/:channel?', {
+        templateUrl: 'js/release/release.html',
         controller: 'DownloadController as vm'
       });
   }])
   .controller('DownloadController', [
-    '$scope', '$routeParams', '$route', 'PubSub', 'deviceDetector',
+    '$scope', '$routeParams', '$route', '$location', 'PubSub', 'deviceDetector',
     'DataService',
     function(
-      $scope, $routeParams, $route, PubSub, deviceDetector, DataService
+      $scope, $routeParams, $route, $location, PubSub, deviceDetector, DataService
     ) {
       var self = this;
       self.showAllVersions = false;
@@ -35,6 +35,18 @@ angular.module('app.releases', [])
       self.filetypes = DataService.filetypes;
       self.availableChannels = DataService.availableChannels;
 
+      self.getApplication = function() {
+        self.application = _.find(DataService.data, {
+          'name': $routeParams.application
+        });
+
+        if (!self.application) {
+          $location.path('/');
+        }
+      };
+
+      self.getApplication();
+
       // Get selected channel from route or set to default (stable)
       self.channel = $routeParams.channel || self.setChannelParams(
         self.availableChannels[0]
@@ -46,30 +58,39 @@ angular.module('app.releases', [])
       self.getLatestReleases = function() {
         self.setChannelParams(self.channel);
         self.latestReleases = DataService.getLatestReleases(
+          self.application.name,
           self.platform,
           self.archs,
           self.channel
         );
-        self.versions = DataService.data;
+        self.versions = self.application.versions;
       };
 
       // Watch for changes to data content and update local data accordingly.
       var uid1 = PubSub.subscribe('data-change', function() {
+        if (!self.application) {
+          self.getApplication();
+        }
         // $scope.$apply(function() {
-        self.getLatestReleases();
+        if (self.application) {
+          self.getLatestReleases();
+        }
         // });
       });
 
       // Update knowledge of the latest available versions.
-      self.getLatestReleases();
+      if (self.application) {
+        self.getLatestReleases();
+      }
 
       self.download = function(asset, versionName) {
         if (!asset) {
           return;
         }
 
-        self.downloadUrl = '/download/' + (asset.version || versionName) +
+        self.downloadUrl = '/' + self.application.name + '/download/' + (asset.version || versionName) +
           '/' + asset.platform + '/' + asset.name;
+        $console.log(self.downloadUrl);
       };
 
       $scope.$on('$destroy', function() {

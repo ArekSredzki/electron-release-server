@@ -66,7 +66,9 @@ angular.module('app.core.data.service', [
        * Sort version data in descending order
        */
       self.sortVersions = function() {
-        self.data.sort(self.compareVersion);
+        _.each(self.data, function(app) {
+          app.versions.sort(self.compareVersion);
+        });
       };
 
       /**
@@ -197,7 +199,7 @@ angular.module('app.core.data.service', [
         if (!versionName) {
           throw new Error('A version name is required for deletion');
         }
-
+        $log.log(versionName);
         return $http.delete('/api/version/' + versionName)
           .then(function success(response) {
             Notification.success('Version Deleted Successfully.');
@@ -245,14 +247,17 @@ angular.module('app.core.data.service', [
           return;
         }
 
-        version = normalizeVersion(msg.data);
+        version = normalizeVersion(msg.data || msg.previous);
 
         var index;
-        var notificationMessage = (version || {}).name || '';
+        var application = _.find(self.data, {
+          'name': version.application
+        });
+        var notificationMessage = (((application || {}).description + ' ') || '') + (version || {}).name || '';
+        var versions = _.flatten(_.map(self.data, 'versions'));
 
         if (msg.verb === 'created') {
-
-          self.data.unshift(version);
+          application.versions.unshift(version);
           self.sortVersions();
 
           $log.log('Sails sent a new version.');
@@ -268,31 +273,30 @@ angular.module('app.core.data.service', [
             message: notificationMessage
           });
 
-          index = _.findIndex(self.data, {
-            'name': msg.id // Sails sends back the old id (name) for us
+          index = _.findIndex(versions, {
+            'id': version.id // Sails sends back the old id (name) for us
           });
 
           if (index > -1) {
             if (!version.assets || !version.assets.length) {
-              version.assets = self.data[index].assets;
+              version.assets = versions[index].assets;
             }
-            self.data[index] = version;
+            application.versions[index] = version;
           }
 
           $log.log('Sails updated a version.');
         } else if (msg.verb === 'destroyed') {
-
-          index = _.findIndex(self.data, {
-            'name': msg.id
+          index = _.findIndex(versions, {
+            'id': version.id
           });
 
           if (index > -1) {
-            self.data.splice(index, 1);
+            application.versions.splice(index, 1);
           }
 
           Notification({
             title: 'Version Deleted',
-            message: msg.id
+            message: notificationMessage
           });
 
           $log.log('Sails removed a version.');
@@ -583,7 +587,7 @@ angular.module('app.core.data.service', [
         }
 
         return $http.post(
-            '/api/version/' + appName,
+            '/api/application/' + appName,
             _.omit(application, ['versions'])
           )
           .then(function(response) {
@@ -613,7 +617,7 @@ angular.module('app.core.data.service', [
           throw new Error('A version name is required for deletion');
         }
 
-        return $http.delete('/api/version/' + appName)
+        return $http.delete('/api/application/' + appName)
           .then(function success(response) {
             Notification.success('Application Deleted Successfully.');
 
@@ -635,16 +639,20 @@ angular.module('app.core.data.service', [
         var deferred = $q.defer();
         // Get the initial set of releases from the server.
         // XXX This will also subscribe us to future changes regarding releases
-        $sails.get('/api/version')
+        $sails.get('/api/application')
           .success(function(data) {
+            $log.log(data)
             self.data = data;
-            self.sortVersions();
             deferred.resolve(true);
-
-            PubSub.publish('data-change');
           })
           .error(function(data, status) {
+            $log.log(data, status);
             deferred.reject(data);
+          });
+
+        $sails.get('/api/version')
+          .success(function(data) {
+            $log.log('Should be subscribed!');
           });
 
         // Only sent to watch for asset updates
@@ -653,7 +661,32 @@ angular.module('app.core.data.service', [
             $log.log('Should be subscribed!');
           });
 
-        return deferred.promise;
+        var defers = [];
+
+        deferred.promise.then(function() {
+          _.each(self.data, function(app) {
+            _.each(app.versions, function(version, idx) {
+              var prom = $q.defer();
+
+              $sails.get('/api/version/' + version.id, { populate: ['assets', 'channel']})
+                .success(function(data) {
+                  $log.log(data);
+                  app.versions[idx] = data;
+                  prom.resolve(true);
+                })
+                .error(function(data, status) {
+                  $log.log(data, status);
+                  prom.reject(data);
+                });
+
+              defers.push(prom.promise);
+            });
+          });
+
+          return $q.all(defers).then(self.sortVersions).then(function() {
+            PubSub.publish('data-change');
+          });
+        });
       };
 
       /**
@@ -664,7 +697,7 @@ angular.module('app.core.data.service', [
        * @param  {String} channel  Target release channel
        * @return {Object}          Latest release data object
        */
-      self.getLatestReleases = function(platform, archs, channel) {
+      self.getLatestReleases = function(application, platform, archs, channel) {
 
         var channelIndex = self.availableChannels.indexOf(channel);
 
@@ -678,7 +711,7 @@ angular.module('app.core.data.service', [
         );
 
         var versions = _
-          .chain(self.data)
+          .chain((_.find(self.data, { 'name': application }) || {}).versions)
           .filter(function(version) {
             var versionChannel = _.get(version, 'channel.name');
             return applicableChannels.indexOf(versionChannel) !== -1;

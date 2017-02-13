@@ -12,10 +12,16 @@ angular.module('app.admin.edit-version-modal', [])
        * because of SocketIO's awesomeness.
        */
       var updateVersionAssets = function() {
-        var updatedVersion = _.find(DataService.data, {
+        var application = _.find(DataService.data, {
+          name: version.application
+        });
+
+        var updatedVersion = _.find(application.versions, {
           name: version.name
         });
 
+        $log.log(application, updatedVersion);
+        
         if (!updatedVersion) {
           // The version no longer exists
           return $uibModalInstance.close();
@@ -30,8 +36,8 @@ angular.module('app.admin.edit-version-modal', [])
           templateUrl: 'js/admin/add-version-asset-modal/add-version-asset-modal.html',
           controller: 'AddVersionAssetModalController',
           resolve: {
-            versionName: function() {
-              return version.name;
+            version: function() {
+              return version;
             }
           }
         });
@@ -63,14 +69,14 @@ angular.module('app.admin.edit-version-modal', [])
       };
 
       $scope.acceptEdit = function() {
-        DataService.updateVersion($scope.version, version.name)
+        DataService.updateVersion($scope.version, version.id)
           .then(function success(response) {
             $uibModalInstance.close();
           }, function error(response) {});
       };
 
       $scope.deleteVersion = function() {
-        DataService.deleteVersion(version.name)
+        DataService.deleteVersion(version.id)
           .then(function success(response) {
             $uibModalInstance.close();
           }, function error(response) {});

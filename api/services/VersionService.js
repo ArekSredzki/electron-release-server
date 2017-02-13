@@ -34,14 +34,16 @@ VersionService.destroy = function(version, req) {
       });
   });
 
+  sails.log.debug(deletePromises);
+
   return Promise.all(deletePromises)
     .then(function allDeleted() {
-      return Version.destroy(pk)
+      return Version.destroy(version.id)
         .then(function destroyedRecord() {
 
           if (sails.hooks.pubsub) {
             Version.publishDestroy(
-              pk, !req._sails.config.blueprints.mirror && req, {
+              String(version.id), !req._sails.config.blueprints.mirror && req, {
                 previous: version
               }
               );
