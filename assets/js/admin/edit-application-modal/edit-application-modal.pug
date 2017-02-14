@@ -1,0 +1,30 @@
+form(editable-form='', name='appForm', onaftersave='acceptEdit()', e-role='form')
+  .modal-header
+    h3.modal-title {{ application.description }}
+  .modal-body
+    .form-horizontal(novalidate='')
+      // Application Name
+      .form-group
+        label.col-md-4.control-label(for='name') Application Slug
+        .col-md-7
+          label {{ application.name }}
+      // Description
+      .form-group
+        label.col-md-4.control-label(for='description') Application Name
+        .col-md-7
+          span(
+            editable-text='application.description',
+            e-name='description',
+            e-minlength='1',
+            e-maxlength='50',
+            e-required
+            )
+            | {{ application.description }}
+  .modal-footer
+    div(ng-if='!appForm.$visible')
+      button.btn.btn-warning(type='button', ng-click='appForm.$show()') Edit
+      button.btn.btn-danger(type='button', ng-click='deleteApplication()', confirm='Are you sure that you want to delete this application?') Delete
+      button.btn.btn-default(type='button', ng-click='closeModal()') Close
+    div(ng-if='appForm.$visible')
+      button.btn.btn-warning(type='submit', ng-disable='appForm.$waiting') Accept Changes
+      button.btn.btn-danger(type='button', ng-click='appForm.$cancel()') Cancel

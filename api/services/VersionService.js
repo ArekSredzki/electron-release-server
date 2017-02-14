@@ -4,6 +4,7 @@
 
 var _ = require('lodash');
 var semver = require('semver');
+var Promise = require('bluebird');
 
 var VersionService = {};
 
@@ -57,6 +58,6 @@ VersionService.destroy = function(version, req) {
           sails.log.info('Destroyed version: ', version);
         });
     });
-}
+};
 
 module.exports = VersionService;

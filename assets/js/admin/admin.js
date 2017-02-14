@@ -4,5 +4,6 @@ angular.module('app.admin', [
     'app.admin.add-version-modal',
     'app.admin.add-version-asset-modal',
     'app.admin.edit-version-modal',
-    'app.admin.edit-version-asset-modal'
+    'app.admin.edit-version-asset-modal',
+    'app.admin.edit-application-modal'
   ]);

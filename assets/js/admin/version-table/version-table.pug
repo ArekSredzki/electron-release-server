@@ -2,7 +2,9 @@
   h3 Version Management
         
   div(data-ng-repeat='app in DataService.data')
-    h4 {{ app.description }}
+    h4(style="") {{ app.description }}
+      button.btn.btn-info.btn-xs(style="float: right;",ng-click="openEditAppModal(app)")
+        | Edit
     table.table.table-bordered.table-hover.table-condensed.table-custom(ng-cloak)
       thead
         tr

@@ -12,7 +12,13 @@
       .form-group
         label.col-md-4.control-label(for='description') Application Name
         .col-md-7
-          textarea.form-control(ng-model='application.description', name='description')
+          input.form-control.input-md(
+            ng-model='application.description',
+            minlength='1',
+            maxlength='50',
+            name='description',
+            required
+            )
 .modal-footer
   div
     button.btn.btn-warning(type='button', ng-click='addApplication()') Add Application

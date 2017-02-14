@@ -28,6 +28,21 @@ angular.module('app.admin.version-table', [])
         modalInstance.result.then(function() {}, function() {});
       };
 
+      $scope.openEditAppModal = function(application) {
+        var modalInstance = $uibModal.open({
+          animation: true,
+          templateUrl: 'js/admin/edit-application-modal/edit-application-modal.html',
+          controller: 'EditApplicationModalController',
+          resolve: {
+            application: function() {
+              return application;
+            }
+          }
+        });
+
+        modalInstance.result.then(function() {}, function() {});
+      }
+
       $scope.openAddModal = function() {
         var modalInstance = $uibModal.open({
           animation: true,

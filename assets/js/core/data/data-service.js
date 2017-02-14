@@ -638,6 +638,93 @@ angular.module('app.core.data.service', [
           });
       };
 
+      var normalizeApplication = function(application) {
+        if (!application) {
+          return;
+        }
+
+        if (!_.isArrayLike(application.versions)) {
+          application.versions = [];
+        }
+
+        return application;
+      };
+
+      $sails.on('application', function(msg) {
+        if (!msg) {
+          return;
+        }
+
+        app = normalizeApplication(msg.data);
+
+        if (!app && msg.verb !== 'destroyed' && msg.verb !== 'addedTo' && msg.verb !== 'removedFrom') {
+          $log.log('No application provided with message. Reloading data.');
+          return self.initialize();
+        }
+
+        var notificationMessage = (app || {}).description || '';
+
+        if (msg.verb === 'created') {
+
+          self.data.unshift(app);
+
+          Notification({
+            title: 'New Application Created',
+            message: notificationMessage
+          });
+
+          $log.log('Sails sent a new application.');
+
+        } else if (msg.verb === 'updated') {
+
+          var appIndex = _.findIndex(self.data, {
+            name: msg.id
+          });
+
+          if (appIndex === -1) {
+            // Our version of the database is out of sync from the remote, re-init
+            $log.log('Data out of sync, reloading.');
+            return self.initialize();
+          }
+
+          app.versions = self.data[appIndex].versions;
+          self.data[appIndex] = app;
+
+          Notification({
+            title: 'Application Updated',
+            message: notificationMessage
+          });
+
+          $log.log('Sails updated an application.');
+
+        } else if (msg.verb === 'destroyed') {
+
+          var appIndex = _.findIndex(self.data, {
+            name: msg.id
+          });
+
+          if (appIndex === -1) {
+            // Our version of the database is out of sync from remote, re-init
+            $log.log('Data out of sync, reloading.');
+            return self.initialize();
+          }
+
+
+          if (appIndex > -1) {
+            self.data.splice(appIndex, 1);
+          }
+
+          Notification({
+            title: 'Application Deleted',
+            message: msg.previous.description || ''
+          });
+
+          $log.log('Sails removed an application.');
+        }
+
+        PubSub.publish('data-change');
+      });
+
       /**
        * Retrieve & subscribe to all version & asset data.
        * @return {Promise} Resolved once data has been retrieved
