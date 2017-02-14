@@ -156,10 +156,6 @@ module.exports = {
     // Omit the blacklisted params (like JSONP callback param, etc.)
     var data = actionUtil.parseValues(req);
 
-    if (!data.application) {
-      return res.badRequest('An application is required.');
-    }
-
     if (!data.version) {
       return res.badRequest('A version is required.');
     }
@@ -167,18 +163,12 @@ module.exports = {
     if (_.isString(data.version)) {
       // Only a name was provided, normalize
       data.version = {
-        name: data.version,
-        application: {
-          name: application
-        }
+        id: data.version
       };
     } else if (_.isObjectLike(data.version) && _.has(data.version, 'name')) {
       // Valid request, but we only want the name
       data.version = {
-        name: data.version.name,
-        application: {
-          name: application
-        }
+        id: data.version.id,
       };
     } else {
       return res.badRequest('Invalid version provided.');

@@ -251,7 +251,7 @@ angular.module('app.core.data.service', [
 
         var index;
         var application = _.find(self.data, {
-          'name': version.application
+          'name': (version || {}).application
         });
         var notificationMessage = (((application || {}).description + ' ') || '') + (version || {}).name || '';
         var versions = _.flatten(_.map(self.data, 'versions'));
@@ -436,6 +436,10 @@ angular.module('app.core.data.service', [
           asset.version = {
             name: asset.version
           };
+        } else if (_.isInteger(asset.version)) {
+          asset.version = {
+            id: asset.version
+          };
         }
 
         return asset;
@@ -455,13 +459,16 @@ angular.module('app.core.data.service', [
           return self.initialize();
         }
 
+        console.log(asset, msg);
+
         var notificationMessage = (asset || {}).name || '';
 
         var versionIndex, index;
+        var versions = _.flatten(_.map(self.data, 'versions'));
 
         if (msg.verb === 'created') {
-          versionIndex = _.findIndex(self.data, {
-            name: asset.version.name // Sails sends the version
+          versionIndex = _.findIndex(versions, {
+            id: asset.version.id // Sails sends the version
           });
 
           if (versionIndex === -1) {
@@ -470,7 +477,7 @@ angular.module('app.core.data.service', [
             return self.initialize();
           }
 
-          self.data[versionIndex].assets.unshift(asset);
+          versions[versionIndex].assets.unshift(asset);
 
           Notification({
             title: 'New Asset Available',
@@ -481,7 +488,7 @@ angular.module('app.core.data.service', [
 
         } else if (msg.verb === 'updated') {
 
-          versionIndex = _.findIndex(self.data, function(version) {
+          versionIndex = _.findIndex(versions, function(version) {
             index = _.findIndex(version.assets, {
               name: msg.id // Sails sends back the old id for us
             });
@@ -495,7 +502,7 @@ angular.module('app.core.data.service', [
             return self.initialize();
           }
 
-          self.data[versionIndex].assets[index] = asset;
+          versions[versionIndex].assets[index] = asset;
 
           Notification({
             title: 'Asset Updated',
@@ -506,7 +513,7 @@ angular.module('app.core.data.service', [
 
         } else if (msg.verb === 'destroyed') {
 
-          versionIndex = _.findIndex(self.data, function(version) {
+          versionIndex = _.findIndex(versions, function(version) {
             $log.log('Searching Version:', version);
             index = _.findIndex(version.assets, {
               name: msg.id // Sails sends back the old id for us
@@ -524,7 +531,7 @@ angular.module('app.core.data.service', [
 
 
           if (index > -1) {
-            self.data[versionIndex].assets.splice(index, 1);
+            versions[versionIndex].assets.splice(index, 1);
           }
 
           Notification({

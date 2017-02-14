@@ -19,8 +19,8 @@ angular.module('app.admin.version-table', [])
           templateUrl: 'js/admin/edit-version-modal/edit-version-modal.html',
           controller: 'EditVersionModalController',
           resolve: {
-            versionName: function() {
-              return version.id;
+            version: function() {
+              return version;
             }
           }
         });

@@ -19,8 +19,6 @@ angular.module('app.admin.edit-version-modal', [])
         var updatedVersion = _.find(application.versions, {
           name: version.name
         });
-
-        $log.log(application, updatedVersion);
         
         if (!updatedVersion) {
           // The version no longer exists
