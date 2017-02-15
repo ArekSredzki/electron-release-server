@@ -17,6 +17,11 @@ module.exports = {
 
     description: {
       type: 'string',
+      required: true
+    },
+
+    image: {
+      type: 'string'
     },
 
     versions: {
@@ -25,5 +30,5 @@ module.exports = {
     }
 
   },
-  autoPK: false 
+  autoPK: false
 };

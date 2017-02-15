@@ -6,6 +6,7 @@ angular.module('app.admin.add-application-modal', ['slugifier'])
       $scope.application = {
         name: '',
         description: '',
+        image: '/images/logo.svg'
       };
 
       $scope.addApplication = function() {

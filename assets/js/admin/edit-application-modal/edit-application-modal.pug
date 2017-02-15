@@ -20,6 +20,16 @@ form(editable-form='', name='appForm', onaftersave='acceptEdit()', e-role='form'
             e-required
             )
             | {{ application.description }}
+      .form-group
+        label.col-md-4.control-label(for='image') Application Icon URL
+        .col-md-7
+          span(
+            editable-text='application.image',
+            e-name='image'
+            )
+            | {{ application.image }}
+          br
+          img.app-logo(src='{{ application.image }}')
   .modal-footer
     div(ng-if='!appForm.$visible')
       button.btn.btn-warning(type='button', ng-click='appForm.$show()') Edit

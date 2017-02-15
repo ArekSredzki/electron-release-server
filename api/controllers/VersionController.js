@@ -15,6 +15,7 @@ module.exports = {
   /**
    * Redirect the update request to the appropriate endpoint
    * (GET /update)
+   * (GET /:application/update)
    */
   redirect: function(req, res) {
     var platform = req.param('platform');
@@ -31,7 +32,7 @@ module.exports = {
       return res.badRequest('Requires "platform" parameter');
     }
 
-    return res.redirect('/update/' + platform + '/' + application + '/' + version);
+    return res.redirect('/' + application + '/update/' + platform + '/' + version);
   },
 
   /**
@@ -39,7 +40,7 @@ module.exports = {
    *
    * Assumes stable channel unless specified
    *
-   * (GET /update/:platform/:application/:version/:channel)
+   * (GET /:application/update/:platform/:version/:channel)
    */
   general: function(req, res) {
     var platform = req.param('platform');
@@ -93,7 +94,7 @@ module.exports = {
           .find(UtilityService.getTruthyObject({
             application: application,
             channel: applicableChannels,
-            createdAt: createdAtFilter
+            //createdAt: createdAtFilter
           }))
           .populate('assets', {
             platform: platforms
@@ -153,6 +154,7 @@ module.exports = {
             return res.ok({
               url: url.resolve(
                 sails.config.appUrl,
+                '/' + latestVersion.application +
                 '/download/' + latestVersion.name + '/' +
                 latestVersion.assets[0].platform + '?filetype=zip'
               ),
@@ -170,7 +172,7 @@ module.exports = {
    * Currently, it will only serve a full.nupkg of the latest release with a
    * normalized filename (for pre-release)
    *
-   * (GET /update/:platform/:application/:version/:channel/RELEASES)
+   * (GET /:application/update/:platform/:version/:channel/RELEASES)
    */
   windows: function(req, res) {
     var application = req.param('application');
@@ -211,7 +213,7 @@ module.exports = {
 
         if (currentVersion) {
           createdAtFilter = {
-            '>=': currentVersion.createdAt
+            '>': currentVersion.createdAt
           };
         } else {
           sails.log.debug('The specified `version` does not exist');
@@ -221,11 +223,12 @@ module.exports = {
 
         return Version
           .find(UtilityService.getTruthyObject({
+            application: application,
             channel: applicableChannels,
-            createdAt: createdAtFilter
+            //createdAt: createdAtFilter
           }))
           .populate('assets', {
-            platform: platforms
+            platform: platforms,
           })
           .then(function(newerVersions) {
             // Sort versions which were added after the current one by semver in
@@ -247,6 +250,7 @@ module.exports = {
                       return _.includes(o.name.toLowerCase(), '-full');
                     }
                   );
+
                 return v.length && semver.lte(
                   version, newVersion.name
                 );
@@ -265,14 +269,17 @@ module.exports = {
                   _.filter(
                     newVersion.assets,
                     function(asset) {
+                      asset.version = newVersion.name;
                       return asset.filetype === '.nupkg'
                         && _.includes(asset.name.toLowerCase(), '-delta')
-                        && semver.lte(version, asset.version)
-                        && semver.gt(latestVersion.name, asset.version);
+                        && semver.lte(version, newVersion.name)
+                        && semver.gt(latestVersion.name, newVersion.name);
                     }));
               }, []);
 
             Array.prototype.unshift.apply(latestVersion.assets, deltaAssets);
+
+            sails.log.debug('Latest Windows Version', latestVersion);
 
             latestVersion.assets.sort(function(a1, a2) {
               return semver.compare(a1.version, a2.version);
@@ -284,8 +291,11 @@ module.exports = {
             assets = _.map(latestVersion.assets, function(asset) {
               asset.name = url.resolve(
                 sails.config.appUrl,
-                '/download/' + application + '/' + asset.version + '/' + asset.platform + '/' +
-                asset.name
+                '/' + application +
+                '/download' +
+                '/' + asset.version +
+                '/' + asset.platform +
+                '/' + asset.name
               );
 
               return asset;
@@ -303,7 +313,7 @@ module.exports = {
 
   /**
    * Get release notes for a specific version
-   * (GET /notes/:application/:version?)
+   * (GET /:application/notes/:version?)
    */
   releaseNotes: function(req, res) {
     var application = req.params.application;

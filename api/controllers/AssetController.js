@@ -39,6 +39,9 @@ module.exports = {
     var version = req.params.version || undefined;
     var filename = req.params.filename;
     var filetype = req.query.filetype;
+    var delta = (req.param('delta') == 'true') || ((filename.toLowerCase() || '').indexOf('-delta') > -1);
+
+    sails.log.debug('Asset requested in Delta mode: ', delta);
 
     if (!application) {
       return res.badRequest('Requires "application" parameter');
@@ -109,7 +112,9 @@ module.exports = {
               // Sorting filename in ascending order prioritizes other files
               // over zip archives is both are available and matched.
               return resolve(_.orderBy(
-                version.assets, ['filetype', 'createdAt'], ['asc', 'desc']
+                _.filter(version.assets, function(asset) {
+                  return filetype !== '.nupkg' || delta === (asset.name.toLowerCase().indexOf('-delta') > -1);
+                }), ['filetype', 'createdAt'], ['asc', 'desc']
               )[0]);
             })
             .catch(reject);
@@ -160,12 +165,12 @@ module.exports = {
       return res.badRequest('A version is required.');
     }
 
-    if (_.isString(data.version)) {
+    if (_.isInteger(data.version) || _.isString(data.version)) {
       // Only a name was provided, normalize
       data.version = {
         id: data.version
       };
-    } else if (_.isObjectLike(data.version) && _.has(data.version, 'name')) {
+    } else if (_.isObjectLike(data.version) && _.has(data.version, 'id')) {
       // Valid request, but we only want the name
       data.version = {
         id: data.version.id,

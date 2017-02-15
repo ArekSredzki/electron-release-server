@@ -1,8 +1,10 @@
 .row.text-center
   .col-md-12
     h2 Available Electron Apps
-      
+
 .row.text-center.padding-20-20
-  .col-md-3(data-ng-repeat='app in DataService.data')
-    a.btn.btn-default(href="/{{ app.name }}/releases")
-      | {{ app.description }}
+  .col-md-3(data-ng-repeat='app in DataService.data', style='padding: 20px;')
+    a.btn.btn-default(href="/{{ app.name }}/releases", style='width: 100%;')
+      img.app-logo(src='{{ app.image }}')
+      br
+      p(style='overflow: hidden; text-overflow: ellipsis; width: 100%;') {{ app.description }}

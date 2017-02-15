@@ -19,6 +19,14 @@
             name='description',
             required
             )
+      .form-group
+        label.col-md-4.control-label(for='image') Application Icon URL
+        .col-md-7
+          input.form-control.input-md(
+            ng-model='application.image',
+            name='image',
+            required
+            )
 .modal-footer
   div
     button.btn.btn-warning(type='button', ng-click='addApplication()') Add Application
