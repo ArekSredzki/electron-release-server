@@ -94,7 +94,7 @@ module.exports = {
           .find(UtilityService.getTruthyObject({
             application: application,
             channel: applicableChannels,
-            //createdAt: createdAtFilter
+            createdAt: createdAtFilter
           }))
           .populate('assets', {
             platform: platforms
@@ -225,7 +225,7 @@ module.exports = {
           .find(UtilityService.getTruthyObject({
             application: application,
             channel: applicableChannels,
-            //createdAt: createdAtFilter
+            createdAt: createdAtFilter
           }))
           .populate('assets', {
             platform: platforms,
