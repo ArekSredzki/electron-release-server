@@ -1,6 +1,10 @@
 angular.module('app.releases', [])
   .config(['$routeProvider', function($routeProvider) {
     $routeProvider
+      .when('/releases/:channel?', {
+        templateUrl: 'js/release/release.html',
+        controller: 'DownloadController as vm'
+      })
       .when('/:application/releases/:channel?', {
         templateUrl: 'js/release/release.html',
         controller: 'DownloadController as vm'
@@ -36,9 +40,13 @@ angular.module('app.releases', [])
       self.availableChannels = DataService.availableChannels;
 
       self.getApplication = function() {
-        self.application = _.find(DataService.data, {
-          'name': $routeParams.application
-        });
+        if ('application' in $routeParams) {
+          self.application = _.find(DataService.data, {
+            'name': $routeParams.application
+          });
+        } else {
+          self.application = DataService.data[0];
+        }
 
         if (!self.application) {
           $location.path('/');

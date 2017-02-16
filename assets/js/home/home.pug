@@ -1,10 +1,19 @@
 .row.text-center
-  .col-md-12
+  .col-md-12(ng-if='DataService.data.length > 1')
     h2 Available Electron Apps
+  .col-md-12(ng-if='DataService.data.length == 1')
+    h2 Home of {{ DataService.data[0].description }}
 
 .row.text-center.padding-20-20
-  .col-md-3(data-ng-repeat='app in DataService.data', style='padding: 20px;')
+  .col-md-3(ng-if='DataService.data.length > 1', data-ng-repeat='app in DataService.data', style='padding: 20px;')
     a.btn.btn-default(href="/{{ app.name }}/releases", style='width: 100%;')
       img.app-logo(src='{{ app.image }}')
       br
       p(style='overflow: hidden; text-overflow: ellipsis; width: 100%;') {{ app.description }}
+  .col-md-12(ng-if='DataService.data.length == 1')
+    img.app-logo-big(src='{{ DataService.data[0].image }}')
+    br
+    a.btn.btn-default(href="/releases")
+      | Get it !
+  .col-md-12(ng-if='!DataService.data.length')
+    h3 There's no app to download here :'(
