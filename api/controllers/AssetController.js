@@ -34,14 +34,12 @@ module.exports = {
    * (GET /:application/download/channel/:channel/:platform?': 'AssetController.download')
    */
   download: function(req, res) {
-    var application = req.params.application;
+    var application = req.params.application || sails.config.miscellaneous.defaultApp;
     var channel = req.params.channel;
     var version = req.params.version || undefined;
     var filename = req.params.filename;
     var filetype = req.query.filetype;
     var delta = (req.param('delta') == 'true') || ((filename.toLowerCase() || '').indexOf('-delta') > -1);
-
-    sails.log.debug('Asset requested in Delta mode: ', delta);
 
     if (!application) {
       return res.badRequest('Requires "application" parameter');

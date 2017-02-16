@@ -44,7 +44,7 @@ module.exports = {
    */
   general: function(req, res) {
     var platform = req.param('platform');
-    var application = req.param('application');
+    var application = req.param('application') || sails.config.miscellaneous.defaultApp;
     var version = req.param('version');
     var channel = req.param('channel') || 'stable';
 
@@ -175,7 +175,7 @@ module.exports = {
    * (GET /:application/update/:platform/:version/:channel/RELEASES)
    */
   windows: function(req, res) {
-    var application = req.param('application');
+    var application = req.param('application') || sails.config.miscellaneous.defaultApp;
     var platform = req.param('platform');
     var version = req.param('version');
     var channel = req.param('channel') || 'stable';
@@ -316,7 +316,7 @@ module.exports = {
    * (GET /:application/notes/:version?)
    */
   releaseNotes: function(req, res) {
-    var application = req.params.application;
+    var application = req.params.application || sails.config.miscellaneous.defaultApp;
     var version = req.params.version;
 
     Version

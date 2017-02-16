@@ -26,11 +26,23 @@ module.exports.routes = {
     view: 'homepage'
   },
 
+  // Legacy routes assuming set defaultApp name
+  'GET /download/latest/:platform?': 'AssetController.download',
+  'GET /download/channel/:channel/:platform?': 'AssetController.download',
+  'GET /download/:version/:platform?/:filename?': 'AssetController.download',
+
+  'GET /update': 'VersionController.redirect',
+  'GET /update/:platform/:version': 'VersionController.general',
+  'GET /update/:platform/:version/RELEASES': 'VersionController.windows',
+  'GET /update/:platform/:version/:channel/RELEASES': 'VersionController.windows',
+  'GET /update/:platform/:version/:channel': 'VersionController.general',
+  'GET /notes/:version?': 'VersionController.releaseNotes',
+
+  // App-aware routes
   'GET /:application/download/latest/:platform?': 'AssetController.download',
   'GET /:application/download/channel/:channel/:platform?': 'AssetController.download',
   'GET /:application/download/:version/:platform?/:filename?': 'AssetController.download',
 
-  'GET /update': 'VersionController.redirect',
   'GET /:application/update': 'VersionController.redirect',
   'GET /:application/update/:platform/:version': 'VersionController.general',
   'GET /:application/update/:platform/:version/RELEASES': 'VersionController.windows',
