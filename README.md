@@ -13,6 +13,9 @@ If you host your project on your Github **and** do not need a UI for your app, t
 ## Advisory Notice
 **IMPORTANT:** The release of Angular `1.6.0` has broken all `electron-release-server` versions prior to `1.4.2`. Please use the instructions under the `Maintenance` heading below to update your fork! Sorry for the inconvenience.
 
+**IMPORTANT:** The next release of `electron-release-server` will be incompatible withe the current schema.
+Please upgrade with the `migrate-multi-app.sql` script before upgrading. 
+
 ## Features
 - :sparkles: Docker :whale: support (thanks to EvgeneOskin)!
 - :sparkles: Awesome release management interface powered by [AngularJS](https://angularjs.org)
