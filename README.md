@@ -35,6 +35,9 @@ If you host your project on your Github **and** do not need a UI for your app, t
 - :sparkles: Serve the perfect type of assets: `.zip` for Squirrel.Mac, `.nupkg` for Squirrel.Windows, `.dmg` for Mac users, ...
 - :sparkles: Release notes endpoint
     - `/notes/:version`
+- :sparkles: Serve and manage multiple application from the same instance:
+    - Urls are simply prefixed with the `slugified` name of the app: `/:application/download/latest` or `/:application/update/:platform/:version[/:channel]`
+    - Define a default application to be served when the simple urls are used
 
 **NOTE:** if you don't provide the appropriate type of file for Squirrel you won't be able to update your app since the update endpoint will not return a JSON. (`.zip` for Squirrel.Mac, `.nupkg` for Squirrel.Windows).
 
