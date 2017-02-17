@@ -3,7 +3,7 @@ services:
   web:
     restart: always
     volumes:
-      - ./docker-data:/tmp
+      - ./docker-assets:/assets
     build: .
     environment:
       APP_USERNAME: username
