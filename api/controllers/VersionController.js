@@ -139,9 +139,14 @@ module.exports = {
 
             sails.log.debug('Version candidate accepted');
 
+            let appUrl = sails.config.appUrl;
+            const port = sails.config.port;
+            if (port && port != 80 && port != 443) {
+              appUrl += ':' + port;
+            }
             return res.ok({
               url: url.resolve(
-                sails.config.appUrl,
+                appUrl,
                 '/download/' + latestVersion.name + '/' +
                 latestVersion.assets[0].platform + '?filetype=zip'
               ),
