@@ -86,7 +86,7 @@ module.exports = {
     // Maximum allowed file size in bytes
     // Defaults to 500MB
     // maxBytes: 524288000
-  }
+  },
 
   /***************************************************************************
    * Your SSL certificate and key, if you want to be able to serve HTTP      *
