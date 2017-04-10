@@ -72,10 +72,10 @@ AssetService.serveFile = function(req, res, asset) {
  * @param  {String} fd File descriptor of file to hash
  * @return {String}    Promise which is resolved with the hash once complete
  */
-AssetService.getHash = function(fd) {
+AssetService.getHash = function(fd, type = 'sha1') {
   return new Promise(function(resolve, reject) {
 
-    var hash = crypto.createHash('sha1');
+    var hash = crypto.createHash(type);
     hash.setEncoding('hex');
 
     var fileStream = fsx.createReadStream(fd)

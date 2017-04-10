@@ -285,6 +285,73 @@ module.exports = {
   },
 
   /**
+   * Get NSIS latest.yml for a specific channel
+   * (GET /update/:platform/latest.yml?)
+   * (GET /update/:platform/:channel/latest.yml?)
+   */
+  nsis: function(req, res) {
+    var platform = req.param('platform');
+    var channel = req.param('channel') || 'stable';
+
+    if (!platform) {
+      return res.badRequest('Requires `platform` parameter');
+    }
+
+    var platforms = PlatformService.detect(platform, true);
+
+    sails.log.debug('NSIS Update Search Query', {
+      platform: platforms,
+      channel: channel
+    });
+
+    // Get latest version that has a windows asset
+    Version
+      .find({ channel: channel })
+      .populate('assets')
+      .then(function(versions){
+        var sortedVersions = versions.sort(UtilityService.compareVersion);
+        var latestVersion = null;
+        var asset = null;
+        for (var i = 0; i < sortedVersions.length; i++) {
+          var currentVersion = sortedVersions[i];
+          if(currentVersion.assets){
+            for (var j = 0; j < currentVersion.assets.length; j++) {
+              var currentAsset = currentVersion.assets[j];
+              if(platforms.indexOf(currentAsset.platform) > -1){
+                latestVersion = currentVersion;
+                asset = currentAsset;
+                break;
+              }
+            }
+
+            if(latestVersion){
+              break;
+            }
+          }
+        }
+
+        if(latestVersion){
+          var downloadPath = url.resolve(
+            //sails.config.appUrl,
+            "",
+            '/download/' + latestVersion.name + '/' + asset.platform + '/' +
+            asset.name
+          );
+
+          var sha2 = asset.hash ? asset.hash.toLowerCase() : null
+
+          var latestYml = "version: " + latestVersion.name
+                          + "\nreleaseDate: " + latestVersion.updatedAt
+                          + "\npath: " + downloadPath
+                          + "\nsha2: " + sha2;
+          res.ok(latestYml);
+        } else {
+          res.notFound();
+        }
+      });
+  },
+
+  /**
    * Get release notes for a specific version
    * (GET /notes/:version?)
    */
