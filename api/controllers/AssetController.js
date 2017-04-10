@@ -194,6 +194,8 @@ module.exports = {
           // Calculate the hash of the file, as it is necessary for windows
           // files
           hashPromise = AssetService.getHash(uploadedFile.fd);
+        } else if(fileExt == '.exe') {
+          hashPromise = AssetService.getHash(uploadedFile.fd, 'sha256');
         } else {
           hashPromise = Promise.resolve('');
         }
