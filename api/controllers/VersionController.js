@@ -304,9 +304,12 @@ module.exports = {
       channel: channel
     });
 
+    var applicableChannels = ChannelService.getApplicableChannels(channel);
+    sails.log.debug('Applicable Channels', applicableChannels);
+
     // Get latest version that has a windows asset
     Version
-      .find({ channel: channel })
+      .find({ channel: applicableChannels })
       .populate('assets')
       .then(function(versions){
         var sortedVersions = versions.sort(UtilityService.compareVersion);
