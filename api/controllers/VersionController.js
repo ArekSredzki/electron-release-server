@@ -285,11 +285,15 @@ module.exports = {
   },
 
   /**
-   * Get NSIS latest.yml for a specific channel
-   * (GET /update/:platform/latest.yml?)
-   * (GET /update/:platform/:channel/latest.yml?)
+   * Get electron-updater win yml for a specific channel
+   * (GET /update/:platform/latest.yml)
+   * (GET /update/:platform/:channel.yml)
+   * (GET /update/:platform/:channel/latest.yml)
+   * (GET /update/:platform/latest-mac.yml)
+   * (GET /update/:platform/:channel-mac.yml)
+   * (GET /update/:platform/:channel/latest-mac.yml)
    */
-  nsis: function(req, res) {
+  electronUpdaterWin: function(req, res) {
     var platform = req.param('platform');
     var channel = req.param('channel') || 'stable';
 
@@ -299,7 +303,7 @@ module.exports = {
 
     var platforms = PlatformService.detect(platform, true);
 
-    sails.log.debug('NSIS Update Search Query', {
+    sails.log.debug('NSIS electron-updater Search Query', {
       platform: platforms,
       channel: channel
     });
@@ -311,29 +315,102 @@ module.exports = {
     Version
       .find({ channel: applicableChannels })
       .populate('assets')
-      .then(function(versions){
+      .then(function(versions) {
+        // TODO: Implement method to get latest version with available asset
         var sortedVersions = versions.sort(UtilityService.compareVersion);
         var latestVersion = null;
         var asset = null;
         for (var i = 0; i < sortedVersions.length; i++) {
           var currentVersion = sortedVersions[i];
-          if(currentVersion.assets){
+          if (currentVersion.assets) {
             for (var j = 0; j < currentVersion.assets.length; j++) {
               var currentAsset = currentVersion.assets[j];
-              if(platforms.indexOf(currentAsset.platform) > -1){
+              if (currentAsset.filetype === '.exe' && _.includes(platforms, currentAsset.platform)) {
                 latestVersion = currentVersion;
                 asset = currentAsset;
                 break;
               }
             }
 
-            if(latestVersion){
+            if (latestVersion) {
               break;
             }
           }
         }
 
-        if(latestVersion){
+        if (latestVersion) {
+          var downloadPath = url.resolve(
+            //sails.config.appUrl,
+            "",
+            '/download/' + latestVersion.name + '/' + asset.platform + '/' +
+            asset.name
+          );
+
+          var sha2 = asset.hash ? asset.hash.toLowerCase() : null
+
+          var latestYml = "version: " + latestVersion.name
+                          + "\nreleaseDate: " + latestVersion.updatedAt
+                          + "\npath: " + downloadPath
+                          + "\nsha2: " + sha2;
+          res.ok(latestYml);
+        } else {
+          res.notFound();
+        }
+      });
+  },
+
+  /**
+   * Get electron-updater mac yml for a specific channel
+   * (GET /update/:platform/latest-mac.yml)
+   * (GET /update/:platform/:channel-mac.yml)
+   * (GET /update/:platform/:channel/latest-mac.yml)
+   */
+  electronUpdaterMac: function(req, res) {
+    var platform = req.param('platform');
+    var channel = req.param('channel') || 'stable';
+
+    if (!platform) {
+      return res.badRequest('Requires `platform` parameter');
+    }
+
+    var platforms = PlatformService.detect(platform, true);
+
+    sails.log.debug('Mac electron-updater Search Query', {
+      platform: platforms,
+      channel: channel
+    });
+
+    var applicableChannels = ChannelService.getApplicableChannels(channel);
+    sails.log.debug('Applicable Channels', applicableChannels);
+
+    // Get latest version that has a mac asset
+    Version
+      .find({ channel: applicableChannels })
+      .populate('assets')
+      .then(function(versions) {
+        // TODO: Implement method to get latest version with available asset
+        var sortedVersions = versions.sort(UtilityService.compareVersion);
+        var latestVersion = null;
+        var asset = null;
+        for (var i = 0; i < sortedVersions.length; i++) {
+          var currentVersion = sortedVersions[i];
+          if (currentVersion.assets) {
+            for (var j = 0; j < currentVersion.assets.length; j++) {
+              var currentAsset = currentVersion.assets[j];
+              if (currentAsset.filetype === '.zip' && _.includes(platforms, currentAsset.platform)) {
+                latestVersion = currentVersion;
+                asset = currentAsset;
+                break;
+              }
+            }
+
+            if (latestVersion) {
+              break;
+            }
+          }
+        }
+
+        if (latestVersion) {
           var downloadPath = url.resolve(
             //sails.config.appUrl,
             "",
