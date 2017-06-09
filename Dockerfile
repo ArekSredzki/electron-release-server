@@ -13,6 +13,9 @@ RUN npm install \
 # Bundle app source
 COPY . /usr/src/electron-release-server
 
+# prepare for dokku
+RUN ./scripts/prepare.sh
+
 COPY config/docker.js config/local.js
 
 EXPOSE 80
