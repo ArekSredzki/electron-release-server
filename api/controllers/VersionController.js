@@ -289,9 +289,6 @@ module.exports = {
    * (GET /update/:platform/latest.yml)
    * (GET /update/:platform/:channel.yml)
    * (GET /update/:platform/:channel/latest.yml)
-   * (GET /update/:platform/latest-mac.yml)
-   * (GET /update/:platform/:channel-mac.yml)
-   * (GET /update/:platform/:channel/latest-mac.yml)
    */
   electronUpdaterWin: function(req, res) {
     var platform = req.param('platform');
