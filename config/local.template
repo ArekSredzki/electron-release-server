@@ -54,7 +54,7 @@ module.exports = {
   },
 
   jwt: {
-    // Recommended: 63 random alpha-numeric characters
+    // Recommended: 63 random alpha-numeric characters for secret
     // Generate using: https://www.grc.com/passwords.htm
     token_secret: 'INSERT_RANDOM_TOKEN_KEY'
   },
@@ -70,7 +70,7 @@ module.exports = {
   },
 
   session: {
-    // Recommended: 63 random alpha-numeric characters
+    // Recommended: 63 random alpha-numeric characters for secret
     // Generate using: https://www.grc.com/passwords.htm
     secret: 'SESSION_SECRET',
     database: 'SESSION_DATABASE_NAME',
