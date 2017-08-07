@@ -2,9 +2,9 @@
   "name": "electron-release-server",
   "private": true,
   "dependencies": {
-    "angular": "^1.5.9",
+    "angular": "1.5.9",
     "bootstrap-sass-official": "^3.3.7",
-    "angular-animate": "~1.5.9",
+    "angular-animate": "1.5.9",
     "angular-messages": "~1.5.9",
     "angular-route": "~1.5.9",
     "angular-sanitize": "~1.5.9",
