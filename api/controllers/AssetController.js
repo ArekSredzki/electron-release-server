@@ -87,7 +87,7 @@ module.exports = {
             .sort({
               createdAt: 'desc'
             })
-            .limit(1)
+            .limit(100)
             .populate('assets', assetOptions)
             .then(function(versions) {
               if (!versions || !versions.length) {
@@ -95,6 +95,14 @@ module.exports = {
               }
 
               var version = versions[0];
+              if (platform){
+                for (var i = 0; i < versions.length; i++){
+                  if (versions[i].assets.length > 0 && versions[i].assets[0].platform == platform){
+                    version = versions[i];
+                    break;
+                  }
+                }
+              }
 
               if (!version.assets || !version.assets.length) {
                 return resolve();
