@@ -55,9 +55,8 @@ angular.module('app.releases', [])
 
       // Watch for changes to data content and update local data accordingly.
       var uid1 = PubSub.subscribe('data-change', function() {
-        // $scope.$apply(function() {
         self.getLatestReleases();
-        // });
+        self.availableChannels = DataService.availableChannels;
       });
 
       // Update knowledge of the latest available versions.
