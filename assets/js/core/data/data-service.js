@@ -40,18 +40,6 @@ angular.module('app.core.data.service', [
       };
 
       /**
-       * An array of all available release channels
-       * TODO: Make this dynamic by fetching from the api
-       * @type {Array}
-       */
-      self.availableChannels = [
-        'stable',
-        'rc',
-        'beta',
-        'alpha'
-      ];
-
-      /**
        * Compare version objects using semantic versioning.
        * Pass to Array.sort for a descending array
        * @param  {Object} v1 Version object one
@@ -535,32 +523,30 @@ angular.module('app.core.data.service', [
       });
 
       /**
-       * Retrieve & subscribe to all version & asset data.
+       * Retrieve & subscribe to all version, channels & asset data.
        * @return {Promise} Resolved once data has been retrieved
        */
       self.initialize = function() {
-        var deferred = $q.defer();
-        // Get the initial set of releases from the server.
-        // XXX This will also subscribe us to future changes regarding releases
-        $sails.get('/api/version')
-          .success(function(data) {
-            self.data = data;
+        return Promise.all([
+            // Get the initial set of releases from the server.
+            // XXX This will also subscribe us to future changes regarding releases
+            $sails.get('/api/version'),
+
+            // Get available channels
+            $sails.get('/api/channel'),
+
+            // Only sent to watch for asset updates
+            $sails.get('/api/asset')
+          ])
+          .then(([versions, channels]) => {
+            self.data = versions.data;
             self.sortVersions();
-            deferred.resolve(true);
-
+            self.availableChannels = channels.data.map(channel => channel.name);
+            
             PubSub.publish('data-change');
-          })
-          .error(function(data, status) {
-            deferred.reject(data);
-          });
 
-        // Only sent to watch for asset updates
-        $sails.get('/api/asset')
-          .success(function(data) {
             $log.log('Should be subscribed!');
           });
-
-        return deferred.promise;
       };
 
       /**
@@ -572,6 +558,9 @@ angular.module('app.core.data.service', [
        * @return {Object}          Latest release data object
        */
       self.getLatestReleases = function(platform, archs, channel) {
+        if (!self.availableChannels) {
+          return;
+        }
 
         var channelIndex = self.availableChannels.indexOf(channel);
 

@@ -1,7 +1,7 @@
 .row
   h3 Version Management
         
-  table.table.table-bordered.table-hover.table-condensed.table-custom(ng-if='DataService.data.length' ng-cloak)
+  table.table.table-bordered.table-hover.table-condensed.table-custom(ng-if='versions.length' ng-cloak)
     thead
       tr
         td Name
@@ -10,7 +10,7 @@
         td Date
         td
     tbody
-      tr(data-ng-repeat='version in DataService.data')
+      tr(data-ng-repeat='version in versions')
         td {{ version.name }}
         td {{ version.channel.name }}
         td {{ version.assets.length }}
@@ -18,7 +18,7 @@
         td(style="white-space: nowrap")
           button.btn.btn-default.btn-sm(ng-click="openEditModal(version)")
             | More
-  .jumbotron(ng-hide="DataService.data.length")
+  .jumbotron(ng-hide="versions.length")
     h5.text-gray No Versions Available
 
   a.btn.btn-default(ng-click="openAddModal()") Add New Version

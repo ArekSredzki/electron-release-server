@@ -9,8 +9,29 @@
  * http://sailsjs.org/#!/documentation/reference/sails.config/sails.config.bootstrap.html
  */
 
+ const mapSeries = require('async/mapSeries');
+ const waterfall = require('async/waterfall');
+ const apply = require('async/apply');
+
 module.exports.bootstrap = function(cb) {  
-  // It's very important to trigger this callback method when you are finished
-  // with the bootstrap!  (otherwise your server will never lift, since it's waiting on the bootstrap)
-  cb();
+  // Create configured channels in database
+  mapSeries(sails.config.channels, (name, next) => {
+    waterfall([
+      (next) => {
+        Channel.find({
+          name: name
+        }).exec(next);
+      },
+      (result, next) => {
+        if (result.length) {
+          return next();
+        }
+
+        Channel.create({
+          name: name
+        })
+        .exec(next);
+      }
+    ], next);
+  }, cb);
 };

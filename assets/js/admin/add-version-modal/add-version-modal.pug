@@ -36,7 +36,7 @@
           select.form-control(
             ng-model='version.channel.name',
             name='channel',
-            ng-options='o as o for o in DataService.availableChannels',
+            ng-options='o as o for o in availableChannels',
             required
             )
           hr

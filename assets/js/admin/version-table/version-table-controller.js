@@ -9,9 +9,9 @@ angular.module('app.admin.version-table', [])
         }
       });
   }])
-  .controller('AdminVersionTableController', ['$scope', 'Notification', 'DataService','$uibModal',
-    function($scope, Notification, DataService, $uibModal) {
-      $scope.DataService = DataService;
+  .controller('AdminVersionTableController', ['$scope', 'Notification', 'DataService','$uibModal', 'PubSub',
+    function($scope, Notification, DataService, $uibModal, PubSub) {
+      $scope.versions = DataService.data;
 
       $scope.openEditModal = function(version, versionName) {
         var modalInstance = $uibModal.open({
@@ -37,5 +37,14 @@ angular.module('app.admin.version-table', [])
 
         modalInstance.result.then(function() {}, function() {});
       };
+
+      // Watch for changes to data content and update local data accordingly.
+      var uid1 = PubSub.subscribe('data-change', function() {
+        $scope.versions = DataService.data;
+      });
+
+      $scope.$on('$destroy', function() {
+        PubSub.unsubscribe(uid1);
+      });
     }
   ]);
