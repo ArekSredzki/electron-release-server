@@ -32,11 +32,11 @@ angular.module('app.core.data.service', [
       };
 
       self.filetypes = {
-        windows_64: '.exe',
-        windows_32: '.exe',
-        osx_64: '.dmg',
-        linux_64: '.deb',
-        linux_32: '.deb'
+        windows_64: ['.exe', '.msi'],
+        windows_32: ['.exe', '.msi'],
+        osx_64: ['.dmg', '.pkg', '.mas'],
+        linux_64: ['.deb', '.gz', '.rpm', '.AppImage'],
+        linux_32: ['.deb', '.gz', '.rpm', '.AppImage']
       };
 
       /**
@@ -597,16 +597,16 @@ angular.module('app.core.data.service', [
         _.forEach(archs, function(arch) {
           var platformName = platform + '_' + arch;
 
-          var filetype = self.filetypes[platformName];
+          var filetypes = self.filetypes[platformName];
 
-          if (!filetype) {
+          if (!filetypes) {
             return;
           }
           _.forEach(versions, function(version) {
             _.forEach(version.assets, function(asset) {
               if (
                 asset.platform === platformName &&
-                asset.filetype === filetype
+                filetypes.includes(asset.filetype)
               ) {
                 var matchedAsset = _.clone(asset);
                 matchedAsset.version = version.name;
