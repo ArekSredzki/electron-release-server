@@ -48,6 +48,8 @@ form(editable-form='', name='versionForm', onaftersave='acceptEdit()', e-role='f
         p
           |  New installs require 
           code .exe
+          |  or 
+          code .msi
           |  assets. Updates require 
           code .nupkg
           | .
@@ -59,6 +61,18 @@ form(editable-form='', name='versionForm', onaftersave='acceptEdit()', e-role='f
           |  assets. Updates require 
           code .zip
           | .
+        h5
+          strong Linux
+        p
+          |  New installs require
+          code .deb
+          |  , 
+          code .rpm
+          |  , 
+          code .tar.gz
+          |  or 
+          code .AppImage
+          |  assets. Updates are not supported.
   .modal-footer
     div(ng-if='!versionForm.$visible')
       button.btn.btn-warning(type='button', ng-click='versionForm.$show()') Edit
