@@ -5,12 +5,12 @@ The following is a recommended database setup process.
 Before you continue, you will need to have an instance on the PostgresSQL database running on a host. 
 
 You will additionally need to have the following details handy:
-- Host Name
-- The username & password for an account with priviledges to create a user, create a database & assign a user to the database.
+- Host name
+- The username & password for an account with privileges to create a user, create a database & assign a user to the database.
 
 If you need help installing the database, the following link contains detailed [installaing guides](https://wiki.postgresql.org/wiki/Detailed_installation_guides).
 
-For example, after a windows installation of postgres, I needed to run the following commands
+For example, after a Windows installation of postgres, I needed to run the following commands
 ```
 C:\Program Files\PostgreSQL\9.5\bin>psql.exe --username=postgres
 Password for user postgres:
@@ -45,7 +45,7 @@ Create databases for role
 CREATE DATABASE electron_release_server OWNER "electron_release_server_user";
 CREATE DATABASE electron_release_server_sessions OWNER "electron_release_server_user";
 ```
-After completeing this section, you should now have
+After completing this section, you should now have
 1. host - hostname of your postgres database server
 2. user - username to be used by the application (electron_release_server_user)
 3. password - password to be used by the application 
