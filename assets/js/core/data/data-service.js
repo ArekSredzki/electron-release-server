@@ -538,10 +538,14 @@ angular.module('app.core.data.service', [
             // Only sent to watch for asset updates
             $sails.get('/api/asset')
           ])
-          .then(([versions, channels]) => {
+          .then(function(responses) {
+            versions = responses[0];
+            channels = responses[1];
             self.data = versions.data;
             self.sortVersions();
-            self.availableChannels = channels.data.map(channel => channel.name);
+            self.availableChannels = channels.data.map(function(channel) {
+              return channel.name;
+            });
             
             PubSub.publish('data-change');
 
