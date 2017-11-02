@@ -14,6 +14,7 @@ angular.module('app.releases', [])
     ) {
       var self = this;
       self.showAllVersions = false;
+      $scope.hasMoreVersions = DataService.hasMore;
 
       self.platform = deviceDetector.os;
       if (self.platform === 'mac') {
@@ -57,6 +58,7 @@ angular.module('app.releases', [])
       var uid1 = PubSub.subscribe('data-change', function() {
         self.getLatestReleases();
         self.availableChannels = DataService.availableChannels;
+        $scope.hasMoreVersions = DataService.hasMore;
       });
 
       // Update knowledge of the latest available versions.
@@ -74,5 +76,9 @@ angular.module('app.releases', [])
       $scope.$on('$destroy', function() {
         PubSub.unsubscribe(uid1);
       });
+
+      $scope.loadMoreVersions = function () {
+        DataService.loadMoreVersions();
+      };
     }
   ]);

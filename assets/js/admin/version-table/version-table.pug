@@ -21,4 +21,6 @@
   .jumbotron(ng-hide="versions.length")
     h5.text-gray No Versions Available
 
-  a.btn.btn-default(ng-click="openAddModal()") Add New Version
+  .btn-group
+    a.btn.btn-default(ng-click="openAddModal()") Add New Version
+    a.btn.btn-default(ng-show="hasMoreVersions" ng-click="loadMoreVersions()") Load more versions

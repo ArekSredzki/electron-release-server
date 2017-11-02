@@ -31,6 +31,11 @@ module.exports.views = {
   ****************************************************************************/
 
   engine: 'pug',
-  layout: false
+  layout: false,
+
+  /**
+   * How many releases are retrieve from the API at a time
+   */
+  pageSize: 50
 
 };

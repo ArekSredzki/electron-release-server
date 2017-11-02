@@ -7,6 +7,7 @@
     "async": "^2.5.0",
     "bluebird": "^3.4.6",
     "bower": "^1.8.0",
+    "compare-versions": "^3.1.0",
     "express-useragent": "^1.0.4",
     "fs-extra": "^1.0.0",
     "grunt": "^1.0.1",

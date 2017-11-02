@@ -109,6 +109,8 @@
           )
           | {{ vm.availablePlatforms[asset.platform] }}
           | ({{ asset.filetype }})
+      .btn-group
+        a.btn.btn-default(ng-show="vm.showAllVersions && hasMoreVersions" ng-click="loadMoreVersions()") Load more versions
 
 iframe(
   style="display:none;"
