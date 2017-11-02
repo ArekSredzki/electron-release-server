@@ -527,10 +527,16 @@ angular.module('app.core.data.service', [
        * @return {Promise} Resolved once data has been retrieved
        */
       self.initialize = function() {
+        self.currentPage = 0;
+        self.loading = true;
+        self.hasMore = false;
+
         return Promise.all([
             // Get the initial set of releases from the server.
             // XXX This will also subscribe us to future changes regarding releases
-            $sails.get('/api/version'),
+            $sails.get('/versions/sorted', {
+              page: self.currentPage
+            }),
 
             // Get available channels
             $sails.get('/api/channel'),
@@ -541,16 +547,38 @@ angular.module('app.core.data.service', [
           .then(function(responses) {
             versions = responses[0];
             channels = responses[1];
-            self.data = versions.data;
-            self.sortVersions();
+            self.data = versions.data.items;
             self.availableChannels = channels.data.map(function(channel) {
               return channel.name;
             });
-            
+
+            self.currentPage++;
+            self.hasMore = versions.data.total > self.data.length;
+            self.loading = false;
             PubSub.publish('data-change');
 
             $log.log('Should be subscribed!');
           });
+      };
+
+      self.loadMoreVersions = function() {
+        if (self.loading) {
+          return;
+        }
+
+        self.loading = true;
+
+        return $sails.get('/versions/sorted', {
+          page: self.currentPage
+        })
+        .then(function(versions) {
+          self.data = self.data.concat(versions.data.items);
+
+          self.currentPage++;
+          self.hasMore = versions.data.total > self.data.length;
+          self.loading = false;
+          PubSub.publish('data-change');
+        });
       };
 
       /**

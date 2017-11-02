@@ -9,6 +9,7 @@ var actionUtil = require('sails/lib/hooks/blueprints/actionUtil');
 var url = require('url');
 var Promise = require('bluebird');
 var semver = require('semver');
+var compareVersions = require('compare-versions');
 
 module.exports = {
 
@@ -28,6 +29,35 @@ module.exports = {
     }
 
     return res.redirect('/update/' + platform + '/' + version);
+  },
+
+  /**
+   * Sorts versions and returns pages sorted by by sermver
+   *
+   * ( GET /versions/sorted )
+   */
+  list: function (req, res) {
+    Version
+      .find()
+      .then(versions => {
+        var count = versions.length;
+        var page = req.param('page') || req.query.page || 0;
+        var start = page * sails.config.views.pageSize;
+        var end = start + sails.config.views.pageSize;
+        var items = versions
+          .sort(function (a, b) {
+            return -compareVersions(a.name, b.name);
+          })
+          .slice(start, end);
+
+        return res.send({
+          total: count,
+          offset: start,
+          page: page,
+          items: items
+        });
+      })
+      .catch(res.negotiate);
   },
 
   /**

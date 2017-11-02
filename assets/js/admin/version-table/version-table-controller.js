@@ -12,6 +12,7 @@ angular.module('app.admin.version-table', [])
   .controller('AdminVersionTableController', ['$scope', 'Notification', 'DataService','$uibModal', 'PubSub',
     function($scope, Notification, DataService, $uibModal, PubSub) {
       $scope.versions = DataService.data;
+      $scope.hasMoreVersions = DataService.hasMore;
 
       $scope.openEditModal = function(version, versionName) {
         var modalInstance = $uibModal.open({
@@ -38,9 +39,14 @@ angular.module('app.admin.version-table', [])
         modalInstance.result.then(function() {}, function() {});
       };
 
+      $scope.loadMoreVersions = function () {
+        DataService.loadMoreVersions();
+      };
+
       // Watch for changes to data content and update local data accordingly.
       var uid1 = PubSub.subscribe('data-change', function() {
         $scope.versions = DataService.data;
+        $scope.hasMoreVersions = DataService.hasMore;
       });
 
       $scope.$on('$destroy', function() {
