@@ -27,6 +27,7 @@ To run the single container provide the next environment variables:
 - `DB_USERNAME`, `DB_PASSWORD` – credentials to access postgres
 - `DB_NAME` – Database name
 - `TOKEN_SECRET` – Recommended: 63 random alpha-numeric characters
+- `STORAGE_PATH` – Specify a custom storage path to store the assets (optional)
 - `APP_URL` - base url for the app - [ref](http://sailsjs.org/documentation/reference/application/sails-get-base-url)
 
 To use `production.js` set `NODE_ENV` to `"production"` – so you should not set the environment variables:
