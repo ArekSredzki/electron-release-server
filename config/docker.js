@@ -23,14 +23,14 @@ module.exports = {
   },
   appUrl: process.env['APP_URL'],
   connections: {
-    postgresql: {
-      adapter: 'sails-postgresql',
-      host: process.env['DB_HOST'] || process.env['DATABASE_URL'].split('@')[1].split(':')[0],
-      port: process.env['DB_PORT'] || process.env['DATABASE_URL'].split('@')[1].split(':')[1].split('/')[0],
-      user: process.env['DB_USERNAME'] || process.env['DATABASE_URL'].split('@')[0].split(':')[1].split('/')[2],
-      password: process.env['DB_PASSWORD'] || process.env['DATABASE_URL'].split('@')[0].split(':')[2],
-      database: process.env['DB_NAME'] || process.env['DATABASE_URL'].split('/')[3]
-    }
+    // postgresql: {
+    //   adapter: 'sails-postgresql',
+    //   host: process.env['DB_HOST'] || process.env['DATABASE_URL'].split('@')[1].split(':')[0],
+    //   port: process.env['DB_PORT'] || process.env['DATABASE_URL'].split('@')[1].split(':')[1].split('/')[0],
+    //   user: process.env['DB_USERNAME'] || process.env['DATABASE_URL'].split('@')[0].split(':')[1].split('/')[2],
+    //   password: process.env['DB_PASSWORD'] || process.env['DATABASE_URL'].split('@')[0].split(':')[2],
+    //   database: process.env['DB_NAME'] || process.env['DATABASE_URL'].split('/')[3]
+    // }
   },
   jwt: {
     // Recommended: 63 random alpha-numeric characters
@@ -43,12 +43,12 @@ module.exports = {
   session: {
     // Recommended: 63 random alpha-numeric characters
     // Generate using: https://www.grc.com/passwords.htm
-    token_secret: process.env['TOKEN_SECRET'],
-    database: process.env['DB_NAME'] || process.env['DATABASE_URL'].split('/')[3],
-    host: process.env['DB_HOST'] || process.env['DATABASE_URL'].split('@')[1].split(':')[0],
-    user: process.env['DB_USERNAME'] || process.env['DATABASE_URL'].split('@')[0].split(':')[1].split('/')[2],
-    password: process.env['DB_PASSWORD'] || process.env['DATABASE_URL'].split('@')[0].split(':')[2],
-    port: process.env['DB_PORT'] || process.env['DATABASE_URL'].split('@')[1].split(':')[1].split('/')[0]
+    // token_secret: process.env['TOKEN_SECRET'],
+    // database: process.env['DB_NAME'] || process.env['DATABASE_URL'].split('/')[3],
+    // host: process.env['DB_HOST'] || process.env['DATABASE_URL'].split('@')[1].split(':')[0],
+    // user: process.env['DB_USERNAME'] || process.env['DATABASE_URL'].split('@')[0].split(':')[1].split('/')[2],
+    // password: process.env['DB_PASSWORD'] || process.env['DATABASE_URL'].split('@')[0].split(':')[2],
+    // port: process.env['DB_PORT'] || process.env['DATABASE_URL'].split('@')[1].split(':')[1].split('/')[0]
   }
 
 };

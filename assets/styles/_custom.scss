@@ -239,3 +239,29 @@ input[type="number"].ng-invalid {
 .btn-group .btn {
   margin-right: 5px;
 }
+
+
+/////
+
+.download-title {
+  text-align: left;
+}
+
+.download-channel-select {
+  margin-left: 10px;
+}
+
+.em-features {
+  margin: 60px;
+
+  .feature {
+    i {
+      font-size: 48px;
+    }
+
+    h3 {
+      font-size: 18px;
+      color: #f0f0f0;
+    }
+  }
+}

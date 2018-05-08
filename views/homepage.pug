@@ -2,9 +2,9 @@ doctype html
 html
   head
     meta(charset='utf-8')
-    title Awesome Electron Desktop App
+    title E-Mobile
     meta(name='description', content='Download the interactive app for doing whatever it does.')
-    meta(name='author', content='Arek Sredzki')
+    meta(name='author', content='Oliver Wang')
     meta(name='viewport', content='width=device-width, initial-scale=1')
     base(href="/")
 
@@ -14,7 +14,7 @@ html
     // endbower
 
     // STYLES
-    link(rel="stylesheet", href="/min/production.min.css")
+    link(rel="stylesheet", href="/styles/importer.css")
     // STYLES END
   body(ng-app='app', ng-controller='MainController as main')
     .header
@@ -23,7 +23,7 @@ html
           .navbar-header
             a.pull-left(href='/')
               img.navbar-logo(src='/images/logo.svg')
-            a.navbar-brand(href='/') Electron App
+            a.navbar-brand(href='/') E Mobile
           .collapse.navbar-collapse
             ul.nav.navbar-nav
               li(ng-class="{ active: isActive('/')}")
@@ -39,7 +39,7 @@ html
           i.fa.fa-fw.fa-code
           |  with
           i.fa.fa-fw.fa-heart
-          |  by Arek Sredzki
+          |  by Oliver wang
 
 
     // bower:js
@@ -68,5 +68,22 @@ html
     // endbower
 
     // SCRIPTS
-    script(src="/min/production.min.js")
+    script(src="/js/main.js")
+    script(src="/js/admin/add-version-asset-modal/add-version-asset-modal-controller.js")
+    script(src="/js/admin/add-version-modal/add-version-modal-controller.js")
+    script(src="/js/admin/admin.js")
+    script(src="/js/admin/edit-version-asset-modal/edit-version-asset-modal-controller.js")
+    script(src="/js/admin/edit-version-modal/edit-version-modal-controller.js")
+    script(src="/js/admin/version-table/version-table-controller.js")
+    script(src="/js/core/auth/auth-service.js")
+    script(src="/js/core/auth/auth.js")
+    script(src="/js/core/auth/login/login-controller.js")
+    script(src="/js/core/auth/logout/logout-controller.js")
+    script(src="/js/core/core.js")
+    script(src="/js/core/data/data-service.js")
+    script(src="/js/core/data/data.js")
+    script(src="/js/core/dependencies/dependencies.js")
+    script(src="/js/core/nav-controller.js")
+    script(src="/js/download/download-controller.js")
+    script(src="/js/home/home-controller.js")
     // SCRIPTS END
