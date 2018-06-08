@@ -28,7 +28,7 @@ Browse to `http://localhost:1337/`
 
 ## Using Nginx
 
-If you want use nginx as web-server:
+If you want to use nginx as web-server:
 
 ```nginx
 server {
