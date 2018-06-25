@@ -1,10 +1,12 @@
 span.pull-right(ng-cloak)
+
   ul.nav.navbar-nav
     li(ng-class="{ active: isActive('/admin')}")
       a(ng-href='/admin')
         i.fa.fa-lock.fa-fw.text-color-lock(ng-show="!isAuthenticated()")
         i.fa.fa-unlock-alt.fa-fw.text-color-lock(ng-show="isAuthenticated()")
         | Admin
+
   span(ng-show="isAuthenticated()")
     a.btn.btn-default.navbar-btn(href="auth/logout")
       | Logout
