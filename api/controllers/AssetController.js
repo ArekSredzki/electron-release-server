@@ -190,7 +190,7 @@ module.exports = {
 
         // Set upload request timeout to 10 minutes
         req.setTimeout(10 * 60 * 1000);
-
+        sails.log.debug(sails.config.files);
         req.file('file').upload(sails.config.files,
           function whenDone(err, uploadedFiles) {
             if (err) {
