@@ -16,7 +16,7 @@ var AssetService = {};
 
 AssetService.serveFile = function(req, res, asset) {
   // Stream the file to the user
-  SkipperS3(sails.config.files).read(fd)
+  SkipperS3(sails.config.files).read(asset.fd)
     .on('error', function(err) {
       res.serverError('An error occurred while accessing asset.', err);
       sails.log.error('Unable to access asset:', asset.fd);
@@ -77,11 +77,7 @@ AssetService.getHash = function(fd, type = 'sha1') {
     var hash = crypto.createHash(type);
     hash.setEncoding('hex');
 
-<<<<<<< HEAD
-    fsx.createReadStream(fd)
-=======
     SkipperS3(sails.config.files).read(fd)
->>>>>>> Update AssetService
       .on('error', function(err) {
         reject(err);
       })
