@@ -4,4 +4,5 @@
  */
 module.exports.files = {
   adapter: require('skipper-s3'),
+  dirname: '',
 };
