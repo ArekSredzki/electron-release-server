@@ -6,7 +6,6 @@
 
 var mime = require('mime');
 
-var fsx = require('fs-extra');
 var crypto = require('crypto');
 var Promise = require('bluebird');
 
