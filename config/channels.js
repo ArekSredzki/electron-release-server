@@ -10,5 +10,4 @@ module.exports.channels = [
   'rc',
   'beta',
   'alpha',
-  'staging'
 ];
