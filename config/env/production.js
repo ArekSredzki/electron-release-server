@@ -25,7 +25,11 @@ module.exports = {
   connections: {
     postgresql: {
       adapter: 'sails-postgresql',
-      url: process.env.DATABASE_URL,
+      host: process.env['DB_HOST'] || process.env['DATABASE_URL'].split('@')[1].split(':')[0],
+      port: process.env['DB_PORT'] || process.env['DATABASE_URL'].split('@')[1].split(':')[1].split('/')[0],
+      user: process.env['DB_USERNAME'] || process.env['DATABASE_URL'].split('@')[0].split(':')[1].split('/')[2],
+      password: process.env['DB_PASSWORD'] || process.env['DATABASE_URL'].split('@')[0].split(':')[2],
+      database: process.env['DB_NAME'] || process.env['DATABASE_URL'].split('/')[3]
       ssl: true,
     }
   },
