@@ -84,3 +84,9 @@ psql electron_release_server_sessions < ./sql/sails-pg-session-support.sql postg
 ```
 > Hint: Use the same **process** as mentioned above to generate the session & JWT secret keys stored in `config/local.js`
 
+## Migration
+If you have a pre-existing database and want to update to a new version of Electron Release Server that has database changes, then you may be able to use migration scripts stored in `migrations/*.js`.
+
+The migration framework being used is [db-migrate](https://www.npmjs.com/package/db-migrate) and in order for it to work you will need to copy `database.json.template` to `database.json` and then change the applicable settings to match your database setup.
+
+To use these migration scripts you can run `npm run migrate up` to apply the changes to your database. You also have the option to undo the changes by running `npm run migrate down`.
