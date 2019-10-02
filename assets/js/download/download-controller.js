@@ -51,7 +51,7 @@ angular.module('app.releases', [])
           self.archs,
           self.channel
         );
-        self.versions = DataService.data;
+        self.versions = DataService.data.filter(DataService.checkAvailability);
       };
 
       // Watch for changes to data content and update local data accordingly.

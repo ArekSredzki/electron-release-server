@@ -29,6 +29,8 @@ module.exports.routes = {
   '/auth/login': { view: 'homepage' },
   '/auth/logout': { view: 'homepage' },
 
+  'PUT /version/availability/:version/:timestamp': 'VersionController.availability',
+
   'GET /download/latest/:platform?': 'AssetController.download',
   'GET /download/channel/:channel/:platform?': 'AssetController.download',
   'GET /download/:version/:platform?/:filename?': 'AssetController.download',

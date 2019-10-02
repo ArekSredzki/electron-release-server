@@ -14,6 +14,11 @@ GET http://download.myapp.com/api/version
 GET http://download.myapp.com/api/version/1.1.0
 ```
 
+#### Set availability date of specific version (Unix timestamp in milliseconds):
+```
+PUT http://download.myapp.com/version/availability/1.1.0/1574755200000
+```
+
 #### List channels:
 ```
 GET http://download.myapp.com/api/channel

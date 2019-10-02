@@ -1,14 +1,16 @@
 angular.module('app.admin.add-version-modal', [])
-  .controller('AddVersionModalController', ['$scope', '$http', 'DataService', 'Notification', '$uibModalInstance', 'PubSub',
-    function($scope, $http, DataService, Notification, $uibModalInstance, PubSub) {
+  .controller('AddVersionModalController', ['$scope', '$http', 'DataService', 'Notification', '$uibModalInstance', 'PubSub', 'moment',
+    ($scope, $http, DataService, Notification, $uibModalInstance, PubSub, moment) => {
       $scope.availableChannels = DataService.availableChannels;
+      $scope.currentDateTime = moment().startOf('second').toDate();
 
       $scope.version = {
         name: '',
         notes: '',
         channel: {
           name: DataService.availableChannels[0]
-        }
+        },
+        availability: $scope.currentDateTime
       };
 
       $scope.addVersion = function() {
@@ -31,7 +33,8 @@ angular.module('app.admin.add-version-modal', [])
           notes: '',
           channel: {
             name: DataService.availableChannels[0]
-          }
+          },
+          availability: $scope.currentDateTime
         };
       });
 

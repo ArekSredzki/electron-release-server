@@ -38,7 +38,7 @@ form(name='assetForm', role='form')
             )
   .modal-footer
     .modal-footer-note.col-md-7
-      span.text-gray(ng-show='!asset.file.progress')
+      span.text-gray(ng-show='!asset.file.progress && versionIsAvailable')
         | This file will be live once uploaded.
       uib-progressbar.progress-striped.active(
         type="success"

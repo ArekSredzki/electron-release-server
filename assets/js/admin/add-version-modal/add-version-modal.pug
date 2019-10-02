@@ -40,6 +40,18 @@
             )
           hr
           span.help-block You will not be able to change the above later.
+      // Availability Date
+      .form-group
+        label.col-md-4.control-label(for='availability') Availability Date
+        .col-md-7
+          input.form-control.input-md(
+            ng-model='version.availability',
+            name='availability',
+            type='datetime-local',
+            min='{{ currentDateTime }}',
+            step='1',
+            required
+            )
       // Change Notes
       .form-group
         label.col-md-4.control-label(for='notes') Change Notes

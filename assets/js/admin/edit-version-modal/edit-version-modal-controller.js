@@ -1,10 +1,14 @@
 angular.module('app.admin.edit-version-modal', [])
-  .controller('EditVersionModalController', ['$scope', 'DataService', 'Notification', '$uibModalInstance', '$uibModal', 'version',
-    function($scope, DataService, Notification, $uibModalInstance, $uibModal, version) {
+  .controller('EditVersionModalController', ['$scope', 'DataService', 'Notification', '$uibModalInstance', '$uibModal', 'version', 'moment',
+    ($scope, DataService, Notification, $uibModalInstance, $uibModal, version, moment) => {
       $scope.DataService = DataService;
 
       // Clone so not to polute the original
       $scope.version = _.cloneDeep(version);
+
+      $scope.version.availability = new Date(version.availability);
+      $scope.createdAt = new Date(version.createdAt);
+      $scope.isAvailable = DataService.checkAvailability(version);
 
       /**
        * Updates the modal's knowlege of this version's assets from the one
@@ -30,9 +34,7 @@ angular.module('app.admin.edit-version-modal', [])
           templateUrl: 'js/admin/add-version-asset-modal/add-version-asset-modal.html',
           controller: 'AddVersionAssetModalController',
           resolve: {
-            versionName: function() {
-              return version.name;
-            }
+            version: () => version
           }
         });
 
@@ -66,7 +68,22 @@ angular.module('app.admin.edit-version-modal', [])
         DataService.updateVersion($scope.version, version.name)
           .then(function success(response) {
             $uibModalInstance.close();
-          }, function error(response) {});
+          }, () => {
+            if (!$scope.version.availability) {
+              $scope.version.availability = new Date(version.availability);
+            }
+          });
+      };
+
+      $scope.makeAvailable = () => {
+        const updatedVersion = {
+          ...$scope.version,
+          availability: moment().startOf('second').toDate()
+        };
+
+        DataService
+          .updateVersion(updatedVersion, version.name)
+          .then($uibModalInstance.close, () => {});
       };
 
       $scope.deleteVersion = function() {

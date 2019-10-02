@@ -45,6 +45,7 @@ module.exports.policies = {
     create: 'authToken',
     update: 'authToken',
     delete: 'authToken',
+    availability: 'authToken',
     redirect: 'noCache',
     general: 'noCache',
     windows: 'noCache',
