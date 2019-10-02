@@ -357,11 +357,11 @@ angular.module('app.core.data.service', [
         if (!asset) {
           throw new Error('A asset object is required for updating');
         }
-        if (!asset.name) {
+        if (!asset.id) {
           throw new Error('The passed asset object must have been submitted to the database in order to be updated');
         }
 
-        return $http.post('/api/asset/' + asset.name, asset)
+        return $http.post('/api/asset/' + asset.id, asset)
           .then(function(response) {
             Notification.success('Asset Updated Successfully.');
 
@@ -467,7 +467,7 @@ angular.module('app.core.data.service', [
 
           versionIndex = _.findIndex(self.data, function(version) {
             index = _.findIndex(version.assets, {
-              name: msg.id // Sails sends back the old id for us
+              id: msg.id // Sails sends back the old id for us
             });
 
             return index !== -1;
@@ -493,7 +493,7 @@ angular.module('app.core.data.service', [
           versionIndex = _.findIndex(self.data, function(version) {
             $log.log('Searching Version:', version);
             index = _.findIndex(version.assets, {
-              name: msg.id // Sails sends back the old id for us
+              id: msg.id // Sails sends back the old id for us
             });
             $log.log('result:', index);
 

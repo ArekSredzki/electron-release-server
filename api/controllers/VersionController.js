@@ -85,6 +85,7 @@ module.exports = {
               channel: results[0][index],
               assets: results[1][index].map(function (asset) {
                 return {
+                  id: asset.id,
                   name: asset.name,
                   platform: asset.platform,
                   filetype: asset.filetype,

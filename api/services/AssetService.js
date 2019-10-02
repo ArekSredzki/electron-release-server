@@ -40,7 +40,7 @@ AssetService.serveFile = function(req, res, asset) {
       // Warning: not all adapters support queries
       if (_.isFunction(Asset.query)) {
         Asset.query(
-          'UPDATE asset SET download_count = download_count + 1 WHERE name = \'' + asset.name + '\';',
+          'UPDATE asset SET download_count = download_count + 1 WHERE id = \'' + asset.id + '\';',
           function(err) {
             if (err) {
               sails.log.error(
@@ -52,7 +52,7 @@ AssetService.serveFile = function(req, res, asset) {
         asset.download_count++;
 
         Asset.update({
-            name: asset.name
+            id: asset.id
           }, asset)
           .exec(function(err) {
             if (err) {
@@ -104,11 +104,11 @@ AssetService.destroy = function(asset, req) {
     throw new Error('You must pass an asset');
   }
 
-  return Asset.destroy(asset.name)
+  return Asset.destroy(asset.id)
     .then(function destroyedRecord() {
       if (sails.hooks.pubsub) {
         Asset.publishDestroy(
-          asset.name, !req._sails.config.blueprints.mirror && req, {
+          asset.id, !req._sails.config.blueprints.mirror && req, {
             previous: asset
           }
         );
