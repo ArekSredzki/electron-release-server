@@ -22,9 +22,12 @@
 
 module.exports.routes = {
 
-  '/': {
-    view: 'homepage'
-  },
+  '/': { view: 'homepage' },
+  '/home': { view: 'homepage' },
+  '/releases/:channel?': { view: 'homepage' },
+  '/admin': { view: 'homepage' },
+  '/auth/login': { view: 'homepage' },
+  '/auth/logout': { view: 'homepage' },
 
   'GET /download/latest/:platform?': 'AssetController.download',
   'GET /download/channel/:channel/:platform?': 'AssetController.download',
