@@ -542,7 +542,10 @@ angular.module('app.core.data.service', [
             $sails.get('/api/channel'),
 
             // Only sent to watch for asset updates
-            $sails.get('/api/asset')
+            $sails.get('/api/asset'),
+
+            // Only sent to watch for version updates
+            $sails.get('/api/version')
           ])
           .then(function(responses) {
             versions = responses[0];
