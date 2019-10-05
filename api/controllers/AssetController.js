@@ -200,7 +200,7 @@ module.exports = {
 
         var fileExt = path.extname(uploadedFile.filename);
 
-        sails.log.debug('Creating asset with name', uploadedFile.filename);
+        sails.log.debug('Creating asset with name', data.name || uploadedFile.filename);
 
         var hashPromise;
 

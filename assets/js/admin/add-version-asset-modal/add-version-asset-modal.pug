@@ -7,8 +7,11 @@ form(name='assetForm', role='form')
       .form-group
         label.col-md-4.control-label(for='name') Asset Name
         .col-md-7
-          | {{ asset.file.name }}
-          span(ng-hide="asset.file.name.length").help-block Auto-populated with filename
+          input.form-control.input-md(
+            ng-model='asset.name',
+            name='name',
+            placeholder='{{ namePlaceholder || "Auto-populated with filename" }}'
+            )
       // Select platform
       .form-group
         label.col-md-4.control-label(for='platform') Platform
