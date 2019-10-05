@@ -38,7 +38,7 @@ angular.module('app.releases', [])
 
       // Get selected channel from route or set to default (stable)
       self.channel = $routeParams.channel || self.setChannelParams(
-        self.availableChannels[0]
+        (self.availableChannels && self.availableChannels[0]) || 'stable'
       );
 
       self.latestReleases = null;
