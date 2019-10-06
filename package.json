@@ -1,7 +1,7 @@
 {
   "name": "electron-release-server",
   "private": true,
-  "version": "1.4.3",
+  "version": "1.5.0",
   "description": "A version server for hosting and serving the your electron desktop app releases.",
   "dependencies": {
     "async": "^2.5.0",
