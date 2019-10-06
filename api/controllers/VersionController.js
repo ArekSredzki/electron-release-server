@@ -11,7 +11,48 @@ var Promise = require('bluebird');
 var semver = require('semver');
 var compareVersions = require('compare-versions');
 
+const availabilityFilter = () => ({ '<=': (new Date()).toISOString() });
+
 module.exports = {
+
+  /**
+   * Set availability date of specified version
+   *
+   * (PUT /version/availability/:version/:timestamp)
+   */
+  availability: (req, res) => {
+    const { version, timestamp } = req.params;
+
+    if (!version) return res.badRequest('Requires `version` parameter');
+    if (!timestamp) return res.badRequest('Requires `timestamp` parameter');
+
+    const availability = new Date(parseInt(timestamp, 10));
+
+    if (isNaN(availability) || availability.getTime().toString() !== timestamp) {
+      return res.badRequest('Parameter `timestamp` must be a valid unix timestamp in milliseconds');
+    }
+
+    Version
+      .findOne(version)
+      .then(foundVersion => {
+        if (!foundVersion) return res.notFound('The specified `version` does not exist');
+
+        if (availability < new Date(foundVersion.createdAt)) {
+          return res.badRequest(
+            'Parameter `timestamp` must be greater than or equal to the version creation date'
+          );
+        }
+
+        return Version
+          .update(version, { availability })
+          .then(([updatedVersion]) => {
+            Version.publishUpdate(version, updatedVersion, req);
+
+            res.send(updatedVersion);
+          });
+      })
+      .catch(res.negotiate);
+  },
 
   /**
    * Redirect the update request to the appropriate endpoint
@@ -100,7 +141,8 @@ module.exports = {
               name: item.name,
               notes: item.notes,
               createdAt: item.createdAt,
-              updatedAt: item.updatedAt
+              updatedAt: item.updatedAt,
+              availability: item.availability
             }
           })
 
@@ -165,7 +207,8 @@ module.exports = {
         return Version
           .find(UtilityService.getTruthyObject({
             channel: applicableChannels,
-            createdAt: createdAtFilter
+            createdAt: createdAtFilter,
+            availability: availabilityFilter()
           }))
           .populate('assets', {
             platform: platforms
@@ -230,7 +273,7 @@ module.exports = {
               ),
               name: latestVersion.name,
               notes: releaseNotes,
-              pub_date: latestVersion.createdAt.toISOString()
+              pub_date: latestVersion.availability.toISOString()
             });
           });
       })
@@ -288,7 +331,8 @@ module.exports = {
         return Version
           .find(UtilityService.getTruthyObject({
             channel: applicableChannels,
-            createdAt: createdAtFilter
+            createdAt: createdAtFilter,
+            availability: availabilityFilter()
           }))
           .populate('assets', {
             platform: platforms
@@ -393,7 +437,10 @@ module.exports = {
 
     // Get latest version that has a windows asset
     Version
-      .find({ channel: applicableChannels })
+      .find({
+        channel: applicableChannels,
+        availability: availabilityFilter()
+      })
       .populate('assets')
       .then(function(versions) {
         // TODO: Implement method to get latest version with available asset
@@ -465,7 +512,10 @@ module.exports = {
 
     // Get latest version that has a mac asset
     Version
-      .find({ channel: applicableChannels })
+      .find({
+        channel: applicableChannels,
+        availability: availabilityFilter()
+      })
       .populate('assets')
       .then(function(versions) {
         // TODO: Implement method to get latest version with available asset
@@ -519,7 +569,10 @@ module.exports = {
     var version = req.params.version;
 
     Version
-      .findOne(version)
+      .findOne({
+        name: version,
+        availability: availabilityFilter()
+      })
       .then(function(currentVersion) {
         if (!currentVersion) {
           return res.notFound('The specified version does not exist');
@@ -529,7 +582,7 @@ module.exports = {
           'application/json': function() {
             res.send({
               'notes': currentVersion.notes,
-              'pub_date': currentVersion.createdAt.toISOString()
+              'pub_date': currentVersion.availability.toISOString()
             });
           },
           'default': function() {

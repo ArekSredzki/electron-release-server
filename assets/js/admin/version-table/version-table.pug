@@ -8,6 +8,7 @@
         td Channel
         td Asset Count
         td Date
+        td Availability
         td
     tbody
       tr(data-ng-repeat='version in versions')
@@ -15,6 +16,7 @@
         td {{ version.channel.name }}
         td {{ version.assets.length }}
         td(am-time-ago="version.createdAt")
+        td(am-time-ago="version.availability")
         td(style="white-space: nowrap")
           button.btn.btn-default.btn-sm(ng-click="openEditModal(version)")
             | More

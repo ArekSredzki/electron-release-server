@@ -33,6 +33,7 @@ If you host your project on your Github **and** do not need a UI for your app, t
     - Mac uses `*.dmg` and `*.zip`
     - Windows uses `*.exe` and `*.nupkg`
 - :sparkles: Serve the perfect type of assets: `.zip` for Squirrel.Mac, `.nupkg` for Squirrel.Windows, `.dmg` for Mac users, ...
+- :sparkles: Specify date of availability for releases
 - :sparkles: Release notes endpoint
     - `/notes/:version`
 

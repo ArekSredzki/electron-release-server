@@ -121,15 +121,23 @@ angular.module('app.core.data.service', [
           throw new Error('A version object is required for creation');
         }
 
+        const errorTitle = 'Unable to Create Version';
+
+        if (!version.availability) {
+          Notification.error({
+            title: errorTitle,
+            message: 'Availability date must be greater than or equal to the current date'
+          });
+
+          return $q.reject();
+        }
+
         return $http.post('/api/version', version)
           .then(function(response) {
             Notification.success('Version Created Successfully.');
 
             return response;
           }, function(response) {
-
-            var errorTitle = 'Unable to Create Version';
-
             showErrors(response, errorTitle);
 
             return $q.reject(response);
@@ -155,6 +163,17 @@ angular.module('app.core.data.service', [
           throw new Error('A version name is required for updating');
         }
 
+        const errorTitle = 'Unable to Update Version';
+
+        if (!version.availability) {
+          Notification.error({
+            title: errorTitle,
+            message: 'Availability date must be greater than or equal to the version creation date'
+          });
+
+          return $q.reject();
+        }
+
         return $http.post(
             '/api/version/' + versionName,
             _.omit(version, ['assets'])
@@ -164,8 +183,6 @@ angular.module('app.core.data.service', [
 
             return response;
           }, function(response) {
-            var errorTitle = 'Unable to Update Version';
-
             showErrors(response, errorTitle);
 
             return $q.reject(response);
@@ -206,6 +223,7 @@ angular.module('app.core.data.service', [
        * Specifically:
        *  - The channel parameter will sometimes only contain the channel name.
        *  - The assets parameter will not be included if empty.
+       *  - The availability parameter will sometimes be dated before the createdAt date.
        * @param  {Object} version Unnormalized version object
        * @return {Object}         Normalized version object
        */
@@ -222,6 +240,10 @@ angular.module('app.core.data.service', [
 
         if (!_.isArrayLike(version.assets)) {
           version.assets = [];
+        }
+
+        if (new Date(version.availability) < new Date(version.createdAt)) {
+          version.availability = version.createdAt;
         }
 
         return version;
@@ -564,6 +586,13 @@ angular.module('app.core.data.service', [
           });
       };
 
+      /**
+       * Determines if a version is available
+       * @param  {Object}  version Version object.
+       * @return {Boolean}         True if the version is available, otherwise false.
+       */
+      self.checkAvailability = version => new Date(version.availability) <= new Date();
+
       self.loadMoreVersions = function() {
         if (self.loading) {
           return;
@@ -610,6 +639,7 @@ angular.module('app.core.data.service', [
 
         var versions = _
           .chain(self.data)
+          .filter(self.checkAvailability)
           .filter(function(version) {
             var versionChannel = _.get(version, 'channel.name');
             return applicableChannels.indexOf(versionChannel) !== -1;

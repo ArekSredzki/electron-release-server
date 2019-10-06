@@ -25,10 +25,28 @@ module.exports = {
       required: true
     },
 
+    availability: {
+      type: 'datetime',
+      required: true
+    },
+
     notes: {
       type: 'string'
     }
   },
-  autoPK: false
+
+  autoPK: false,
+
+  afterCreate: (version, proceed) => {
+    const { availability, createdAt, name } = version;
+
+    if (new Date(availability) < new Date(createdAt)) {
+      return Version
+        .update(name, { availability: createdAt })
+        .exec(proceed);
+    }
+
+    return proceed();
+  }
 
 };
