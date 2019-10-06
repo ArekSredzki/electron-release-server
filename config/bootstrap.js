@@ -39,9 +39,46 @@ module.exports.bootstrap = done => {
       .find({ availability: null })
       .then(versions => mapSeries(
         versions,
-        ({ name, createdAt }, next) => {
+        ({ id, createdAt }, next) => {
           Version
-            .update(name, { availability: createdAt })
+            .update(id, { availability: createdAt })
+            .exec(next)
+        },
+        cb
+      )),
+
+    // Create configured flavors in database
+    cb => mapSeries(sails.config.flavors, (name, next) => {
+      waterfall([
+        next => {
+          Flavor
+            .find(name)
+            .exec(next);
+        },
+        (result, next) => {
+          if (result.length) return next();
+
+          Flavor
+            .create({ name })
+            .exec(next);
+        }
+      ], next);
+    }, cb),
+
+    // Update existing versions and associated assets in database with default flavor data
+    cb => Version
+      .update(
+        { flavor: null },
+        { flavor: 'default' }
+      )
+      .exec((err, updatedVersions) => mapSeries(
+        updatedVersions,
+        ({ name, id }, next) => {
+          Asset
+            .update(
+              { version: name },
+              { version: id }
+            )
             .exec(next)
         },
         cb

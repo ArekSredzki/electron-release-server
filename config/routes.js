@@ -34,6 +34,9 @@ module.exports.routes = {
   'GET /download/latest/:platform?': 'AssetController.download',
   'GET /download/channel/:channel/:platform?': 'AssetController.download',
   'GET /download/:version/:platform?/:filename?': 'AssetController.download',
+  'GET /download/flavor/:flavor/latest/:platform?': 'AssetController.download',
+  'GET /download/flavor/:flavor/channel/:channel/:platform?': 'AssetController.download',
+  'GET /download/flavor/:flavor/:version/:platform?/:filename?': 'AssetController.download',
 
   'GET /update': 'VersionController.redirect',
   'GET /update/:platform/latest-mac.yml': 'VersionController.electronUpdaterMac',
@@ -46,7 +49,18 @@ module.exports.routes = {
   'GET /update/:platform/:version/RELEASES': 'VersionController.windows',
   'GET /update/:platform/:version/:channel/RELEASES': 'VersionController.windows',
   'GET /update/:platform/:version/:channel': 'VersionController.general',
-  'GET /notes/:version?': 'VersionController.releaseNotes',
+
+  'GET /update/flavor/:flavor/:platform/:version/:channel?': 'VersionController.general',
+  'GET /update/flavor/:flavor/:platform/:version/RELEASES': 'VersionController.windows',
+  'GET /update/flavor/:flavor/:platform/:version/:channel/RELEASES': 'VersionController.windows',
+  'GET /update/flavor/:flavor/:platform/latest.yml': 'VersionController.electronUpdaterWin',
+  'GET /update/flavor/:flavor/:platform/:channel.yml': 'VersionController.electronUpdaterWin',
+  'GET /update/flavor/:flavor/:platform/:channel/latest.yml': 'VersionController.electronUpdaterWin',
+  'GET /update/flavor/:flavor/:platform/latest-mac.yml': 'VersionController.electronUpdaterMac',
+  'GET /update/flavor/:flavor/:platform/:channel-mac.yml': 'VersionController.electronUpdaterMac',
+  'GET /update/flavor/:flavor/:platform/:channel/latest-mac.yml': 'VersionController.electronUpdaterMac',
+
+  'GET /notes/:version/:flavor?': 'VersionController.releaseNotes',
 
   'GET /versions/sorted': 'VersionController.list'
 

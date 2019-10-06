@@ -17,7 +17,7 @@ angular.module('app.admin.add-version-asset-modal', [])
           delete $scope.asset.name;
         }
 
-        DataService.createAsset($scope.asset, version.name)
+        DataService.createAsset($scope.asset, version.id)
           .then(function success(response) {
             $uibModalInstance.close();
           }, function error(response) {

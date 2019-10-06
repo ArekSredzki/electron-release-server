@@ -9,8 +9,12 @@ http://download.myapp.com/update/win32/:version/RELEASES
 http://download.myapp.com/update/win64/:version/RELEASES
 http://download.myapp.com/update/win32/:version/:channel/RELEASES
 http://download.myapp.com/update/win64/:version/:channel/RELEASES
+http://download.myapp.com/update/flavor/:flavor/win32/:version/RELEASES
+http://download.myapp.com/update/flavor/:flavor/win64/:version/RELEASES
+http://download.myapp.com/update/flavor/:flavor/win32/:version/:channel/RELEASES
+http://download.myapp.com/update/flavor/:flavor/win64/:version/:channel/RELEASES
 ```
-If the channel is not specified, then `stable` will be used. If `win64` is used but only a `win32` asset is available, it will be used.
+If the channel is not specified, then `stable` will be used. If the flavor is not specified, then `default` will be used. If `win64` is used but only a `win32` asset is available, it will be used.
 
 > Note: If desired, you can use `windows_32` instead of `win32` and `windows_64` instead of `win64`.
 

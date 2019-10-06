@@ -41,6 +41,12 @@ module.exports.policies = {
     delete: 'authToken'
   },
 
+  FlavorController: {
+    create: 'authToken',
+    update: 'authToken',
+    delete: 'authToken'
+  },
+
   VersionController: {
     create: 'authToken',
     update: 'authToken',

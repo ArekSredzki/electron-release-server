@@ -1,7 +1,7 @@
 angular.module('app.releases', [])
   .config(['$routeProvider', function($routeProvider) {
     $routeProvider
-      .when('/releases/:channel?', {
+      .when('/releases/:channel?/:flavor?', {
         templateUrl: 'js/download/download.html',
         controller: 'DownloadController as vm'
       });
@@ -24,53 +24,63 @@ angular.module('app.releases', [])
         self.archs = ['32', '64'];
       }
 
-      self.setChannelParams = function(channel) {
+      self.setRouteParams = (channel, flavor) => {
         $route.updateParams({
-          channel: channel
+          channel,
+          flavor
         });
-
-        return channel;
       };
 
       self.availablePlatforms = DataService.availablePlatforms;
       self.filetypes = DataService.filetypes;
       self.availableChannels = DataService.availableChannels;
+      self.availableFlavors = DataService.availableFlavors;
 
       // Get selected channel from route or set to default (stable)
-      self.channel = $routeParams.channel || self.setChannelParams(
-        (self.availableChannels && self.availableChannels[0]) || 'stable'
-      );
+      self.channel = $routeParams.channel || (self.availableChannels && self.availableChannels[0]) || 'stable';
+
+      // Get selected flavor from route or set to default (default)
+      self.flavor = $routeParams.flavor || 'default';
 
       self.latestReleases = null;
       self.downloadUrl = null;
 
       self.getLatestReleases = function() {
-        self.setChannelParams(self.channel);
+        self.setRouteParams(
+          self.channel,
+          self.flavor
+        );
         self.latestReleases = DataService.getLatestReleases(
           self.platform,
           self.archs,
-          self.channel
+          self.channel,
+          self.flavor
         );
-        self.versions = DataService.data.filter(DataService.checkAvailability);
+        self.versions = DataService.data
+          .filter(DataService.checkAvailability)
+          .filter(version => version.flavor.name === self.flavor);
       };
 
       // Watch for changes to data content and update local data accordingly.
       var uid1 = PubSub.subscribe('data-change', function() {
         self.getLatestReleases();
         self.availableChannels = DataService.availableChannels;
+        self.availableFlavors = DataService.availableFlavors;
         $scope.hasMoreVersions = DataService.hasMore;
       });
 
       // Update knowledge of the latest available versions.
       self.getLatestReleases();
 
-      self.download = function(asset, versionName) {
+      self.download = function(asset, versionName, flavorName) {
         if (!asset) {
           return;
         }
 
-        self.downloadUrl = '/download/' + (asset.version || versionName) +
-          '/' + asset.platform + '/' + asset.name;
+        const { flavor, version, platform, name } = asset;
+
+        self.downloadUrl =
+          `/download/flavor/${flavorName || flavor}/${versionName || version}/${platform}/${name}`;
       };
 
       $scope.$on('$destroy', function() {

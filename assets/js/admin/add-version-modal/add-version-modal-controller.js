@@ -3,6 +3,7 @@ angular.module('app.admin.add-version-modal', [])
     ($scope, $http, DataService, Notification, $uibModalInstance, PubSub, moment) => {
       $scope.availableChannels = DataService.availableChannels;
       $scope.currentDateTime = moment().startOf('second').toDate();
+      $scope.availableFlavors = DataService.availableFlavors;
 
       $scope.version = {
         name: '',
@@ -10,7 +11,10 @@ angular.module('app.admin.add-version-modal', [])
         channel: {
           name: DataService.availableChannels[0]
         },
-        availability: $scope.currentDateTime
+        availability: $scope.currentDateTime,
+        flavor: {
+          name: 'default'
+        }
       };
 
       $scope.addVersion = function() {
@@ -27,6 +31,7 @@ angular.module('app.admin.add-version-modal', [])
       // Watch for changes to data content and update local data accordingly.
       var uid1 = PubSub.subscribe('data-change', function() {
         $scope.availableChannels = DataService.availableChannels;
+        $scope.availableFlavors = DataService.availableFlavors;
 
         $scope.version = {
           name: '',
@@ -34,7 +39,10 @@ angular.module('app.admin.add-version-modal', [])
           channel: {
             name: DataService.availableChannels[0]
           },
-          availability: $scope.currentDateTime
+          availability: $scope.currentDateTime,
+          flavor: {
+            name: 'default'
+          }
         };
       });
 

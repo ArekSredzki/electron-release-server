@@ -1,10 +1,18 @@
 .row
   h3 Version Management
+    small.pull-right
+      | Flavor: 
+      select(
+        ng-model='flavor'
+        ng-options='flavor for flavor in availableFlavors'
+        ng-change='filterVersionsByFlavor()'
+        )
         
   table.table.table-bordered.table-hover.table-condensed.table-custom(ng-if='versions.length' ng-cloak)
     thead
       tr
         td Name
+        td Flavor
         td Channel
         td Asset Count
         td Date
@@ -13,6 +21,7 @@
     tbody
       tr(data-ng-repeat='version in versions')
         td {{ version.name }}
+        td {{ version.flavor.name }}
         td {{ version.channel.name }}
         td {{ version.assets.length }}
         td(am-time-ago="version.createdAt")
@@ -21,8 +30,10 @@
           button.btn.btn-default.btn-sm(ng-click="openEditModal(version)")
             | More
   .jumbotron(ng-hide="versions.length")
-    h5.text-gray No Versions Available
+    h5.text-gray(ng-show="showAllFlavors") No Versions Available
+    h5.text-gray(ng-hide="showAllFlavors") The {{ flavor }} flavor has no versions available
 
   .btn-group
-    a.btn.btn-default(ng-click="openAddModal()") Add New Version
+    a.btn.btn-default(ng-click="openAddVersionModal()") Add New Version
+    a.btn.btn-default(ng-click="openAddFlavorModal()") Add New Flavor
     a.btn.btn-default(ng-show="hasMoreVersions" ng-click="loadMoreVersions()") Load more versions

@@ -17,7 +17,7 @@ angular.module('app.admin.edit-version-modal', [])
        */
       var updateVersionAssets = function() {
         var updatedVersion = _.find(DataService.data, {
-          name: version.name
+          id: version.id
         });
 
         if (!updatedVersion) {
@@ -65,7 +65,7 @@ angular.module('app.admin.edit-version-modal', [])
       };
 
       $scope.acceptEdit = function() {
-        DataService.updateVersion($scope.version, version.name)
+        DataService.updateVersion($scope.version)
           .then(function success(response) {
             $uibModalInstance.close();
           }, () => {
@@ -82,12 +82,12 @@ angular.module('app.admin.edit-version-modal', [])
         };
 
         DataService
-          .updateVersion(updatedVersion, version.name)
+          .updateVersion(updatedVersion)
           .then($uibModalInstance.close, () => {});
       };
 
       $scope.deleteVersion = function() {
-        DataService.deleteVersion(version.name)
+        DataService.deleteVersion(version.id)
           .then(function success(response) {
             $uibModalInstance.close();
           }, function error(response) {});

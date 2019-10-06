@@ -32,12 +32,16 @@ module.exports = {
    * (GET /download/latest/:platform?': 'AssetController.download')
    * (GET /download/:version/:platform?/:filename?': 'AssetController.download')
    * (GET /download/channel/:channel/:platform?': 'AssetController.download')
+   * (GET /download/flavor/:flavor/latest/:platform?': 'AssetController.download')
+   * (GET /download/flavor/:flavor/:version/:platform?/:filename?': 'AssetController.download')
+   * (GET /download/flavor/:flavor/channel/:channel/:platform?': 'AssetController.download')
    */
   download: function(req, res) {
     var channel = req.params.channel;
     var version = req.params.version || undefined;
     var filename = req.params.filename;
     var filetype = req.query.filetype;
+    const flavor = req.params.flavor || 'default';
 
     // We accept multiple platforms (x64 implies x32)
     var platforms;
@@ -82,7 +86,8 @@ module.exports = {
           Version
             .find(UtilityService.getTruthyObject({
               name: version,
-              channel: channel
+              channel: channel,
+              flavor
             }))
             .sort({
               createdAt: 'desc'
@@ -134,7 +139,7 @@ module.exports = {
       })
       .then(function(asset) {
         if (!asset || !asset.fd) {
-          var noneFoundMessage = 'No download available';
+          let noneFoundMessage = `The ${flavor} flavor has no download available`;
 
           if (platforms) {
             if (platforms.length > 1) {
@@ -168,14 +173,14 @@ module.exports = {
     }
 
     if (_.isString(data.version)) {
-      // Only a name was provided, normalize
+      // Only a id was provided, normalize
       data.version = {
-        name: data.version
+        id: data.version
       };
-    } else if (_.isObjectLike(data.version) && _.has(data.version, 'name')) {
-      // Valid request, but we only want the name
+    } else if (data.version && data.version.id) {
+      // Valid request, but we only want the id
       data.version = {
-        name: data.version.name
+        id: data.version.id
       };
     } else {
       return res.badRequest('Invalid version provided.');
