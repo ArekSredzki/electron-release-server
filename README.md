@@ -27,15 +27,25 @@ If you host your project on your Github **and** do not need a UI for your app, t
     - `/download/:version/:platform/:filename`
     - `/download/channel/:channel`
     - `/download/channel/:channel/:platform`
+    - `/download/flavor/:flavor/latest`
+    - `/download/flavor/:flavor/latest/:platform`
+    - `/download/flavor/:flavor/:version`
+    - `/download/flavor/:flavor/:version/:platform`
+    - `/download/flavor/:flavor/:version/:platform/:filename`
+    - `/download/flavor/:flavor/channel/:channel`
+    - `/download/flavor/:flavor/channel/:channel/:platform`
 - :sparkles: Support pre-release channels (`beta`, `alpha`, ...)
+- :sparkles: Support multiple flavors of your app
 - :sparkles: Auto-updates with [Squirrel](https://github.com/Squirrel):
-    - Update URLs provided: `/update/:platform/:version[/:channel]`
+    - Update URLs provided:
+        - `/update/:platform/:version[/:channel]`
+        - `/update/flavor/:flavor/:platform/:version[/:channel]`
     - Mac uses `*.dmg` and `*.zip`
     - Windows uses `*.exe` and `*.nupkg`
 - :sparkles: Serve the perfect type of assets: `.zip` for Squirrel.Mac, `.nupkg` for Squirrel.Windows, `.dmg` for Mac users, ...
 - :sparkles: Specify date of availability for releases
 - :sparkles: Release notes endpoint
-    - `/notes/:version`
+    - `/notes/:version/:flavor?`
 
 **NOTE:** if you don't provide the appropriate type of file for Squirrel you won't be able to update your app since the update endpoint will not return a JSON. (`.zip` for Squirrel.Mac, `.nupkg` for Squirrel.Windows).
 

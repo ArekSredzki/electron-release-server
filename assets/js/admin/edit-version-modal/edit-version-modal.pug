@@ -7,6 +7,10 @@ form(editable-form='', name='versionForm', onaftersave='acceptEdit()', e-role='f
       .form-group
         label.col-md-4.control-label Version Name
         .col-md-7 {{ version.name }}
+      // Flavor Name
+      .form-group
+        label.col-md-4.control-label Flavor
+        .col-md-7 {{ version.flavor.name }}
       // Select Channel
       .form-group
         label.col-md-4.control-label Channel

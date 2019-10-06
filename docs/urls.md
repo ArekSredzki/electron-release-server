@@ -3,31 +3,40 @@
 Electron Release Server provides a variety of urls to access release assets.
 
 #### Latest version for detected platform:
-`http://download.myapp.com/download/latest`
+- `http://download.myapp.com/download/latest`
+- `http://download.myapp.com/download/flavor/default/latest`
 #### Latest version for specific platform:
-`http://download.myapp.com/download/latest/osx`
+- `http://download.myapp.com/download/latest/osx`
+- `http://download.myapp.com/download/flavor/default/latest/osx`
 #### Specific version for detected platform:
-`http://download.myapp.com/download/1.1.0`
+- `http://download.myapp.com/download/1.1.0`
+- `http://download.myapp.com/download/flavor/default/1.1.0`
 #### Specific version for a specific platform:
-`http://download.myapp.com/download/1.2.0/osx`
+- `http://download.myapp.com/download/1.2.0/osx`
+- `http://download.myapp.com/download/flavor/default/1.2.0/osx`
 #### Specific file for a version for a specific platform:
 > Note that only the file extension is used.
 
-`http://download.myapp.com/download/1.2.0/windows_64/MyApp-0.1.1-full.nupkg`
+- `http://download.myapp.com/download/1.2.0/windows_64/MyApp-0.1.1-full.nupkg`
+- `http://download.myapp.com/download/flavor/default/1.2.0/windows_64/MyApp-0.1.1-full.nupkg`
 #### Specific channel:
-`http://download.myapp.com/download/channel/beta`
+- `http://download.myapp.com/download/channel/beta`
+- `http://download.myapp.com/download/flavor/default/channel/beta`
 #### Specific channel for specific platform:
-`http://download.myapp.com/download/channel/beta/osx`
+- `http://download.myapp.com/download/channel/beta/osx`
+- `http://download.myapp.com/download/flavor/default/channel/beta/osx`
 
 ### Windows
-`http://download.myapp.com/download/windows_32`
-
-`http://download.myapp.com/download/windows_64`
+- `http://download.myapp.com/download/windows_32`
+- `http://download.myapp.com/download/windows_64`
+- `http://download.myapp.com/download/flavor/default/windows_32`
+- `http://download.myapp.com/download/flavor/default/windows_64`
 
 ### Linux
-`http://download.myapp.com/download/linux_32`
-
-`http://download.myapp.com/download/linux_64`
+- `http://download.myapp.com/download/linux_32`
+- `http://download.myapp.com/download/linux_64`
+- `http://download.myapp.com/download/flavor/default/linux_32`
+- `http://download.myapp.com/download/flavor/default/linux_64`
 
 ## Update endpoints
 These are detailed separately for [OSX](update-osx.md) and [Windows](update-windows.md).
@@ -35,7 +44,7 @@ These are detailed separately for [OSX](update-osx.md) and [Windows](update-wind
 When an update is not available, the update endpoints will return a 204 response. This happens when the version you are requesting is newer than or equal to the last available version on the server, but also when the appropriate file type is not present for Squirrel to be able to update your application (`.zip` for Squirrel.Mac, `.nupkg` for Squirrel.Windows).
 
 ## Notes endpoint
-`http://download.myapp.com/notes/:version`
+`http://download.myapp.com/notes/:version/:flavor?`
 
 ## Data endpoints
 These are detailed separately [here](api.md).

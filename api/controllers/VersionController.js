@@ -113,16 +113,23 @@ module.exports = {
           new Promise(function (resolve, reject) {
             Promise.all(items.map(function (version) {
               return Asset.find({
-                version: version.name
+                version: version.id
               })
             }))
             .then(resolve)
             .catch(reject)
-          })
+          }),
+          // load flavors
+          new Promise((resolve, reject) => Promise
+            .map(items, version => Flavor.findOne(version.flavor))
+            .then(resolve)
+            .catch(reject)
+          )
         ])
         .then(function (results) {
           response.items = response.items.map(function (item, index) {
             return {
+              id: item.id,
               channel: results[0][index],
               assets: results[1][index].map(function (asset) {
                 return {
@@ -138,6 +145,7 @@ module.exports = {
                   updatedAt: asset.updatedAt
                 }
               }),
+              flavor: results[2][index],
               name: item.name,
               notes: item.notes,
               createdAt: item.createdAt,
@@ -158,14 +166,16 @@ module.exports = {
   /**
    * Serves auto-updates: Status and Squirrel.Mac
    *
-   * Assumes stable channel unless specified
+   * Assumes stable channel & default flavor unless specified
    *
    * (GET /update/:platform/:version/:channel)
+   * (GET /update/flavor/:flavor/:platform/:version/:channel?)
    */
   general: function(req, res) {
     var platform = req.param('platform');
     var version = req.param('version');
     var channel = req.param('channel') || 'stable';
+    const flavor = req.params.flavor || 'default';
 
     if (!version) {
       return res.badRequest('Requires `version` parameter');
@@ -180,13 +190,17 @@ module.exports = {
     sails.log.debug('Update Search Query', {
       platform: platforms,
       version: version,
-      channel: channel
+      channel: channel,
+      flavor
     });
 
     // Get specified version object, it's time will be used for the general
     // cutoff.
     Version
-      .findOne(version)
+      .findOne({
+        name: version,
+        flavor
+      })
       .then(function(currentVersion) {
 
         var applicableChannels, createdAtFilter;
@@ -208,7 +222,8 @@ module.exports = {
           .find(UtilityService.getTruthyObject({
             channel: applicableChannels,
             createdAt: createdAtFilter,
-            availability: availabilityFilter()
+            availability: availabilityFilter(),
+            flavor
           }))
           .populate('assets', {
             platform: platforms
@@ -268,7 +283,7 @@ module.exports = {
             return res.ok({
               url: url.resolve(
                 sails.config.appUrl,
-                '/download/' + latestVersion.name + '/' +
+                `/download/flavor/${flavor}/${latestVersion.name}/` +
                 latestVersion.assets[0].platform + '?filetype=zip'
               ),
               name: latestVersion.name,
@@ -286,11 +301,13 @@ module.exports = {
    * normalized filename (for pre-release)
    *
    * (GET /update/:platform/:version/:channel/RELEASES)
+   * (GET /update/flavor/:flavor/:platform/:version/:channel/RELEASES)
    */
   windows: function(req, res) {
     var platform = req.param('platform');
     var version = req.param('version');
     var channel = req.param('channel') || 'stable';
+    const flavor = req.params.flavor || 'default';
 
     if (!version) {
       return res.badRequest('Requires `version` parameter');
@@ -305,13 +322,17 @@ module.exports = {
     sails.log.debug('Windows Update Search Query', {
       platform: platforms,
       version: version,
-      channel: channel
+      channel: channel,
+      flavor
     });
 
     // Get specified version object, it's time will be used for the general
     // cutoff.
     Version
-      .findOne(version)
+      .findOne({
+        name: version,
+        flavor
+      })
       .then(function(currentVersion) {
         var applicableChannels, createdAtFilter;
 
@@ -332,7 +353,8 @@ module.exports = {
           .find(UtilityService.getTruthyObject({
             channel: applicableChannels,
             createdAt: createdAtFilter,
-            availability: availabilityFilter()
+            availability: availabilityFilter(),
+            flavor
           }))
           .populate('assets', {
             platform: platforms
@@ -394,7 +416,7 @@ module.exports = {
             assets = _.map(latestVersion.assets, function(asset) {
               asset.name = url.resolve(
                 sails.config.appUrl,
-                '/download/' + asset.version + '/' + asset.platform + '/' +
+                `/download/flavor/${flavor}/${asset.version}/${asset.platform}/` +
                 asset.name
               );
 
@@ -416,10 +438,14 @@ module.exports = {
    * (GET /update/:platform/latest.yml)
    * (GET /update/:platform/:channel.yml)
    * (GET /update/:platform/:channel/latest.yml)
+   * (GET /update/flavor/:flavor/:platform/latest.yml)
+   * (GET /update/flavor/:flavor/:platform/:channel.yml)
+   * (GET /update/flavor/:flavor/:platform/:channel/latest.yml)
    */
   electronUpdaterWin: function(req, res) {
     var platform = req.param('platform');
     var channel = req.param('channel') || 'stable';
+    const flavor = req.params.flavor || 'default';
 
     if (!platform) {
       return res.badRequest('Requires `platform` parameter');
@@ -429,7 +455,8 @@ module.exports = {
 
     sails.log.debug('NSIS electron-updater Search Query', {
       platform: platforms,
-      channel: channel
+      channel: channel,
+      flavor
     });
 
     var applicableChannels = ChannelService.getApplicableChannels(channel);
@@ -439,7 +466,8 @@ module.exports = {
     Version
       .find({
         channel: applicableChannels,
-        availability: availabilityFilter()
+        availability: availabilityFilter(),
+        flavor
       })
       .populate('assets')
       .then(function(versions) {
@@ -469,7 +497,7 @@ module.exports = {
           var downloadPath = url.resolve(
             //sails.config.appUrl,
             "",
-            '/download/' + latestVersion.name + '/' + asset.platform + '/' +
+            `/download/flavor/${flavor}/${latestVersion.name}/${asset.platform}/` +
             asset.name
           );
 
@@ -491,10 +519,14 @@ module.exports = {
    * (GET /update/:platform/latest-mac.yml)
    * (GET /update/:platform/:channel-mac.yml)
    * (GET /update/:platform/:channel/latest-mac.yml)
+   * (GET /update/flavor/:flavor/:platform/latest-mac.yml)
+   * (GET /update/flavor/:flavor/:platform/:channel-mac.yml)
+   * (GET /update/flavor/:flavor/:platform/:channel/latest-mac.yml)
    */
   electronUpdaterMac: function(req, res) {
     var platform = req.param('platform');
     var channel = req.param('channel') || 'stable';
+    const flavor = req.params.flavor || 'default';
 
     if (!platform) {
       return res.badRequest('Requires `platform` parameter');
@@ -504,7 +536,8 @@ module.exports = {
 
     sails.log.debug('Mac electron-updater Search Query', {
       platform: platforms,
-      channel: channel
+      channel: channel,
+      flavor
     });
 
     var applicableChannels = ChannelService.getApplicableChannels(channel);
@@ -514,7 +547,8 @@ module.exports = {
     Version
       .find({
         channel: applicableChannels,
-        availability: availabilityFilter()
+        availability: availabilityFilter(),
+        flavor
       })
       .populate('assets')
       .then(function(versions) {
@@ -544,7 +578,7 @@ module.exports = {
           var downloadPath = url.resolve(
             //sails.config.appUrl,
             "",
-            '/download/' + latestVersion.name + '/' + asset.platform + '/' +
+            `/download/flavor/${flavor}/${latestVersion.name}/${asset.platform}/` +
             asset.name
           );
 
@@ -563,15 +597,17 @@ module.exports = {
 
   /**
    * Get release notes for a specific version
-   * (GET /notes/:version?)
+   * (GET /notes/:version/:flavor?)
    */
   releaseNotes: function(req, res) {
     var version = req.params.version;
+    const flavor = req.params.flavor || 'default';
 
     Version
       .findOne({
         name: version,
-        availability: availabilityFilter()
+        availability: availabilityFilter(),
+        flavor
       })
       .then(function(currentVersion) {
         if (!currentVersion) {

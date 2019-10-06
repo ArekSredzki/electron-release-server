@@ -10,8 +10,14 @@ GET http://download.myapp.com/api/version
 ```
 
 #### Get details about specific version:
+> Note that since the addition of flavors, version id is formatted as `name_flavor`.
 ```
-GET http://download.myapp.com/api/version/1.1.0
+GET http://download.myapp.com/api/version/1.1.0_default
+```
+
+#### Set availability date of specific version (Unix timestamp in milliseconds):
+```
+PUT http://download.myapp.com/version/availability/1.1.0/1574755200000
 ```
 
 #### Set availability date of specific version (Unix timestamp in milliseconds):

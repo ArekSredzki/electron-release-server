@@ -28,6 +28,16 @@
             em ex. 1.0.1
               span.text-warning -{{version.channel.name}}.
               span.text-info 1
+      // Select Flavor
+      .form-group
+        label.col-md-4.control-label(for='flavor') Flavor
+        .col-md-7
+          select.form-control(
+            ng-model='version.flavor.name',
+            name='flavor',
+            ng-options='flavor for flavor in availableFlavors',
+            required
+            )
       // Select Channel
       .form-group
         label.col-md-4.control-label(for='channel') Channel

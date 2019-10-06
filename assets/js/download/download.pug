@@ -8,6 +8,13 @@
           ng-options='channel for channel in vm.availableChannels'
           ng-change='vm.getLatestReleases()'
           )
+      small.pull-left
+        | Flavor: 
+        select(
+          ng-model='vm.flavor'
+          ng-options='flavor for flavor in vm.availableFlavors'
+          ng-change='vm.getLatestReleases()'
+          )
 .row.text-center.padding-top-20(ng-if="vm.latestReleases")
   .col-md-12(ng-if="vm.platform === 'osx'")
     .jumbotron
@@ -80,7 +87,7 @@
 .row.text-center.padding-top-20(ng-if="!vm.latestReleases")
   .col-md-12
     h5.text-muted
-      | There are no {{ vm.channel }} releases available for {{ vm.platform }}.
+      | The {{ vm.flavor }} flavor has no {{ vm.channel }} releases available for {{ vm.platform }}.
       
 .row.text-center.padding-20-0
   .col-sm-8.col-sm-offset-2
@@ -104,7 +111,7 @@
           )
         button.btn.btn-sm.btn-success.download-btn(
           ng-repeat="asset in version.assets"
-          ng-click="vm.download(asset, version.name)"
+          ng-click="vm.download(asset, version.name, version.flavor.name)"
           ng-if="vm.filetypes[asset.platform].includes(asset.filetype)"
           )
           | {{ vm.availablePlatforms[asset.platform] }}
