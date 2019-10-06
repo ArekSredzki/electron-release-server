@@ -40,7 +40,7 @@
     "sails-disk": "^0.10.10",
     "sails-pg-session": "^1.0.1",
     "sails-postgresql": "^0.12.1",
-    "semver": "^5.3.0",
+    "semver": "^5.5.0",
     "skipper-disk": "^0.5.7",
     "strip-bom": "^3.0.0",
     "url": "^0.11.0"
