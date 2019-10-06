@@ -42,6 +42,7 @@ angular.module('app.releases', [])
 
       self.latestReleases = null;
       self.downloadUrl = null;
+      self.versions = [];
 
       self.getLatestReleases = function() {
         self.setChannelParams(self.channel);
@@ -50,18 +51,22 @@ angular.module('app.releases', [])
           self.archs,
           self.channel
         );
-        self.versions = DataService.data;
       };
+
+      // Get version assets organized by their platforms.
+      self.getVersionsByPlatform = function() {
+        self.versions = DataService.getVersionsByPlatform();
+      }
 
       // Watch for changes to data content and update local data accordingly.
       var uid1 = PubSub.subscribe('data-change', function() {
-        // $scope.$apply(function() {
         self.getLatestReleases();
-        // });
+        self.getVersionsByPlatform();
       });
 
       // Update knowledge of the latest available versions.
       self.getLatestReleases();
+      self.getVersionsByPlatform();
 
       self.download = function(asset, versionName) {
         if (!asset) {

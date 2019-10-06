@@ -639,5 +639,22 @@ angular.module('app.core.data.service', [
 
         return latestReleases;
       };
+
+      /**
+       * Returns an array of versions in which assets are keyed by platform.
+       * @return {[Array]} Augmented set of versions.
+       */
+      self.getVersionsByPlatform = function() {
+        // Group assets for each version by their platforms
+        var versions = _.map(self.data, function(version) {
+          var versionCopy = _.clone(version);
+          versionCopy.platforms = _.groupBy(version.assets, function(asset) {
+            return asset.platform;
+          });
+          return versionCopy;
+        });
+
+        return versions;
+      }
     }
   ]);
