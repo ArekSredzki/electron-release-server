@@ -21,7 +21,7 @@
     "grunt-contrib-jst": "~1.0.0",
     "grunt-contrib-less": "1.4.0",
     "grunt-contrib-pug": "^1.0.0",
-    "grunt-contrib-uglify": "~2.0.0",
+    "grunt-contrib-uglify-es": "^3.3.0",
     "grunt-contrib-watch": "~1.0.0",
     "grunt-sails-linker": "~1.0.4",
     "grunt-sass": "^2.0.0",
