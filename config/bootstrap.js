@@ -9,9 +9,9 @@
  * http://sailsjs.org/#!/documentation/reference/sails.config/sails.config.bootstrap.html
  */
 
- const mapSeries = require('async/mapSeries');
- const waterfall = require('async/waterfall');
- const series = require('async/series');
+const mapSeries = require('async/mapSeries');
+const waterfall = require('async/waterfall');
+const series = require('async/series');
 
 module.exports.bootstrap = done => {
   series([

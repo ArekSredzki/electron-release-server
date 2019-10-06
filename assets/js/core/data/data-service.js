@@ -198,17 +198,6 @@ angular.module('app.core.data.service', [
           return $q.reject();
         }
 
-        const errorTitle = 'Unable to Update Version';
-
-        if (!version.availability) {
-          Notification.error({
-            title: errorTitle,
-            message: 'Availability date must be greater than or equal to the version creation date'
-          });
-
-          return $q.reject();
-        }
-
         return $http.post(
             '/api/version/' + version.id,
             _.omit(version, ['assets'])
