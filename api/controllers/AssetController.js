@@ -140,7 +140,7 @@ module.exports = {
           }
 
           noneFoundMessage += version ? ' for version ' + version : '';
-          noneFoundMessage += ' (' + channel + ') ';
+          noneFoundMessage += channel ? ' (' + channel + ') ' : '';
           noneFoundMessage += filename ? ' with filename ' + filename : '';
           noneFoundMessage += filetype ? ' with filetype ' + filetype : '';
           return res.notFound(noneFoundMessage);

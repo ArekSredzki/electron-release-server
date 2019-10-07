@@ -416,7 +416,7 @@ module.exports = {
             const assets = _.map(latestVersion.assets, function(asset) {
               asset.name = url.resolve(
                 sails.config.appUrl,
-                `/download/flavor/${flavor}/${asset.version}/${asset.platform}/` +
+                `/download/flavor/${flavor}/${latestVersion.name}/${asset.platform}/` +
                 asset.name
               );
 
