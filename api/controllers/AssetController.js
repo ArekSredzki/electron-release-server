@@ -176,72 +176,85 @@ module.exports = {
       return res.badRequest('Invalid version provided.');
     }
 
-    // Set upload request timeout to 10 minutes
-    req.setTimeout(10 * 60 * 1000);
-
-    req.file('file').upload(sails.config.files,
-      function whenDone(err, uploadedFiles) {
-        if (err) {
-          return res.negotiate(err);
+    // Check that the version exists (or its `_default` flavor equivalent)
+    Version
+      .find({
+        id: [data.version.id, `${data.version.id}_default`]
+      })
+      .then(versions => {
+        if (!versions || !versions.length) {
+          return res.notFound('The specified `version` does not exist');
         }
 
-        // If an unexpected number of files were uploaded, respond with an
-        // error.
-        if (uploadedFiles.length !== 1) {
-          return res.badRequest('No file was uploaded');
-        }
+        data.version.id = versions[versions.length - 1].id;
 
-        var uploadedFile = uploadedFiles[0];
+        // Set upload request timeout to 10 minutes
+        req.setTimeout(10 * 60 * 1000);
 
-        var fileExt = path.extname(uploadedFile.filename);
+        req.file('file').upload(sails.config.files,
+          function whenDone(err, uploadedFiles) {
+            if (err) {
+              return res.negotiate(err);
+            }
 
-        sails.log.debug('Creating asset with name', data.name || uploadedFile.filename);
+            // If an unexpected number of files were uploaded, respond with an
+            // error.
+            if (uploadedFiles.length !== 1) {
+              return res.badRequest('No file was uploaded');
+            }
 
-        var hashPromise;
+            var uploadedFile = uploadedFiles[0];
 
-        if (fileExt === '.nupkg') {
-          // Calculate the hash of the file, as it is necessary for windows
-          // files
-          hashPromise = AssetService.getHash(uploadedFile.fd);
-        } else if (fileExt === '.exe' || fileExt === '.zip') {
-          hashPromise = AssetService.getHash(uploadedFile.fd, 'sha256');
-        } else {
-          hashPromise = Promise.resolve('');
-        }
+            var fileExt = path.extname(uploadedFile.filename);
 
-        hashPromise
-          .then(function(fileHash) {
-            // Create new instance of model using data from params
-            Asset
-              .create(_.merge({
-                name: uploadedFile.filename,
-                hash: fileHash,
-                filetype: fileExt,
-                fd: uploadedFile.fd,
-                size: uploadedFile.size
-              }, data))
-              .exec(function created(err, newInstance) {
+            sails.log.debug('Creating asset with name', data.name || uploadedFile.filename);
 
-                // Differentiate between waterline-originated validation errors
-                // and serious underlying issues. Respond with badRequest if a
-                // validation error is encountered, w/ validation info.
-                if (err) return res.negotiate(err);
+            var hashPromise;
 
-                // If we have the pubsub hook, use the model class's publish
-                // method to notify all subscribers about the created item.
-                if (req._sails.hooks.pubsub) {
-                  if (req.isSocket) {
-                    Asset.subscribe(req, newInstance);
-                    Asset.introduce(newInstance);
-                  }
-                  Asset.publishCreate(newInstance, !req.options.mirror && req);
-                }
+            if (fileExt === '.nupkg') {
+              // Calculate the hash of the file, as it is necessary for windows
+              // files
+              hashPromise = AssetService.getHash(uploadedFile.fd);
+            } else if (fileExt === '.exe' || fileExt === '.zip') {
+              hashPromise = AssetService.getHash(uploadedFile.fd, 'sha256');
+            } else {
+              hashPromise = Promise.resolve('');
+            }
 
-                // Send JSONP-friendly response if it's supported
-                res.created(newInstance);
-              });
-          })
-          .catch(res.negotiate);
+            hashPromise
+              .then(function(fileHash) {
+                // Create new instance of model using data from params
+                Asset
+                  .create(_.merge({
+                    name: uploadedFile.filename,
+                    hash: fileHash,
+                    filetype: fileExt,
+                    fd: uploadedFile.fd,
+                    size: uploadedFile.size
+                  }, data))
+                  .exec(function created(err, newInstance) {
+
+                    // Differentiate between waterline-originated validation errors
+                    // and serious underlying issues. Respond with badRequest if a
+                    // validation error is encountered, w/ validation info.
+                    if (err) return res.negotiate(err);
+
+                    // If we have the pubsub hook, use the model class's publish
+                    // method to notify all subscribers about the created item.
+                    if (req._sails.hooks.pubsub) {
+                      if (req.isSocket) {
+                        Asset.subscribe(req, newInstance);
+                        Asset.introduce(newInstance);
+                      }
+                      Asset.publishCreate(newInstance, !req.options.mirror && req);
+                    }
+
+                    // Send JSONP-friendly response if it's supported
+                    res.created(newInstance);
+                  });
+              })
+              .catch(res.negotiate);
+          });
       });
   },
 

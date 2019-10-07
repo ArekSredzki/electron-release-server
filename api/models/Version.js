@@ -30,13 +30,12 @@ module.exports = {
     },
 
     availability: {
-      type: 'datetime',
-      required: true
+      type: 'datetime'
     },
 
     flavor: {
       model: 'flavor',
-      required: true
+      defaultsTo: 'default'
     },
 
     notes: {
@@ -57,7 +56,7 @@ module.exports = {
   afterCreate: (version, proceed) => {
     const { availability, createdAt, id } = version;
 
-    if (new Date(availability) < new Date(createdAt)) {
+    if (!availability || new Date(availability) < new Date(createdAt)) {
       return Version
         .update(id, { availability: createdAt })
         .exec(proceed);
