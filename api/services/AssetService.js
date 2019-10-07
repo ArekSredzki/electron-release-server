@@ -5,7 +5,6 @@
  */
 
 var mime = require('mime');
-var path = require('path');
 
 var fsx = require('fs-extra');
 var crypto = require('crypto');
@@ -17,7 +16,7 @@ var AssetService = {};
 
 AssetService.serveFile = function(req, res, asset) {
   // Stream the file to the user
-  var fileStream = fsx.createReadStream(asset.fd)
+  fsx.createReadStream(asset.fd)
     .on('error', function(err) {
       res.serverError('An error occurred while accessing asset.', err);
       sails.log.error('Unable to access asset:', asset.fd);
@@ -78,7 +77,7 @@ AssetService.getHash = function(fd, type = 'sha1') {
     var hash = crypto.createHash(type);
     hash.setEncoding('hex');
 
-    var fileStream = fsx.createReadStream(fd)
+    fsx.createReadStream(fd)
       .on('error', function(err) {
         reject(err);
       })

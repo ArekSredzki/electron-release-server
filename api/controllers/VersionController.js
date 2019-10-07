@@ -413,7 +413,7 @@ module.exports = {
             sails.log.debug('Latest Windows Version', latestVersion);
 
             // Change asset name to use full download link
-            assets = _.map(latestVersion.assets, function(asset) {
+            const assets = _.map(latestVersion.assets, function(asset) {
               asset.name = url.resolve(
                 sails.config.appUrl,
                 `/download/flavor/${flavor}/${asset.version}/${asset.platform}/` +
@@ -501,7 +501,7 @@ module.exports = {
             asset.name
           );
 
-          var sha2 = asset.hash ? asset.hash.toLowerCase() : null
+          const sha2 = asset.hash ? asset.hash.toLowerCase() : null;
 
           var latestYml = "version: " + latestVersion.name
                           + "\nreleaseDate: " + latestVersion.updatedAt
@@ -582,7 +582,7 @@ module.exports = {
             asset.name
           );
 
-          var sha2 = asset.hash ? asset.hash.toLowerCase() : null
+          const sha2 = asset.hash ? asset.hash.toLowerCase() : null;
 
           var latestYml = "version: " + latestVersion.name
                           + "\nreleaseDate: " + latestVersion.updatedAt

@@ -10,16 +10,6 @@ var path = require('path');
 var actionUtil = require('sails/lib/hooks/blueprints/actionUtil');
 var Promise = require('bluebird');
 
-var SEGMENTS_TO_REMOVE = _.concat(_.pickBy(PlatformService, _.isString), [
-  'x64',
-  'ia32',
-  'x32',
-  'win32',
-  'windows',
-  'osx',
-  'linux'
-]);
-
 module.exports = {
 
   /**
@@ -74,7 +64,7 @@ module.exports = {
       channel = channel || 'stable';
     }
 
-    var assetPromise = new Promise(function(resolve, reject) {
+    new Promise(function(resolve, reject) {
         var assetOptions = UtilityService.getTruthyObject({
           platform: platforms,
           filetype: filetype

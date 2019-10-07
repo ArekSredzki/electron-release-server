@@ -70,7 +70,7 @@ angular.module('app.core.data.service', [
 
         _.forEach(response.data.invalidAttributes,
           function(attribute, attributeName) {
-            warningMessage = '';
+            let warningMessage = '';
 
             _.forEach(attribute, function(attributeError) {
               warningMessage += (attributeError.message || '') + '<br />';
@@ -285,7 +285,7 @@ angular.module('app.core.data.service', [
           return;
         }
 
-        version = normalizeVersion(msg.data || msg.previous);
+        const version = normalizeVersion(msg.data || msg.previous);
 
         var index;
         const notificationMessage = version ? `${version.name} (${version.flavor.name})` : '';
@@ -513,7 +513,7 @@ angular.module('app.core.data.service', [
         }
         $log.log('Asset Received', msg);
 
-        asset = normalizeAsset(msg.data);
+        const asset = normalizeAsset(msg.data);
 
         if (!asset && msg.verb !== 'destroyed') {
           $log.log('No asset provided with message. Reloading data.');
@@ -631,9 +631,9 @@ angular.module('app.core.data.service', [
             $sails.get('/api/version')
           ])
           .then(function(responses) {
-            versions = responses[0];
-            channels = responses[1];
-            flavors = responses[2];
+            const versions = responses[0];
+            const channels = responses[1];
+            const flavors = responses[2];
             self.data = versions.data.items;
             self.availableChannels = channels.data.map(function(channel) {
               return channel.name;

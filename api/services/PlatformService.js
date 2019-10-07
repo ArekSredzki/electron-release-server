@@ -33,8 +33,6 @@ PlatformService.toType = function(platform) {
  * @return {String}     String representation of the detected platform
  */
 PlatformService.detectFromRequest = function(req) {
-  var platform;
-
   var source = req.headers['user-agent'];
   var ua = useragent.parse(source);
 

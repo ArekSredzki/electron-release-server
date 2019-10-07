@@ -99,7 +99,7 @@ WindowsReleaseService.parse = function(content) {
         size: Number(parts[3]),
         isDelta: isDelta,
         version: version,
-        semver: toSemver(version)
+        semver: this.toSemver(version)
       };
     })
     .compact()
