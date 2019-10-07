@@ -7,7 +7,7 @@ Electron Release Server can be easily be deployed to your own server.
 Install dependencies using:
 
 ```
-$ npm install
+npm install
 ```
 
 **Action Step:** You must create a `config/local.js` file, which contains the configuration options required to run the server.

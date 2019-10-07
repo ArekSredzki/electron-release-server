@@ -13,3 +13,7 @@ Electron Release Server uses explicit file compatibility naming in order to avoi
 ### How should I name my releases?
 
 Electron Release Server requires applications to follow [SemVer](http://semver.org). And even if you're not using Electron Release Server, you should follow it!
+
+### I'm seeing HTTP errors when the Electron autoUpdater queries for the `RELEASES` file. How should I fix it?
+
+Ensure that you are not including `/RELEASES` in the feed URL that is passed to `setFeedURL()`.

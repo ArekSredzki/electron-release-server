@@ -10,8 +10,8 @@ Install [docker](https://www.docker.com/) and [docker-compose](https://github.co
 ## Localserver
 
 ```bash
-$ docker-compose up -d
-$ # open localhost:5000 in browser
+docker-compose up -d
+# open localhost:5000 in browser
 ```
 
 If you use [docker-machine](https://github.com/docker/machine) you should change
