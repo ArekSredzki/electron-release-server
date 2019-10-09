@@ -3,6 +3,7 @@
 // -----------------------------------------------------
 
 $web-font-path: "https://fonts.googleapis.com/css?family=Lato:400,700,400italic" !default;
+
 @import url($web-font-path);
 
 // Navbar =====================================================================
@@ -11,7 +12,6 @@ $web-font-path: "https://fonts.googleapis.com/css?family=Lato:400,700,400italic"
   border-width: 0;
 
   &-default {
-
     .badge {
       background-color: #fff;
       color: $navbar-default-bg;
@@ -19,7 +19,6 @@ $web-font-path: "https://fonts.googleapis.com/css?family=Lato:400,700,400italic"
   }
 
   &-inverse {
-
     .badge {
       background-color: #fff;
       color: $navbar-inverse-bg;
@@ -86,7 +85,6 @@ $web-font-path: "https://fonts.googleapis.com/css?family=Lato:400,700,400italic"
 
 table,
 .table {
-
   a:not(.btn) {
     text-decoration: underline;
   }
@@ -138,6 +136,7 @@ textarea {
 input,
 textarea {
   border: 2px hidden transparent;
+
   @include box-shadow(none);
 
   &:focus {
@@ -246,10 +245,10 @@ textarea {
   }
 
   .disabled {
-    &>a,
-    &>a:hover,
-    &>a:focus,
-    &>span {
+    & > a,
+    & > a:hover,
+    & > a:focus,
+    & > span {
       background-color: $pagination-disabled-bg;
     }
   }
@@ -283,7 +282,9 @@ textarea {
 
 .progress {
   height: 10px;
+
   @include box-shadow(none);
+
   .progress-bar {
     font-size: 10px;
     line-height: 10px;
@@ -297,7 +298,6 @@ textarea {
 }
 
 a.list-group-item {
-
   &.active,
   &.active:hover,
   &.active:focus {
