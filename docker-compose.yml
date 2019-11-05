@@ -18,7 +18,7 @@ services:
       - '5000:80'
     entrypoint: ./scripts/wait.sh db:5432 -- npm start
   db:
-    image: postgres
+    image: postgres:11
     environment:
       POSTGRES_PASSWORD: secret
       POSTGRES_USER: releaseserver
