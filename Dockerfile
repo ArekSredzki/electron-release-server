@@ -1,14 +1,14 @@
-FROM node:6
+FROM node:10
 
 # Create app directory
-RUN mkdir -p /usr/src/electron-release-server
 WORKDIR /usr/src/electron-release-server
 
 # Install app dependencies
 COPY package.json .bowerrc bower.json /usr/src/electron-release-server/
 RUN npm install \
   && ./node_modules/.bin/bower install --allow-root \
-  && npm cache clean
+  && npm cache clean --force \
+  && npm prune --production
 
 # Bundle app source
 COPY . /usr/src/electron-release-server
