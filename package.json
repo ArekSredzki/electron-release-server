@@ -1,11 +1,15 @@
 {
   "name": "electron-release-server",
   "private": true,
-  "version": "1.4.3",
+  "version": "1.5.2",
   "description": "A version server for hosting and serving the your electron desktop app releases.",
   "dependencies": {
+    "async": "^2.5.0",
     "bluebird": "^3.4.6",
     "bower": "^1.8.0",
+    "compare-versions": "^3.1.0",
+    "db-migrate": "^0.11.6",
+    "db-migrate-pg": "^1.0.0",
     "express-useragent": "^1.0.4",
     "fs-extra": "^1.0.0",
     "grunt": "^1.0.1",
@@ -17,7 +21,7 @@
     "grunt-contrib-jst": "~1.0.0",
     "grunt-contrib-less": "1.4.0",
     "grunt-contrib-pug": "^1.0.0",
-    "grunt-contrib-uglify": "~2.0.0",
+    "grunt-contrib-uglify-es": "^3.3.0",
     "grunt-contrib-watch": "~1.0.0",
     "grunt-sails-linker": "~1.0.4",
     "grunt-sass": "^2.0.0",
@@ -36,7 +40,7 @@
     "sails-disk": "^0.10.10",
     "sails-pg-session": "^1.0.1",
     "sails-postgresql": "^0.12.1",
-    "semver": "^5.3.0",
+    "semver": "^5.5.0",
     "skipper-disk": "^0.5.7",
     "strip-bom": "^3.0.0",
     "url": "^0.11.0"
@@ -44,7 +48,10 @@
   "scripts": {
     "debug": "node debug app.js",
     "start": "node app.js",
-    "postinstall": "bower install"
+    "migrate": "db-migrate",
+    "postinstall": "bower install",
+    "eslint": "eslint ./*.js api assets/js config migrations tasks",
+    "stylelint": "stylelint assets/styles/*.*"
   },
   "main": "app.js",
   "author": {
@@ -52,5 +59,10 @@
     "email": "arek@sredzki.com",
     "url": "http://arek.io/"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "eslint": "^6.5.1",
+    "stylelint": "^11.0.0",
+    "stylelint-config-standard": "^19.0.0"
+  }
 }

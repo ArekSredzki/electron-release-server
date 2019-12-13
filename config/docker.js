@@ -25,11 +25,11 @@ module.exports = {
   connections: {
     postgresql: {
       adapter: 'sails-postgresql',
-      host: process.env['DB_HOST'],
-      port: process.env['DB_PORT'],
-      user: process.env['DB_USERNAME'],
-      password: process.env['DB_PASSWORD'],
-      database: process.env['DB_NAME']
+      host: process.env['DB_HOST'] || process.env['DATABASE_URL'] && process.env['DATABASE_URL'].split('@')[1].split(':')[0],
+      port: process.env['DB_PORT'] || process.env['DATABASE_URL'] && process.env['DATABASE_URL'].split('@')[1].split(':')[1].split('/')[0],
+      user: process.env['DB_USERNAME'] || process.env['DATABASE_URL'] && process.env['DATABASE_URL'].split('@')[0].split(':')[1].split('/')[2],
+      password: process.env['DB_PASSWORD'] || process.env['DATABASE_URL'] && process.env['DATABASE_URL'].split('@')[0].split(':')[2],
+      database: process.env['DB_NAME'] || process.env['DATABASE_URL'] && process.env['DATABASE_URL'].split('/')[3]
     }
   },
   jwt: {
@@ -38,18 +38,17 @@ module.exports = {
     token_secret: process.env['TOKEN_SECRET'],
   },
   files: {
-    dirname: '/tmp/',
+    dirname: process.env['ASSETS_PATH'] || '/tmp/',
   },
   session: {
     // Recommended: 63 random alpha-numeric characters
     // Generate using: https://www.grc.com/passwords.htm
     token_secret: process.env['TOKEN_SECRET'],
-    database: process.env['DB_NAME'],
-    host: process.env['DB_HOST'],
-    user: process.env['DB_USERNAME'],
-    password: process.env['DB_PASSWORD'],
-    port: process.env['DB_PORT'],
+    database: process.env['DB_NAME'] || process.env['DATABASE_URL'] && process.env['DATABASE_URL'].split('/')[3],
+    host: process.env['DB_HOST'] || process.env['DATABASE_URL'] && process.env['DATABASE_URL'].split('@')[1].split(':')[0],
+    user: process.env['DB_USERNAME'] || process.env['DATABASE_URL'] && process.env['DATABASE_URL'].split('@')[0].split(':')[1].split('/')[2],
+    password: process.env['DB_PASSWORD'] || process.env['DATABASE_URL'] && process.env['DATABASE_URL'].split('@')[0].split(':')[2],
+    port: process.env['DB_PORT'] || process.env['DATABASE_URL'] && process.env['DATABASE_URL'].split('@')[1].split(':')[1].split('/')[0]
   }
 
 };
-

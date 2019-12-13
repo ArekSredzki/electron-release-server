@@ -7,7 +7,7 @@ Electron Release Server can be easily be deployed to your own server.
 Install dependencies using:
 
 ```
-$ npm install
+npm install
 ```
 
 **Action Step:** You must create a `config/local.js` file, which contains the configuration options required to run the server.
@@ -28,7 +28,7 @@ Browse to `http://localhost:1337/`
 
 ## Using Nginx
 
-If you want use nginx as web-server:
+If you want to use nginx as web-server:
 
 ```nginx
 server {
@@ -37,9 +37,9 @@ server {
 
     location / {
         proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwared-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header Host $http_host;
-        proxy_set_header X-NginX-Proxy true;
+        proxy_set_header X-Nginx-Proxy true;
 
         proxy_pass http://127.0.0.1:1337/;
         proxy_redirect off;

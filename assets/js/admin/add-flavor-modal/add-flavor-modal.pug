@@ -1,0 +1,18 @@
+.modal-header
+  h3.modal-title Add a New Flavor
+.modal-body
+  form.form-horizontal(novalidate='')
+    fieldset
+      // Flavor Name
+      .form-group
+        label.col-md-4.control-label(for='name') Flavor Name
+        .col-md-7
+          input.form-control.input-md(
+            ng-model='flavor.name',
+            minlength='1',
+            required
+            )
+.modal-footer
+  div
+    button.btn.btn-warning(type='button', ng-click='addFlavor()') Add Flavor
+    button.btn.btn-danger(type='button', ng-click='closeModal()') Cancel

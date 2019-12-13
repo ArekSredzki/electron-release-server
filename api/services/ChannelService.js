@@ -5,13 +5,7 @@
 var _ = require('lodash');
 
 var ChannelService = {
-  // Available channels ordered by desc. stability
-  availableChannels: [
-    'stable',
-    'rc',
-    'beta',
-    'alpha'
-  ]
+  availableChannels: sails.config.channels
 };
 
 /**
@@ -23,7 +17,7 @@ ChannelService.getApplicableChannels = function(channel) {
   var channelIndex = ChannelService.availableChannels.indexOf(channel);
 
   if (channelIndex === -1) {
-    return ['stable'];
+    return ChannelService.availableChannels[ChannelService.availableChannels.length - 1];
   }
 
   return ChannelService.availableChannels.slice(

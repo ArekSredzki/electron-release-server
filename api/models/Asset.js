@@ -9,10 +9,14 @@ module.exports = {
 
   attributes: {
 
-    name: {
+    id: {
       type: 'string',
       primaryKey: true,
-      unique: true,
+      unique: true
+    },
+
+    name: {
+      type: 'string',
       required: true
     },
 
@@ -52,5 +56,15 @@ module.exports = {
       required: true
     }
   },
-  autoPK: false
+
+  autoPK: false,
+
+  beforeCreate: (asset, proceed) => {
+    const { version, platform, filetype } = asset;
+
+    asset.id = `${version}_${platform}_${filetype.replace(/\./g, '')}`;
+
+    return proceed();
+  }
+
 };

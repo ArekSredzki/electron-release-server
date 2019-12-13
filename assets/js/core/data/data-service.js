@@ -32,24 +32,12 @@ angular.module('app.core.data.service', [
       };
 
       self.filetypes = {
-        windows_64: '.exe',
-        windows_32: '.exe',
-        osx_64: '.dmg',
-        linux_64: '.deb',
-        linux_32: '.deb'
+        windows_64: ['.exe', '.msi'],
+        windows_32: ['.exe', '.msi'],
+        osx_64: ['.dmg', '.pkg', '.mas'],
+        linux_64: ['.deb', '.gz', '.rpm', '.AppImage'],
+        linux_32: ['.deb', '.gz', '.rpm', '.AppImage']
       };
-
-      /**
-       * An array of all available release channels
-       * TODO: Make this dynamic by fetching from the api
-       * @type {Array}
-       */
-      self.availableChannels = [
-        'stable',
-        'rc',
-        'beta',
-        'alpha'
-      ];
 
       /**
        * Compare version objects using semantic versioning.
@@ -82,7 +70,7 @@ angular.module('app.core.data.service', [
 
         _.forEach(response.data.invalidAttributes,
           function(attribute, attributeName) {
-            warningMessage = '';
+            let warningMessage = '';
 
             _.forEach(attribute, function(attributeError) {
               warningMessage += (attributeError.message || '') + '<br />';
@@ -133,15 +121,23 @@ angular.module('app.core.data.service', [
           throw new Error('A version object is required for creation');
         }
 
+        const errorTitle = 'Unable to Create Version';
+
+        if (!version.availability) {
+          Notification.error({
+            title: errorTitle,
+            message: 'Availability date must be greater than or equal to the current date'
+          });
+
+          return $q.reject();
+        }
+
         return $http.post('/api/version', version)
           .then(function(response) {
             Notification.success('Version Created Successfully.');
 
             return response;
           }, function(response) {
-
-            var errorTitle = 'Unable to Create Version';
-
             showErrors(response, errorTitle);
 
             return $q.reject(response);
@@ -149,26 +145,61 @@ angular.module('app.core.data.service', [
       };
 
       /**
-       * Updates a version using the api.
+       * Creates a flavor using the api.
        * Requires authentication (token is auto-injected).
-       * @param  {Object}  version     A object containing all of the parameters
-       *                               we would like to update the version with.
-       * @param  {String}  versionName The version's original name (in case we
-       *                               are trying to change it)
+       * @param  {Object}  flavor      A object containing all of the parameters
+       *                               we would like to create the flavor with.
        * @return {Promise}             A promise which is resolve/rejected as
        *                               soon as we know the result of the operation
        *                               Contains the response object.
        */
-      self.updateVersion = function(version, versionName) {
+      self.createFlavor = flavor => {
+        if (!flavor) {
+          throw new Error('A flavor object is required for creation');
+        }
+
+        return $http.post('/api/flavor', flavor)
+          .then(
+            response => {
+              Notification.success('Flavor Created Successfully.');
+
+              return response;
+            },
+            response => {
+              showErrors(response, 'Unable to Create Flavor');
+
+              return $q.reject(response);
+            }
+          );
+      };
+
+      /**
+       * Updates a version using the api.
+       * Requires authentication (token is auto-injected).
+       * @param  {Object}  version     A object containing all of the parameters
+       *                               we would like to update the version with.
+       * @return {Promise}             A promise which is resolve/rejected as
+       *                               soon as we know the result of the operation
+       *                               Contains the response object.
+       */
+      self.updateVersion = function(version) {
         if (!version) {
           throw new Error('A version object is required for updating');
         }
-        if (!versionName) {
-          throw new Error('A version name is required for updating');
+
+        const errorTitle = 'Unable to Update Version';
+
+        if (!version.availability) {
+          Notification.error({
+            title: errorTitle,
+            message: 'Availability date must be greater than or equal to the version creation date'
+          });
+
+          return $q.reject();
         }
 
         return $http.post(
-            '/api/version/' + versionName,
+            '/api/version/' + version.id,
             _.omit(version, ['assets'])
           )
           .then(function(response) {
@@ -176,8 +207,6 @@ angular.module('app.core.data.service', [
 
             return response;
           }, function(response) {
-            var errorTitle = 'Unable to Update Version';
-
             showErrors(response, errorTitle);
 
             return $q.reject(response);
@@ -187,18 +216,18 @@ angular.module('app.core.data.service', [
       /**
        * Deletes a version using the api.
        * Requires authentication (token is auto-injected).
-       * @param  {Object}  versionName The name of the version that we would
+       * @param  {Object}  versionId   The id of the version that we would
        *                               like to delete.
        * @return {Promise}             A promise which is resolve/rejected as
        *                               soon as we know the result of the operation
        *                               Contains the response object.
        */
-      self.deleteVersion = function(versionName) {
-        if (!versionName) {
-          throw new Error('A version name is required for deletion');
+      self.deleteVersion = versionId => {
+        if (!versionId) {
+          throw new Error('A version id is required for deletion');
         }
 
-        return $http.delete('/api/version/' + versionName)
+        return $http.delete('/api/version/' + versionId)
           .then(function success(response) {
             Notification.success('Version Deleted Successfully.');
 
@@ -218,6 +247,7 @@ angular.module('app.core.data.service', [
        * Specifically:
        *  - The channel parameter will sometimes only contain the channel name.
        *  - The assets parameter will not be included if empty.
+       *  - The availability parameter will sometimes be dated before the createdAt date.
        * @param  {Object} version Unnormalized version object
        * @return {Object}         Normalized version object
        */
@@ -232,8 +262,18 @@ angular.module('app.core.data.service', [
           };
         }
 
+        if (typeof version.flavor === 'string') {
+          version.flavor = {
+            name: version.flavor
+          };
+        }
+
         if (!_.isArrayLike(version.assets)) {
           version.assets = [];
+        }
+
+        if (new Date(version.availability) < new Date(version.createdAt)) {
+          version.availability = version.createdAt;
         }
 
         return version;
@@ -245,10 +285,10 @@ angular.module('app.core.data.service', [
           return;
         }
 
-        version = normalizeVersion(msg.data);
+        const version = normalizeVersion(msg.data || msg.previous);
 
         var index;
-        var notificationMessage = (version || {}).name || '';
+        const notificationMessage = version ? `${version.name} (${version.flavor.name})` : '';
 
         if (msg.verb === 'created') {
 
@@ -269,7 +309,7 @@ angular.module('app.core.data.service', [
           });
 
           index = _.findIndex(self.data, {
-            'name': msg.id // Sails sends back the old id (name) for us
+            id: version.id // Sails sends back the old id for us
           });
 
           if (index > -1) {
@@ -281,9 +321,8 @@ angular.module('app.core.data.service', [
 
           $log.log('Sails updated a version.');
         } else if (msg.verb === 'destroyed') {
-
           index = _.findIndex(self.data, {
-            'name': msg.id
+            id: version.id
           });
 
           if (index > -1) {
@@ -292,10 +331,40 @@ angular.module('app.core.data.service', [
 
           Notification({
             title: 'Version Deleted',
-            message: msg.id
+            message: notificationMessage
           });
 
           $log.log('Sails removed a version.');
+        }
+
+        PubSub.publish('data-change');
+      });
+
+      // Process create/delete events on flavors pushed from the server over SocketIO
+      $sails.on('flavor', msg => {
+        if (!msg) {
+          return;
+        }
+
+        if (msg.verb === 'created') {
+          $log.log('Sails sent a new flavor.');
+
+          self.availableFlavors = [msg.data.name, ...self.availableFlavors].sort();
+
+          Notification({
+            title: 'New Flavor Available',
+            message: msg.data.name
+          });
+        } else if (msg.verb === 'destroyed') {
+          $log.log('Sails removed a flavor.');
+
+          self.availableFlavors = self.availableFlavors
+            .filter(flavor => flavor !== msg.previous.name);
+
+          Notification({
+            title: 'Flavor Deleted',
+            message: msg.previous.name
+          });
         }
 
         PubSub.publish('data-change');
@@ -307,18 +376,18 @@ angular.module('app.core.data.service', [
        * Requires authentication (token is auto-injected).
        * @param  {Object}  asset       A object containing all of the parameters
        *                               we would like to create the asset with.
-       * @param  {Object}  versionName The name of the version that we would
+       * @param  {Object}  versionId   The id of the version that we would
        *                               like to add this asset to.
        * @return {Promise}             A promise which is resolve/rejected as
        *                               soon as we know the result of the operation
        *                               Contains the response object.
        */
-      self.createAsset = function(asset, versionName) {
+      self.createAsset = function(asset, versionId) {
         if (!asset) {
           throw new Error('A asset object is required for creation');
         }
-        if (!versionName) {
-          throw new Error('A version name is required for creation');
+        if (!versionId) {
+          throw new Error('A version id is required for creation');
         }
 
         var deferred = $q.defer();
@@ -327,7 +396,7 @@ angular.module('app.core.data.service', [
           url: '/api/asset',
           data: _.merge({
             token: AuthService.getToken(),
-            version: versionName
+            version: versionId
           }, asset)
         });
 
@@ -369,11 +438,11 @@ angular.module('app.core.data.service', [
         if (!asset) {
           throw new Error('A asset object is required for updating');
         }
-        if (!asset.name) {
+        if (!asset.id) {
           throw new Error('The passed asset object must have been submitted to the database in order to be updated');
         }
 
-        return $http.post('/api/asset/' + asset.name, asset)
+        return $http.post('/api/asset/' + asset.id, asset)
           .then(function(response) {
             Notification.success('Asset Updated Successfully.');
 
@@ -419,7 +488,7 @@ angular.module('app.core.data.service', [
        * Normalize the asset object returned by sails over SocketIO.
        * Note: Sails will not populate related models on update
        * Specifically:
-       *  - The version parameter will sometimes only contain the version name.
+       *  - The version parameter will sometimes only contain the version id.
        * @param  {Object} asset Unnormalized asset object
        * @return {Object}       Normalized asset object
        */
@@ -430,7 +499,7 @@ angular.module('app.core.data.service', [
 
         if (_.isString(asset.version)) {
           asset.version = {
-            name: asset.version
+            id: asset.version
           };
         }
 
@@ -444,7 +513,7 @@ angular.module('app.core.data.service', [
         }
         $log.log('Asset Received', msg);
 
-        asset = normalizeAsset(msg.data);
+        const asset = normalizeAsset(msg.data);
 
         if (!asset && msg.verb !== 'destroyed') {
           $log.log('No asset provided with message. Reloading data.');
@@ -457,7 +526,7 @@ angular.module('app.core.data.service', [
 
         if (msg.verb === 'created') {
           versionIndex = _.findIndex(self.data, {
-            name: asset.version.name // Sails sends the version
+            id: asset.version.id // Sails sends the version
           });
 
           if (versionIndex === -1) {
@@ -479,7 +548,7 @@ angular.module('app.core.data.service', [
 
           versionIndex = _.findIndex(self.data, function(version) {
             index = _.findIndex(version.assets, {
-              name: msg.id // Sails sends back the old id for us
+              id: msg.id // Sails sends back the old id for us
             });
 
             return index !== -1;
@@ -505,7 +574,7 @@ angular.module('app.core.data.service', [
           versionIndex = _.findIndex(self.data, function(version) {
             $log.log('Searching Version:', version);
             index = _.findIndex(version.assets, {
-              name: msg.id // Sails sends back the old id for us
+              id: msg.id // Sails sends back the old id for us
             });
             $log.log('result:', index);
 
@@ -535,43 +604,91 @@ angular.module('app.core.data.service', [
       });
 
       /**
-       * Retrieve & subscribe to all version & asset data.
+       * Retrieve & subscribe to all versions, channels, flavors & asset data.
        * @return {Promise} Resolved once data has been retrieved
        */
       self.initialize = function() {
-        var deferred = $q.defer();
-        // Get the initial set of releases from the server.
-        // XXX This will also subscribe us to future changes regarding releases
-        $sails.get('/api/version')
-          .success(function(data) {
-            self.data = data;
-            self.sortVersions();
-            deferred.resolve(true);
+        self.currentPage = 0;
+        self.loading = true;
+        self.hasMore = false;
 
+        return Promise.all([
+            // Get the initial set of releases from the server.
+            $sails.get('/versions/sorted', {
+              page: self.currentPage
+            }),
+
+            // Get available channels
+            $sails.get('/api/channel'),
+
+            // Get available flavors
+            $sails.get('/api/flavor'),
+
+            // Only sent to watch for asset updates
+            $sails.get('/api/asset'),
+
+            // Only sent to watch for version updates
+            $sails.get('/api/version')
+          ])
+          .then(function(responses) {
+            const versions = responses[0];
+            const channels = responses[1];
+            const flavors = responses[2];
+            self.data = versions.data.items;
+            self.availableChannels = channels.data.map(function(channel) {
+              return channel.name;
+            });
+            self.availableFlavors = flavors.data.map(flavor => flavor.name).sort();
+
+            self.currentPage++;
+            self.hasMore = versions.data.total > self.data.length;
+            self.loading = false;
             PubSub.publish('data-change');
-          })
-          .error(function(data, status) {
-            deferred.reject(data);
-          });
 
-        // Only sent to watch for asset updates
-        $sails.get('/api/asset')
-          .success(function(data) {
             $log.log('Should be subscribed!');
           });
+      };
 
-        return deferred.promise;
+      /**
+       * Determines if a version is available
+       * @param  {Object}  version Version object.
+       * @return {Boolean}         True if the version is available, otherwise false.
+       */
+      self.checkAvailability = version => new Date(version.availability) <= new Date();
+
+      self.loadMoreVersions = function() {
+        if (self.loading) {
+          return;
+        }
+
+        self.loading = true;
+
+        return $sails.get('/versions/sorted', {
+          page: self.currentPage
+        })
+        .then(function(versions) {
+          self.data = self.data.concat(versions.data.items);
+
+          self.currentPage++;
+          self.hasMore = versions.data.total > self.data.length;
+          self.loading = false;
+          PubSub.publish('data-change');
+        });
       };
 
       /**
        * Returns information about the latest release available for a given
-       * platform + architecture and channel.
+       * platform + architecture, channel and flavor.
        * @param  {String} platform Target platform (osx, windows, linux)
        * @param  {Array}  archs    Target architectures ('32', '64')
        * @param  {String} channel  Target release channel
+       * @param  {String} flavor   Target flavor
        * @return {Object}          Latest release data object
        */
-      self.getLatestReleases = function(platform, archs, channel) {
+      self.getLatestReleases = (platform, archs, channel, flavor) => {
+        if (!self.availableChannels) {
+          return;
+        }
 
         var channelIndex = self.availableChannels.indexOf(channel);
 
@@ -584,12 +701,18 @@ angular.module('app.core.data.service', [
           channelIndex + 1
         );
 
+        if (!self.availableFlavors || !self.availableFlavors.includes(flavor)) {
+          return;
+        }
+
         var versions = _
           .chain(self.data)
+          .filter(self.checkAvailability)
           .filter(function(version) {
             var versionChannel = _.get(version, 'channel.name');
             return applicableChannels.indexOf(versionChannel) !== -1;
           })
+          .filter(version => version.flavor.name === flavor)
           .value();
 
         var latestReleases = {};
@@ -597,21 +720,22 @@ angular.module('app.core.data.service', [
         _.forEach(archs, function(arch) {
           var platformName = platform + '_' + arch;
 
-          var filetype = self.filetypes[platformName];
+          var filetypes = self.filetypes[platformName];
 
-          if (!filetype) {
+          if (!filetypes) {
             return;
           }
           _.forEach(versions, function(version) {
             _.forEach(version.assets, function(asset) {
               if (
                 asset.platform === platformName &&
-                asset.filetype === filetype
+                filetypes.includes(asset.filetype)
               ) {
                 var matchedAsset = _.clone(asset);
                 matchedAsset.version = version.name;
                 matchedAsset.notes = version.notes;
                 matchedAsset.channel = _.get(version, 'channel.name');
+                matchedAsset.flavor = version.flavor.name;
                 latestReleases[arch] = matchedAsset;
 
                 return false;

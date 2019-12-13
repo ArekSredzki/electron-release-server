@@ -5,7 +5,6 @@
  */
 
 var mime = require('mime');
-var path = require('path');
 
 var fsx = require('fs-extra');
 var crypto = require('crypto');
@@ -17,7 +16,7 @@ var AssetService = {};
 
 AssetService.serveFile = function(req, res, asset) {
   // Stream the file to the user
-  var fileStream = fsx.createReadStream(asset.fd)
+  fsx.createReadStream(asset.fd)
     .on('error', function(err) {
       res.serverError('An error occurred while accessing asset.', err);
       sails.log.error('Unable to access asset:', asset.fd);
@@ -40,7 +39,7 @@ AssetService.serveFile = function(req, res, asset) {
       // Warning: not all adapters support queries
       if (_.isFunction(Asset.query)) {
         Asset.query(
-          'UPDATE asset SET download_count = download_count + 1 WHERE name = \'' + asset.name + '\';',
+          'UPDATE asset SET download_count = download_count + 1 WHERE id = \'' + asset.id + '\';',
           function(err) {
             if (err) {
               sails.log.error(
@@ -52,7 +51,7 @@ AssetService.serveFile = function(req, res, asset) {
         asset.download_count++;
 
         Asset.update({
-            name: asset.name
+            id: asset.id
           }, asset)
           .exec(function(err) {
             if (err) {
@@ -72,13 +71,13 @@ AssetService.serveFile = function(req, res, asset) {
  * @param  {String} fd File descriptor of file to hash
  * @return {String}    Promise which is resolved with the hash once complete
  */
-AssetService.getHash = function(fd) {
+AssetService.getHash = function(fd, type = 'sha1') {
   return new Promise(function(resolve, reject) {
 
-    var hash = crypto.createHash('sha1');
+    var hash = crypto.createHash(type);
     hash.setEncoding('hex');
 
-    var fileStream = fsx.createReadStream(fd)
+    fsx.createReadStream(fd)
       .on('error', function(err) {
         reject(err);
       })
@@ -104,11 +103,11 @@ AssetService.destroy = function(asset, req) {
     throw new Error('You must pass an asset');
   }
 
-  return Asset.destroy(asset.name)
+  return Asset.destroy(asset.id)
     .then(function destroyedRecord() {
       if (sails.hooks.pubsub) {
         Asset.publishDestroy(
-          asset.name, !req._sails.config.blueprints.mirror && req, {
+          asset.id, !req._sails.config.blueprints.mirror && req, {
             previous: asset
           }
         );

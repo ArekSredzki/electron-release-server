@@ -7,7 +7,12 @@ form(editable-form='', name='assetForm', onaftersave='acceptEdit()', e-role='for
       .form-group
         label.col-md-4.control-label(for='name') Asset Name
         .col-md-7
-          | {{ asset.name }}
+          span(
+            editable-text='asset.name',
+            e-name='name',
+            e-placeholder='{{ originalName }}'
+            )
+            | {{ asset.name }}
       // Select Platform
       .form-group
         label.col-md-4.control-label(for='platform') Platform
@@ -18,6 +23,11 @@ form(editable-form='', name='assetForm', onaftersave='acceptEdit()', e-role='for
             e-ng-options='key as value for (key, value) in DataService.availablePlatforms',
             )
             | {{ DataService.availablePlatforms[asset.platform] || 'Not set' }}
+      // File Type
+      .form-group(ng-show="fileType")
+        label.col-md-4.control-label File Type
+        .col-md-7
+          | {{ fileType }}
   .modal-footer
     div(ng-if='!assetForm.$visible')
       button.btn.btn-warning(type='button', ng-click='assetForm.$show()') Edit

@@ -3,7 +3,9 @@ Electron Release Server provides a backend for the [Squirrel.Mac](https://github
 
 ### Endpoint
 
-The endpoint for **Squirrel.Mac** is `https://download.myapp.com/update/:platform/:version[/:channel]`.
+The endpoints for **Squirrel.Mac** are:
+    - `https://download.myapp.com/update/:platform/:version[/:channel]`
+    - `https://download.myapp.com/update/flavor/:flavor/:platform/:version[/:channel]`.
 
 Note that `version` is the currently installed version.
 
@@ -12,6 +14,8 @@ The server will accept the platform as `osx`, `darwin`,`darwin_64`,`macos`, and 
 Since the server supports multiple release channels, you can specify the channel when requesting updates. Examples of supported channels are `stable`, `beta`, `alpha`. Each channel includes those above it; `beta` will include `stable` updates.
 
 This url requires different parameters to return a correct version: `version` and `platform`.
+
+If the flavor is not specified, then `default` will be used.
 
 ### Electron Example
 

@@ -2,7 +2,9 @@
 [![GitHub stars](https://img.shields.io/github/stars/ArekSredzki/electron-release-server.svg)](https://github.com/ArekSredzki/electron-release-server/stargazers)
 [![GitHub forks](https://img.shields.io/github/forks/ArekSredzki/electron-release-server.svg)](https://github.com/ArekSredzki/electron-release-server/network)
 [![Join the chat at https://gitter.im/ArekSredzki/electron-release-server](https://badges.gitter.im/ArekSredzki/electron-release-server.svg)](https://gitter.im/ArekSredzki/electron-release-server?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
->A node web server which serves & manages releases of the your [Electron](http://electron.atom.io) App, and is fully compatible with [Squirrel](https://github.com/Squirrel) Auto-updater (which is built into Electron).
+[![CodeFactor](https://www.codefactor.io/repository/github/areksredzki/electron-release-server/badge)](https://www.codefactor.io/repository/github/areksredzki/electron-release-server)
+[![Total alerts](https://img.shields.io/lgtm/alerts/g/ArekSredzki/electron-release-server.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/ArekSredzki/electron-release-server/alerts/)
+>A node web server which serves & manages releases of your [Electron](http://electron.atom.io) App, and is fully compatible with [Squirrel](https://github.com/Squirrel) Auto-updater (which is built into Electron).
 
 [![Electron Release Server Demo](https://j.gifs.com/wpyY1X.gif)](https://youtu.be/lvT7rfB01iA)
 
@@ -10,8 +12,10 @@ _Note: Despite being advertised as a release server for Electron applications, i
 
 If you host your project on your Github **and** do not need a UI for your app, then [Nuts](https://github.com/GitbookIO/nuts) is probably what you're looking for. Otherwise, you're in the same boat as I was, and you've found the right place!
 
-## Advisory Notice
-**IMPORTANT:** The release of Angular `1.6.0` has broken all `electron-release-server` versions prior to `1.4.2`. Please use the instructions under the `Maintenance` heading below to update your fork! Sorry for the inconvenience.
+## Advisory Notices
+**IMPORTANT:**
+- The release of Angular `1.6.0` has broken all `electron-release-server` versions prior to `1.4.2`. Please use the instructions under the `Maintenance` heading below to update your fork! Sorry for the inconvenience.
+- Since release `1.5.0` several models have changed to accommodate new features. Please use the instructions under [Migration](docs/database.md#migration) to update your database! Sorry for the inconvenience.
 
 ## Features
 - :sparkles: Docker :whale: support (thanks to EvgeneOskin)!
@@ -27,14 +31,25 @@ If you host your project on your Github **and** do not need a UI for your app, t
     - `/download/:version/:platform/:filename`
     - `/download/channel/:channel`
     - `/download/channel/:channel/:platform`
+    - `/download/flavor/:flavor/latest`
+    - `/download/flavor/:flavor/latest/:platform`
+    - `/download/flavor/:flavor/:version`
+    - `/download/flavor/:flavor/:version/:platform`
+    - `/download/flavor/:flavor/:version/:platform/:filename`
+    - `/download/flavor/:flavor/channel/:channel`
+    - `/download/flavor/:flavor/channel/:channel/:platform`
 - :sparkles: Support pre-release channels (`beta`, `alpha`, ...)
+- :sparkles: Support multiple flavors of your app
 - :sparkles: Auto-updates with [Squirrel](https://github.com/Squirrel):
-    - Update URLs provided: `/update/:platform/:version[/:channel]`
+    - Update URLs provided:
+        - `/update/:platform/:version[/:channel]`
+        - `/update/flavor/:flavor/:platform/:version[/:channel]`
     - Mac uses `*.dmg` and `*.zip`
     - Windows uses `*.exe` and `*.nupkg`
 - :sparkles: Serve the perfect type of assets: `.zip` for Squirrel.Mac, `.nupkg` for Squirrel.Windows, `.dmg` for Mac users, ...
+- :sparkles: Specify date of availability for releases
 - :sparkles: Release notes endpoint
-    - `/notes/:version`
+    - `/notes/:version/:flavor?`
 
 **NOTE:** if you don't provide the appropriate type of file for Squirrel you won't be able to update your app since the update endpoint will not return a JSON. (`.zip` for Squirrel.Mac, `.nupkg` for Squirrel.Windows).
 

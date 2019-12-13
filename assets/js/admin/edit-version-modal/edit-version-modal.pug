@@ -7,10 +7,26 @@ form(editable-form='', name='versionForm', onaftersave='acceptEdit()', e-role='f
       .form-group
         label.col-md-4.control-label Version Name
         .col-md-7 {{ version.name }}
+      // Flavor Name
+      .form-group
+        label.col-md-4.control-label Flavor
+        .col-md-7 {{ version.flavor.name }}
       // Select Channel
       .form-group
         label.col-md-4.control-label Channel
         .col-md-7 {{ version.channel.name || 'Not set' }}
+      // Availability Date
+      .form-group
+        label.col-md-4.control-label(for='availability') Availability Date
+        .col-md-7
+          span(
+            editable-text='version.availability',
+            e-name='availability',
+            e-type='datetime-local',
+            e-min='{{ createdAt }}',
+            e-step='1'
+            )
+            p {{ version.availability | amDateFormat: 'YYYY-MM-DD, hh:mm:ss A' }}
       // Notes
       .form-group
         label.col-md-4.control-label(for='notes') Change Notes
@@ -48,6 +64,8 @@ form(editable-form='', name='versionForm', onaftersave='acceptEdit()', e-role='f
         p
           |  New installs require 
           code .exe
+          |  or 
+          code .msi
           |  assets. Updates require 
           code .nupkg
           | .
@@ -59,8 +77,21 @@ form(editable-form='', name='versionForm', onaftersave='acceptEdit()', e-role='f
           |  assets. Updates require 
           code .zip
           | .
+        h5
+          strong Linux
+        p
+          |  New installs require
+          code .deb
+          |  , 
+          code .rpm
+          |  , 
+          code .tar.gz
+          |  or 
+          code .AppImage
+          |  assets. Updates are not supported.
   .modal-footer
     div(ng-if='!versionForm.$visible')
+      button.btn.btn-warning.pull-left(ng-hide='isAvailable', type='button', ng-click='makeAvailable()') Make Available
       button.btn.btn-warning(type='button', ng-click='versionForm.$show()') Edit
       button.btn.btn-danger(type='button', ng-click='deleteVersion()', confirm='Are you sure that you want to delete this version?') Delete
       button.btn.btn-default(type='button', ng-click='closeModal()') Close

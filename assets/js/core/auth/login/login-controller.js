@@ -31,7 +31,7 @@ angular.module('app.core.auth.login', [
 
           $location.path('/admin');
         }, function(err) {
-          notificationObject = {
+          const notificationObject = {
             title: err.statusText || 'Unable to login',
             message: err.data || 'Invalid Credentials'
           };

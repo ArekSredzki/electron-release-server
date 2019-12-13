@@ -10,7 +10,6 @@
           input.form-control.input-md(
             ng-model='version.name',
             minlength='1',
-            maxlength='12',
             required
             )
           span.help-block This must match the 
@@ -27,8 +26,18 @@
             span.text-info whole number.
             br
             em ex. 1.0.1
-              span.text-warning -{{version.channel.name}}
+              span.text-warning -{{version.channel.name}}.
               span.text-info 1
+      // Select Flavor
+      .form-group
+        label.col-md-4.control-label(for='flavor') Flavor
+        .col-md-7
+          select.form-control(
+            ng-model='version.flavor.name',
+            name='flavor',
+            ng-options='flavor for flavor in availableFlavors',
+            required
+            )
       // Select Channel
       .form-group
         label.col-md-4.control-label(for='channel') Channel
@@ -36,11 +45,23 @@
           select.form-control(
             ng-model='version.channel.name',
             name='channel',
-            ng-options='o as o for o in DataService.availableChannels',
+            ng-options='o as o for o in availableChannels',
             required
             )
           hr
           span.help-block You will not be able to change the above later.
+      // Availability Date
+      .form-group
+        label.col-md-4.control-label(for='availability') Availability Date
+        .col-md-7
+          input.form-control.input-md(
+            ng-model='version.availability',
+            name='availability',
+            type='datetime-local',
+            min='{{ currentDateTime }}',
+            step='1',
+            required
+            )
       // Change Notes
       .form-group
         label.col-md-4.control-label(for='notes') Change Notes

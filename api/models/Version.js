@@ -1,17 +1,21 @@
 /**
  * Version.js
  *
- * @description :: Represents a release version, which contains assets and is a member of a channel
+ * @description :: Represents a release version, which has a flavor, contains assets and is a member of a channel
  * @docs        :: http://sailsjs.org/#!documentation/models
  */
 
 module.exports = {
 
   attributes: {
-    name: {
+    id: {
       type: 'string',
       primaryKey: true,
-      unique: true,
+      unique: true
+    },
+
+    name: {
+      type: 'string',
       required: true
     },
 
@@ -25,10 +29,40 @@ module.exports = {
       required: true
     },
 
+    availability: {
+      type: 'datetime'
+    },
+
+    flavor: {
+      model: 'flavor',
+      defaultsTo: 'default'
+    },
+
     notes: {
       type: 'string'
     }
   },
-  autoPK: false
+
+  autoPK: false,
+
+  beforeCreate: (version, proceed) => {
+    const { name, flavor } = version;
+
+    version.id = `${name}_${flavor}`;
+
+    return proceed();
+  },
+
+  afterCreate: (version, proceed) => {
+    const { availability, createdAt, id } = version;
+
+    if (!availability || new Date(availability) < new Date(createdAt)) {
+      return Version
+        .update(id, { availability: createdAt })
+        .exec(proceed);
+    }
+
+    return proceed();
+  }
 
 };
