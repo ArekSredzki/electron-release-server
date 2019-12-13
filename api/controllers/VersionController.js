@@ -287,7 +287,7 @@ module.exports = {
             }
             return res.ok({
               url: url.resolve(
-                sails.config.appUrl,
+                appUrl,
                 `/download/flavor/${flavor}/${latestVersion.name}/` +
                 latestVersion.assets[0].platform + '?filetype=zip'
               ),
