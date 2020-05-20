@@ -24,6 +24,11 @@ VersionService.compare = function(v1, v2) {
   return 0;
 };
 
+// Remove flavor from asset version
+VersionService.clearAssetVersion = function(version) {
+  return version.replace(/_.*/, '');
+};
+
 /**
  * Deletes a version from the database.
  * @param   {Object}  version The versions record object from sails
