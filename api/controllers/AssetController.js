@@ -210,11 +210,13 @@ module.exports = {
             sails.log.debug('Creating asset with name', data.name || uploadedFile.filename);
 
             var hashPromise;
+            var packageType;
 
             if (fileExt === '.nupkg') {
               // Calculate the hash of the file, as it is necessary for windows
               // files
               hashPromise = AssetService.getHash(uploadedFile.fd);
+              packageType = AssetService.getPackageType(uploadedFile.filename);
             } else if (fileExt === '.exe' || fileExt === '.zip') {
               hashPromise = AssetService.getHash(uploadedFile.fd, 'sha256');
             } else {
@@ -229,6 +231,7 @@ module.exports = {
                     name: uploadedFile.filename,
                     hash: fileHash,
                     filetype: fileExt,
+                    package_type: packageType,
                     fd: uploadedFile.fd,
                     size: uploadedFile.size
                   }, data))

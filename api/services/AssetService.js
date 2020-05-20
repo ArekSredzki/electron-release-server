@@ -90,6 +90,17 @@ AssetService.getHash = function(fd, type = 'sha1') {
   });
 };
 
+/**
+ * Returns nupkg type (full, delta) from filename
+ */
+AssetService.getPackageType = function(filename) {
+  var matches = filename.match(/.*-(\w+)\.nupkg/);
+
+  return matches && matches.length === 2
+    ? matches[1]
+    : undefined;
+}
+
 
 /**
  * Deletes an asset from the database.
