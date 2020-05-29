@@ -10,7 +10,7 @@ Install dependencies using:
 npm install
 ```
 
-**Action Step:** You must create a `config/local.js` file, which contains the configuration options required to run the server.
+**Action Step:** You need to configure database ([database setup guide](database.md)) and must create a `config/local.js` file, which contains the configuration options required to run the server.
 
 To assist this process, you can copy `config/local.template` and edit it using:
 ```bash
