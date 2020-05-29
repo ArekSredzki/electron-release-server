@@ -15,5 +15,22 @@
 module.exports.session = {
   // XXX: Enable this if you are using postgres as your database
   // If so, be sure to run the sql command detailed here: https://github.com/ravitej91/sails-pg-session
-  // adapter: 'sails-pg-session'
+
+//  // uncomment if you use v2land-sails-pg-session
+//  postgresql: {
+//      adapter: 'v2land-sails-pg-session',
+//      host: 'localhost',
+//      user: 'electron_release_server_user',
+//      password: 'MySecurePassword',
+//      database: 'electron_release_server'
+//  }
+
+//  // uncomment if you use sails-pg-session
+//  postgresql: {
+//      adapter: 'sails-pg-session',
+//      host: 'localhost',
+//      user: 'electron_release_server_user',
+//      password: 'MySecurePassword',
+//      database: 'electron_release_server'
+//  }
 };

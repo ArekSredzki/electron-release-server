@@ -43,7 +43,8 @@
     "semver": "^5.5.0",
     "skipper-disk": "^0.5.7",
     "strip-bom": "^3.0.0",
-    "url": "^0.11.0"
+    "url": "^0.11.0",
+    "v2land-sails-pg-session": "^1.0.4"
   },
   "scripts": {
     "debug": "node debug app.js",
