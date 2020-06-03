@@ -24,7 +24,7 @@ AssetService.serveFile = function(req, res, asset) {
     .on('open', function() {
       // Send file properties in header
       res.setHeader(
-        'Content-Disposition', 'attachment; filename="' + asset.name + '"'
+        'Content-Disposition', 'attachment; filename*=UTF-8' + "''" + '"' + encodeURIComponent(asset.name) + '"'
       );
       res.setHeader('Content-Length', asset.size);
       res.setHeader('Content-Type', mime.lookup(asset.fd));
