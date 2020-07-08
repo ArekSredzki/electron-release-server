@@ -26,8 +26,13 @@ When you run your server (usually on Windows machine) you may see following erro
 ~~~
 
 Solution could be to update server configuration file:
+Windows:
 ~~~
 C:\Program Files\PostgreSQL\12\data\pg_hba.conf
+~~~
+Linux:
+~~~
+/var/lib/pgsql/data/pg_hba.conf
 ~~~
 
 to make all METHODs trusted
@@ -77,3 +82,30 @@ export PORT=1337
 ~~~
 
 See documentation for your console for appropriate syntax
+
+
+### Error on startup on Linux
+When you start your application on Linux environment you may see following error message:
+~~~
+
+error: Grunt :: /home/git/release_server/node_modules/grunt-legacy-util/index.js:26
+var _ = util._ = require('lodash').runInContext();
+                                   ^
+
+TypeError: require(...).runInContext is not a function
+    at Object.<anonymous> (/home/git/release_server/node_modules/grunt-legacy-util/index.js:26:36)
+    at Module._compile (internal/modules/cjs/loader.js:1138:30)
+    at Object.Module._extensions..js (internal/modules/cjs/loader.js:1158:10)
+    at Module.load (internal/modules/cjs/loader.js:986:32)
+    at Function.Module._load (internal/modules/cjs/loader.js:879:14)
+    at Module.require (internal/modules/cjs/loader.js:1026:19)
+    at require (internal/modules/cjs/helpers.js:72:18)
+    at Object.<anonymous> (/home/git/release_server/node_modules/grunt/lib/grunt.js:35:12)
+    at Module._compile (internal/modules/cjs/loader.js:1138:30)
+    at Object.Module._extensions..js (internal/modules/cjs/loader.js:1158:10)
+~~~
+
+To resolve the problem modify _./node_modules/grunt-legacy-util/index.js_ line 26 to:
+~~~
+var _ = util._ = require('lodash');
+~~~

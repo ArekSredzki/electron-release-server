@@ -103,6 +103,9 @@ Uncomment snippet to enable adapter of your choice (either _v2land-sails-pg-sess
 
 Originally described [here](https://github.com/ravitej91/sails-pg-session)
 
+## Issues
+Please refer to Frequently Asked Questions section of documentation in case if you still see some issue
+
 ## Migration
 If you have a pre-existing database and want to update to a new version of Electron Release Server that has database
 changes, then you may be able to use migration scripts stored in [migrations](../migrations/).
