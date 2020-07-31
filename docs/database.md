@@ -68,7 +68,7 @@ After completing this section, you should now have
         // Recommended: 63 random alpha-numeric characters
         // Generate using: https://www.grc.com/passwords.htm
         secret: 'EB9F0CA4414893F7B72DDF0F8507D88042DB4DBF8BD9D0A5279ADB54158EB2F0',
-        database: 'electron_release_server',
+        database: 'electron_release_server_sessions',
         host: 'localhost',
         user: 'electron_release_server_user',
         password: 'MySecurePassword',
