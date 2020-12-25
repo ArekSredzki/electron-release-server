@@ -216,7 +216,11 @@ module.exports = {
               // files
               hashPromise = AssetService.getHash(uploadedFile.fd);
             } else if (fileExt === '.exe' || fileExt === '.zip') {
-              hashPromise = AssetService.getHash(uploadedFile.fd, 'sha256');
+              hashPromise = AssetService.getHash(
+                uploadedFile.fd,
+                "sha512",
+                "base64"
+              );
             } else {
               hashPromise = Promise.resolve('');
             }
