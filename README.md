@@ -46,6 +46,7 @@ If you host your project on your Github **and** do not need a UI for your app, t
         - `/update/flavor/:flavor/:platform/:version[/:channel]`
     - Mac uses `*.dmg` and `*.zip`
     - Windows uses `*.exe` and `*.nupkg`
+- :sparkles: Auto-updates with [NSIS differential updates for Windows](docs/update-windows.md#NSIS-differential-updates)
 - :sparkles: Serve the perfect type of assets: `.zip` for Squirrel.Mac, `.nupkg` for Squirrel.Windows, `.dmg` for Mac users, ...
 - :sparkles: Specify date of availability for releases
 - :sparkles: Release notes endpoint

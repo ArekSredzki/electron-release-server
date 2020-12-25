@@ -33,6 +33,7 @@ Accepted file extensions:
 #### Serving updates
 Accepted file extensions:
 - `.nupkg`
+- `.blockmap` (NSIS differential updates)
 
 **Important**: only `-full.nupkg` files are currently supported. If you're confused, just upload the one that [electron-builder](https://github.com/electron-userland/electron-builder) made for you.
 
