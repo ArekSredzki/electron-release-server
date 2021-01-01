@@ -27,13 +27,13 @@ The RELEASES file will be generated for you :)
 ## NSIS differential updates
 Electron Release Server can also be used to serve NSIS differential updates for electron-builder.
 
-You should define the following endpoint as url: `https://my.update.server/update/${os}/`. Electron Release Server will auto-generate the `.yml` files for the corresponding channel (`latest.yml`, `beta.yml`, `alpha.yml`). Electron-builder will fetch the `.yml` for the correct channel, check if there is a newer version and fetch the `.blockmap` file of the new release. Based on the `.blockmap` file, it will download parts of the `.exe` file. The file name of the `.blockmap` should be the same as the `.exe` file but with the extra `.blockmap` extension.
+You should define the following endpoint as url: `https://my.update.server/update/${os}${arch}/`. Electron Release Server will auto-generate the `.yml` files for the corresponding channel (`latest.yml`, `beta.yml`, `alpha.yml`). Electron-builder will fetch the `.yml` for the correct channel, check if there is a newer version and fetch the `.blockmap` file of the new release. Based on the `.blockmap` file, it will download parts of the `.exe` file. The file name of the `.blockmap` should be the same as the `.exe` file but with the extra `.blockmap` extension.
 `useMultipleRangeRequest` is not supported by Electron Release Server, so it should be disabled.
 
 To get differential updates for Windows NSIS:
-1. Point electron-builder to `https://my.update.server/update/${os}/`
+1. Point electron-builder to `https://my.update.server/update/${os}${arch}/`
 2. Set [`"useMultipleRangeRequest": false`](https://www.electron.build/configuration/publish#genericserveroptions)
-3. Upload the `.exe` and `.blockmap` files for the Windows (32-bit) build (and keep the `.blockmap` files available for all releases. Do not delete it!)
+3. Upload the `.exe` and `.blockmap` files for the Windows (32-bit or 64-bit) build (and keep the `.blockmap` files available for all releases. Do not delete it!)
 4. Electron-builder will fetch the `.yml` files (`https://my.update.server/update/win/latest.yml` or `https://my.update.server/update/win/beta.yml` or `https://my.update.server/update/win/alpha.yml`) and download the updates based on the `.blockmap`.
 
-Keep in mind that `${os}` will result in using the Windows 32-bit uploaded files, not 64-bit. Also, the counter for the `.exe` file will be incorrect because there will be multiple requests to the `.exe` file. However, the `.blockmap` counter should be accurate because this one is downloaded onces per update.
+Keep in mind that the counter for the `.exe` file will be incorrect because there will be multiple requests to the `.exe` file. However, the `.blockmap` counter should be accurate because this one is downloaded onces per update.
