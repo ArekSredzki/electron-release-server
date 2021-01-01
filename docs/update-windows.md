@@ -34,6 +34,6 @@ To get differential updates for Windows NSIS:
 1. Point electron-builder to `https://my.update.server/update/${os}/`
 2. Set [`"useMultipleRangeRequest": false`](https://www.electron.build/configuration/publish#genericserveroptions)
 3. Upload the `.exe` and `.blockmap` files for the Windows (32-bit) build (and keep the `.blockmap` files available for all releases. Do not delete it!)
-4. Electron-builder will fetch the `.yml` files (`https://my.update.server/update/win/latest.yml` or `https://my.update.server/update/win32/beta.yml` or `https://my.update.server/update/win32/alpha.yml`) and download the updates based on the `.blockmap`.
+4. Electron-builder will fetch the `.yml` files (`https://my.update.server/update/win/latest.yml` or `https://my.update.server/update/win/beta.yml` or `https://my.update.server/update/win/alpha.yml`) and download the updates based on the `.blockmap`.
 
 Keep in mind that `${os}` will result in using the Windows 32-bit uploaded files, not 64-bit. Also, the counter for the `.exe` file will be incorrect because there will be multiple requests to the `.exe` file. However, the `.blockmap` counter should be accurate because this one is downloaded onces per update.
