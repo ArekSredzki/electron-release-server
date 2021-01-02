@@ -68,25 +68,27 @@ AssetService.serveFile = function(req, res, asset) {
 
 /**
  * Asyncronously generates a SHA1 hash from a file
+ * Identical to:
+ * https://github.com/electron-userland/electron-builder/blob/552f1a4ed6f4bb83c3c548ed962c21142f07a9b4/packages/electron-updater/src/DownloadedUpdateHelper.ts#L161
  * @param  {String} fd File descriptor of file to hash
  * @return {String}    Promise which is resolved with the hash once complete
  */
-AssetService.getHash = function(fd, type = 'sha1') {
-  return new Promise(function(resolve, reject) {
-
+AssetService.getHash = function (fd, type = "sha1", encoding = "hex") {
+  return new Promise(function (resolve, reject) {
     var hash = crypto.createHash(type);
-    hash.setEncoding('hex');
+    hash.setEncoding(encoding);
 
-    fsx.createReadStream(fd)
-      .on('error', function(err) {
+    fsx
+      .createReadStream(fd)
+      .on("error", function (err) {
         reject(err);
       })
-      .on('end', function() {
+      .on("end", function () {
         hash.end();
-        resolve(String.prototype.toUpperCase.call(hash.read()));
+        resolve(hash.read());
       })
       // Pipe to hash generator
-      .pipe(hash);
+      .pipe(hash, {    end: false    });
   });
 };
 
