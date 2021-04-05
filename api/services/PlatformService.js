@@ -38,7 +38,7 @@ PlatformService.detectFromRequest = function(req) {
   var ua = useragent.parse(source);
 
   if (ua.isWindows) return [this.WINDOWS_32, this.WINDOWS_64];
-  if (ua.isMac) return [this.OSX_64];
+  if (ua.isMac) return [this.OSX_64, this.OSX_ARM64]; // this.OSX_ARM64 until a bug with arm64 useragent is fixed
   if (ua.isLinux64) return [this.LINUX_64, this.LINUX_32];
   if (ua.isLinux) return [this.LINUX_32];
 };

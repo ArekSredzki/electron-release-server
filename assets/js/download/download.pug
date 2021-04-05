@@ -16,10 +16,10 @@
           ng-change='vm.getLatestReleases()'
           )
 .row.text-center.padding-top-20(ng-if="vm.latestReleases")
-  .col-md-12(ng-if="vm.platform === 'osx'")
+  .col-md-12(ng-if="vm.platform === 'osx' && !vm.archs.includes('arm64')")
     .jumbotron
       h4 OS X 
-        span.text-muted 64 bit
+        span.text-muted 64 bit INTEL
       a.btn.btn-success.btn-lg(
         ng-click="vm.download(vm.latestReleases['64'])"
         )
@@ -35,6 +35,26 @@
         h4 Change Notes
         p.release-notes.text-muted(
           ng-bind="vm.latestReleases['64'].notes"
+          )
+  .col-md-12(ng-if="vm.platform === 'osx' && vm.archs.includes('arm64')")
+    .jumbotron
+      h4 OS X 
+        span.text-muted 64 bit ARM
+      a.btn.btn-success.btn-lg(
+        ng-click="vm.download(vm.latestReleases['arm64'])"
+        )
+        i.fa.fa-download.fa-5x
+        h5 {{ vm.latestReleases['arm64'].version }} 
+          label.label.label-info(
+            ng-show="vm.latestReleases['arm64'].channel !== 'stable'"
+            )
+            | {{ vm.latestReleases['arm64'].channel }}
+      .padding-top-20.text-muted
+        span.timestamp(am-time-ago="vm.latestReleases['arm64'].createdAt")
+      .padding-top-20(ng-show="vm.latestReleases['arm64'].notes")
+        h4 Change Notes
+        p.release-notes.text-muted(
+          ng-bind="vm.latestReleases['arm64'].notes"
           )
   div(ng-if="vm.platform !== 'osx'")
     .row
