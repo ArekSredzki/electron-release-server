@@ -12,6 +12,7 @@ var PlatformService = {
   OSX: 'osx',
   OSX_32: 'osx_32',
   OSX_64: 'osx_64',
+  OSX_ARM64: 'osx_arm64',
   WINDOWS: 'windows',
   WINDOWS_32: 'windows_32',
   WINDOWS_64: 'windows_64',
@@ -82,7 +83,11 @@ PlatformService.detect = function(platformName, strictMatch) {
     // _.includes(name, 'amd64') ||
     _.includes(name, '64')
   ) {
-    suffixes.push('64');
+    if (_.includes(name, 'arm64')) {
+      suffixes.unshift('arm64');
+    } else {
+      suffixes.push('64');
+    }
 
     if (!strictMatch && prefix !== this.OSX) {
       suffixes.unshift('32');
