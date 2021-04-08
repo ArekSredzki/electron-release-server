@@ -25,3 +25,5 @@ services:
     environment:
       POSTGRES_PASSWORD: secret
       POSTGRES_USER: releaseserver
+    volumes:
+      - ./postgresql:/var/lib/postgresql/data
