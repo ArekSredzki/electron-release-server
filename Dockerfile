@@ -1,4 +1,4 @@
-FROM node:10
+FROM node:10.24.0-slim
 
 # Create app directory
 WORKDIR /usr/src/electron-release-server
