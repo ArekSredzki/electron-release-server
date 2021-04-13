@@ -12,13 +12,18 @@ services:
       DB_PASSWORD: secret
       TOKEN_SECRET: change_me_in_production
       APP_URL: 'localhost:5000'
+      ASSETS_PATH: '/usr/src/electron-release-server/releases'
     depends_on:
       - db
     ports:
       - '5000:80'
     entrypoint: ./scripts/wait.sh db:5432 -- npm start
+    volumes:
+      - ./releases:/usr/src/electron-release-server/releases
   db:
     image: postgres:11
     environment:
       POSTGRES_PASSWORD: secret
       POSTGRES_USER: releaseserver
+    volumes:
+      - ./postgresql:/var/lib/postgresql/data
