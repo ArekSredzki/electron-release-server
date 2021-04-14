@@ -22,7 +22,7 @@ module.exports = {
 
     platform: {
       type: 'string',
-      enum: ['linux_32', 'linux_64', 'osx_64', 'windows_32', 'windows_64'],
+      enum: ['linux_32', 'linux_64', 'osx_64', 'osx_arm64', 'windows_32', 'windows_64'],
       required: true
     },
 
