@@ -31,6 +31,10 @@ module.exports = {
       required: true
     },
 
+    package_type: {
+      type: 'string'
+    },
+
     hash: {
       type: 'string'
     },
@@ -60,9 +64,11 @@ module.exports = {
   autoPK: false,
 
   beforeCreate: (asset, proceed) => {
-    const { version, platform, filetype } = asset;
+    const { version, platform, filetype, package_type } = asset;
 
-    asset.id = `${version}_${platform}_${filetype.replace(/\./g, '')}`;
+    asset.id = [version, platform, filetype.replace(/\./g, ''), package_type]
+      .filter(arg => arg)
+      .join('_');
 
     return proceed();
   }
