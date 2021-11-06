@@ -31,11 +31,11 @@ module.exports.routes = {
 
   'PUT /version/availability/:version/:timestamp': 'VersionController.availability',
 
-  'GET /download/latest/:platform?': 'AssetController.download',
-  'GET /download/channel/:channel/:platform?': 'AssetController.download',
+  'GET /download/latest/:platform?/:filename?': 'AssetController.download',
+  'GET /download/channel/:channel/:platform?/:filename?': 'AssetController.download',
   'GET /download/:version/:platform?/:filename?': 'AssetController.download',
-  'GET /download/flavor/:flavor/latest/:platform?': 'AssetController.download',
-  'GET /download/flavor/:flavor/channel/:channel/:platform?': 'AssetController.download',
+  'GET /download/flavor/:flavor/latest/:platform?/:filename?': 'AssetController.download',
+  'GET /download/flavor/:flavor/channel/:channel/:platform?/:filename?': 'AssetController.download',
   'GET /download/flavor/:flavor/:version/:platform?/:filename?': 'AssetController.download',
 
   'GET /update': 'VersionController.redirect',
