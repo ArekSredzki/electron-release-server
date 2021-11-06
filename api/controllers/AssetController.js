@@ -9,6 +9,7 @@ var _ = require('lodash');
 var path = require('path');
 var actionUtil = require('sails/lib/hooks/blueprints/actionUtil');
 var Promise = require('bluebird');
+const PlatformService = require('../services/PlatformService');
 
 module.exports = {
 
@@ -19,12 +20,12 @@ module.exports = {
    * This is because Squirrel.Windows does a poor job of parsing the filename,
    * and so we must fake the filenames of x32 and x64 versions to be the same.
    *
-   * (GET /download/latest/:platform?': 'AssetController.download')
+   * (GET /download/latest/:platform?/:filename?': 'AssetController.download')
    * (GET /download/:version/:platform?/:filename?': 'AssetController.download')
-   * (GET /download/channel/:channel/:platform?': 'AssetController.download')
-   * (GET /download/flavor/:flavor/latest/:platform?': 'AssetController.download')
+   * (GET /download/channel/:channel/:platform?/:filename?': 'AssetController.download')
+   * (GET /download/flavor/:flavor/latest/:platform?/:filename?': 'AssetController.download')
    * (GET /download/flavor/:flavor/:version/:platform?/:filename?': 'AssetController.download')
-   * (GET /download/flavor/:flavor/channel/:channel/:platform?': 'AssetController.download')
+   * (GET /download/flavor/:flavor/channel/:channel/:platform?/:filename?': 'AssetController.download')
    */
   download: function(req, res) {
     var channel = req.params.channel;
@@ -37,7 +38,7 @@ module.exports = {
     var platforms;
     var platform = req.param('platform');
     if (platform) {
-      platforms = [platform];
+      platforms = PlatformService.detect(platform, true);
     }
 
     // Normalize filetype by prepending with period
