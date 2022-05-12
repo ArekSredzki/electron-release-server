@@ -19,15 +19,11 @@ var AuthController = {
           return res.serverError('Could not retrieve user');
         }
 
-        const token = AuthToken.issueToken({
-          sub: user.username
-        })
-
-        res.cookie("authToken", token, {httpOnly: true, maxAge: 900000, secure: true})
-
         return res.json({
           user: user.username,
-          token: token
+          token: AuthToken.issueToken({
+            sub: user.username
+          })
         });
       });
   }
