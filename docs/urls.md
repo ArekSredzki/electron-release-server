@@ -8,10 +8,6 @@ Electron Release Server provides a variety of urls to access release assets.
 #### Latest version for specific platform:
 - `http://download.myapp.com/download/latest/osx`
 - `http://download.myapp.com/download/flavor/default/latest/osx`
-#### Latest version for specific platform and file extension
-- `http://download.myapp.com/download/latest/osx/update.zip`
-- `http://download.myapp.com/download/flavor/default/latest/osx/update.dmg`
-- `http://download.myapp.com/download/flavor/default/latest/channel/stable/osx/update.dmg`
 #### Specific version for detected platform:
 - `http://download.myapp.com/download/1.1.0`
 - `http://download.myapp.com/download/flavor/default/1.1.0`
