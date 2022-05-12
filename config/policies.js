@@ -26,7 +26,11 @@ module.exports.policies = {
    *                                                                          *
    ***************************************************************************/
 
-  '*': true,
+  '*': 'authToken',
+
+  AuthController: {
+    login: 'noCache'
+  },
 
   AssetController: {
     create: 'authToken',
@@ -55,6 +59,8 @@ module.exports.policies = {
     redirect: 'noCache',
     general: 'noCache',
     windows: 'noCache',
-    releaseNotes: 'noCache'
+    releaseNotes: 'noCache',
+    electronUpdaterWin: 'noCache',
+    electronUpdaterMac: 'noCache'
   }
 };
