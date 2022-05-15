@@ -30,7 +30,14 @@ module.exports.views = {
   *                                                                           *
   ****************************************************************************/
 
-  engine: 'pug',
+  extension: 'pug',
+  getRenderFn: function () {
+    // Import `consolidate`.
+    var consolidate = require('consolidate');
+    // Return the rendering function for Pug.
+    return consolidate.pug;
+  },
+
   layout: false,
 
   /**

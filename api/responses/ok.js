@@ -25,7 +25,7 @@ module.exports = function sendOK (data, options) {
 
   // If appropriate, serve data as JSON(P)
   if (req.wantsJSON) {
-    return res.jsonx(data);
+    return res.json(data);
   }
 
   // If second argument is a string, we take that to mean it refers to a view.
@@ -42,7 +42,7 @@ module.exports = function sendOK (data, options) {
   // If no second argument provided, try to serve the implied view,
   // but fall back to sending JSON(P) if no view can be inferred.
   else return res.guessView({ data: data }, function couldNotGuessView () {
-    return res.jsonx(data);
+    return res.json(data);
   });
 
 };

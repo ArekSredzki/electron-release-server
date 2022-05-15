@@ -15,7 +15,7 @@
     "angular-confirm-modal": "~1.2.6",
     "angular-jwt": "~0.1.8",
     "ngstorage": "~0.3.11",
-    "sails.io.js": "*",
+    "sails.io.js": "^1.2.1",
     "angular-sails": "~1.1.4",
     "angular-moment": "~1.0.1",
     "components-font-awesome": "~4.7.0",

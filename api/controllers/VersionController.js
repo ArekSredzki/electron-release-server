@@ -46,7 +46,12 @@ module.exports = {
         return Version
           .update(version, { availability })
           .then(([updatedVersion]) => {
-            Version.publishUpdate(version, updatedVersion, req);
+            Version.publish([version.id], {
+              verb: 'updated',
+              id: version.id,
+              data: updatedVersion,
+              previous: version
+            }, req);
 
             res.send(updatedVersion);
           });
@@ -73,7 +78,7 @@ module.exports = {
   },
 
   /**
-   * Sorts versions and returns pages sorted by by sermver
+   * Sorts versions and returns pages of them sorted by sermver
    *
    * ( GET /versions/sorted )
    */
@@ -674,10 +679,11 @@ module.exports = {
             .then(function destroyedRecord() {
 
               if (sails.hooks.pubsub) {
-                Version.publishDestroy(
-                  pk, !req._sails.config.blueprints.mirror && req, {
+                Version.publish(
+                  [pk], {
+                    verb: 'destroyed',
                     previous: record
-                  }
+                  }, !req._sails.config.blueprints.mirror && req
                 );
 
                 if (req.isSocket) {

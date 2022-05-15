@@ -33,10 +33,20 @@ module.exports.routes = {
 
   'GET /download/latest/:platform?': 'AssetController.download',
   'GET /download/channel/:channel/:platform?': 'AssetController.download',
-  'GET /download/:version/:platform?/:filename?': 'AssetController.download',
+  'GET /download/:version/:platform?/:filename?': {
+    controller: 'AssetController',
+    action: 'download',
+    // This is important since it allows matching with filenames.
+    skipAssets: false
+  },
   'GET /download/flavor/:flavor/latest/:platform?': 'AssetController.download',
   'GET /download/flavor/:flavor/channel/:channel/:platform?': 'AssetController.download',
-  'GET /download/flavor/:flavor/:version/:platform?/:filename?': 'AssetController.download',
+  'GET /download/flavor/:flavor/:version/:platform?/:filename?': {
+    controller: 'AssetController',
+    action: 'download',
+    // This is important since it allows matching with filenames.
+    skipAssets: false
+  },
 
   'GET /update': 'VersionController.redirect',
   'GET /update/:platform/latest-mac.yml': 'VersionController.electronUpdaterMac',
@@ -62,6 +72,8 @@ module.exports.routes = {
 
   'GET /notes/:version/:flavor?': 'VersionController.releaseNotes',
 
-  'GET /versions/sorted': 'VersionController.list'
+  'GET /versions/sorted': 'VersionController.list',
+
+  'GET /channels/sorted': 'ChannelController.list'
 
 };

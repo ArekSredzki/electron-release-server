@@ -79,9 +79,9 @@ module.exports = {
               channel: channel,
               flavor
             }))
-            .sort({
+            .sort([{
               createdAt: 'desc'
-            })
+            }])
             // the latest version maybe has no assets, for example
             // the moment between creating a version and uploading assets,
             // so find more than 1 version and use the one containing assets.
@@ -119,9 +119,9 @@ module.exports = {
         } else {
           Asset
             .find(assetOptions)
-            .sort({
+            .sort([{
               createdAt: 'desc'
-            })
+            }])
             .limit(1)
             .then(resolve)
             .catch(reject);
@@ -227,15 +227,18 @@ module.exports = {
 
             hashPromise
               .then(function(fileHash) {
+                var newAsset = _.merge({
+                  name: uploadedFile.filename,
+                  hash: fileHash,
+                  filetype: fileExt,
+                  fd: uploadedFile.fd,
+                  size: uploadedFile.size
+                }, data);
+                newAsset.version = newAsset.version.id;
+
                 // Create new instance of model using data from params
                 Asset
-                  .create(_.merge({
-                    name: uploadedFile.filename,
-                    hash: fileHash,
-                    filetype: fileExt,
-                    fd: uploadedFile.fd,
-                    size: uploadedFile.size
-                  }, data))
+                  .create(newAsset)
                   .exec(function created(err, newInstance) {
 
                     // Differentiate between waterline-originated validation errors
@@ -250,11 +253,15 @@ module.exports = {
                         Asset.subscribe(req, newInstance);
                         Asset.introduce(newInstance);
                       }
-                      Asset.publishCreate(newInstance, !req.options.mirror && req);
+                      Asset.publish([newInstance.id], {
+                        verb: 'created',
+                        id: newInstance.id,
+                        data: newInstance
+                      }, !req.options.mirror && req);
                     }
 
                     // Send JSONP-friendly response if it's supported
-                    res.created(newInstance);
+                    res.ok(newInstance);
                   });
               })
               .catch(res.negotiate);

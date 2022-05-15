@@ -7,10 +7,11 @@
 
 module.exports = {
 
+  primaryKey: 'id',
+
   attributes: {
     id: {
       type: 'string',
-      primaryKey: true,
       unique: true
     },
 
@@ -30,20 +31,18 @@ module.exports = {
     },
 
     availability: {
-      type: 'datetime'
+      type: 'string',
+      columnType: 'datetime'
     },
 
     flavor: {
       model: 'flavor',
-      defaultsTo: 'default'
     },
 
     notes: {
       type: 'string'
     }
   },
-
-  autoPK: false,
 
   beforeCreate: (version, proceed) => {
     const { name, flavor } = version;

@@ -134,7 +134,12 @@ angular.module('app.core.data.service', [
           return $q.reject();
         }
 
-        return $http.post('/api/version', version)
+        // Due to an API change in Sails/Waterline, the primary key values must be specified directly.
+        var version_for_request = version;
+        version_for_request.channel = version_for_request.channel.name;
+        version_for_request.flavor = version_for_request.flavor.name;
+
+        return $http.post('/api/version', version_for_request)
           .then(function(response) {
             Notification.success('Version Created Successfully.');
 
@@ -200,9 +205,14 @@ angular.module('app.core.data.service', [
           return $q.reject();
         }
 
+        // Due to an API change in Sails/Waterline, the primary key values must be specified directly.
+        var version_for_request = _.omit(version, ['assets']);
+        version_for_request.channel = version_for_request.channel.name;
+        version_for_request.flavor = version_for_request.flavor.name;
+
         return $http.post(
             '/api/version/' + version.id,
-            _.omit(version, ['assets'])
+            version_for_request
           )
           .then(function(response) {
             Notification.success('Version Updated Successfully.');
@@ -621,7 +631,7 @@ angular.module('app.core.data.service', [
             }),
 
             // Get available channels
-            $sails.get('/api/channel'),
+            $sails.get('/channels/sorted'),
 
             // Get available flavors
             $sails.get('/api/flavor'),
@@ -637,17 +647,13 @@ angular.module('app.core.data.service', [
             const channels = responses[1];
             const flavors = responses[2];
             self.data = versions.data.items;
-            self.availableChannels = channels.data.map(function(channel) {
-              return channel.name;
-            });
+            self.availableChannels = channels.data;
             self.availableFlavors = flavors.data.map(flavor => flavor.name).sort();
 
             self.currentPage++;
             self.hasMore = versions.data.total > self.data.length;
             self.loading = false;
             PubSub.publish('data-change');
-
-            $log.log('Should be subscribed!');
           });
       };
 

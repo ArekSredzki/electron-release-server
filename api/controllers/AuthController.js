@@ -11,7 +11,7 @@ var AuthController = {
       function(err, user) {
 
         if (err) {
-          return res.send(err.code || 401, err.message || 'Incorrect credentials');
+          return res.status(err.code || 401).send(err.message || 'Incorrect credentials');
         }
 
         if (!user) {

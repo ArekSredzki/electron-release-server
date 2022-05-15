@@ -39,10 +39,11 @@ VersionService.destroy = (version, req) => {
     .destroy(version.id)
     .then(() => {
       if (sails.hooks.pubsub) {
-        Version.publishDestroy(
-          version.id, !req._sails.config.blueprints.mirror && req, {
+        Version.publish(
+          [version.id], {
+            verb: 'destroyed',
             previous: version
-          }
+          }, !req._sails.config.blueprints.mirror && req
         );
 
         if (req && req.isSocket) {

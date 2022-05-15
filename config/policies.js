@@ -31,26 +31,26 @@ module.exports.policies = {
   AssetController: {
     create: 'authToken',
     update: 'authToken',
-    delete: 'authToken',
+    destroy: 'authToken',
     download: 'noCache'
   },
 
   ChannelController: {
     create: 'authToken',
     update: 'authToken',
-    delete: 'authToken'
+    destroy: 'authToken'
   },
 
   FlavorController: {
     create: 'authToken',
     update: 'authToken',
-    delete: 'authToken'
+    destroy: 'authToken'
   },
 
   VersionController: {
     create: 'authToken',
     update: 'authToken',
-    delete: 'authToken',
+    destroy: 'authToken',
     availability: 'authToken',
     redirect: 'noCache',
     general: 'noCache',

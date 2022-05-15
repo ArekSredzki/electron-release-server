@@ -14,53 +14,60 @@ var SkipperDisk = require('skipper-disk');
 
 var AssetService = {};
 
-AssetService.serveFile = function(req, res, asset) {
+AssetService.serveFile = function (req, res, asset) {
   // Stream the file to the user
   fsx.createReadStream(asset.fd)
-    .on('error', function(err) {
+    .on('error', function (err) {
       res.serverError('An error occurred while accessing asset.', err);
       sails.log.error('Unable to access asset:', asset.fd);
     })
-    .on('open', function() {
+    .on('open', function () {
       // Send file properties in header
       res.setHeader(
-        'Content-Disposition', 'attachment; filename*=UTF-8' + "''" + '"' + encodeURIComponent(asset.name) + '"'
+        'Content-Disposition', 'attachment; filename*=UTF-8\'\'' + encodeURIComponent(asset.name)
       );
       res.setHeader('Content-Length', asset.size);
-      res.setHeader('Content-Type', mime.lookup(asset.fd));
+      res.setHeader('Content-Type', mime.getType(asset.fd));
     })
-    .on('end', function complete() {
+    .on('end', async function complete() {
       // After we have sent the file, log analytics, failures experienced at
       // this point should only be handled internally (do not use the res
       // object).
       //
       // Atomically increment the download count for analytics purposes
       //
-      // Warning: not all adapters support queries
-      if (_.isFunction(Asset.query)) {
-        Asset.query(
-          'UPDATE asset SET download_count = download_count + 1 WHERE id = \'' + asset.id + '\';',
-          function(err) {
-            if (err) {
-              sails.log.error(
-                'An error occurred while logging asset download', err
-              );
-            }
-          });
-      } else {
+      // Warning: not all adapters support queries (such as sails-disk).
+      var datastore = Asset.getDatastore();
+      if (_.isFunction(datastore.sendNativeQuery) && datastore.config.adapter !== 'sails-disk') {
+        try {
+          await datastore.sendNativeQuery(
+            'UPDATE asset SET download_count = download_count + 1 WHERE id = $1;', [asset.id])
+            .intercept(function (err) {
+            });
+
+            // Early exit if the query was successful.
+            return;
+          } catch (err) {
+            sails.log.error(
+              'An error occurred while logging asset download', err
+            );
+          }
+        }
+
+        // Attempt to update the download count through the fallback mechanism.
+        // Note that this may be lossy since it is not atomic.
         asset.download_count++;
 
         Asset.update({
-            id: asset.id
-          }, asset)
-          .exec(function(err) {
+          id: asset.id
+        }, asset)
+          .exec(function (err) {
             if (err) {
               sails.log.error(
                 'An error occurred while logging asset download', err
               );
             }
           });
-      }
     })
     // Pipe to user
     .pipe(res);
@@ -88,7 +95,7 @@ AssetService.getHash = function (fd, type = "sha1", encoding = "hex") {
         resolve(hash.read());
       })
       // Pipe to hash generator
-      .pipe(hash, {    end: false    });
+      .pipe(hash, { end: false });
   });
 };
 
@@ -100,7 +107,7 @@ AssetService.getHash = function (fd, type = "sha1", encoding = "hex") {
  * @param   {Object}  req   Optional: The request object
  * @returns {Promise}       Resolved once the asset is destroyed
  */
-AssetService.destroy = function(asset, req) {
+AssetService.destroy = function (asset, req) {
   if (!asset) {
     throw new Error('You must pass an asset');
   }
@@ -108,10 +115,13 @@ AssetService.destroy = function(asset, req) {
   return Asset.destroy(asset.id)
     .then(function destroyedRecord() {
       if (sails.hooks.pubsub) {
-        Asset.publishDestroy(
-          asset.id, !req._sails.config.blueprints.mirror && req, {
+        Asset.publish(
+          [asset.id],
+          {
+            verb: 'destroyed',
             previous: asset
-          }
+          },
+          !req._sails.config.blueprints.mirror && req
         );
 
         if (req && req.isSocket) {
@@ -128,7 +138,7 @@ AssetService.destroy = function(asset, req) {
  * @param   {Object}  asset The asset object who's file we would like deleted
  * @returns {Promise}       Resolved once the file is deleted
  */
-AssetService.deleteFile = function(asset) {
+AssetService.deleteFile = function (asset) {
   if (!asset) {
     throw new Error('You must pass an asset');
   }

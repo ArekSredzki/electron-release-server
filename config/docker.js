@@ -5,7 +5,7 @@
 module.exports = {
 
   models: {
-    connection: 'postgresql',
+    datastore: 'postgresql',
     migrate: 'alter'
   },
 
@@ -22,7 +22,7 @@ module.exports = {
     }
   },
   appUrl: process.env['APP_URL'],
-  connections: {
+  datastores: {
     postgresql: {
       adapter: 'sails-postgresql',
       host: process.env['DB_HOST'] || process.env['DATABASE_URL'] && process.env['DATABASE_URL'].split('@')[1].split(':')[0],

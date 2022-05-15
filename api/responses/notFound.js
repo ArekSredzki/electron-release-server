@@ -42,7 +42,7 @@ module.exports = function notFound (data, options) {
 
   // If the user-agent wants JSON, always respond with JSON
   if (req.wantsJSON) {
-    return res.jsonx(data);
+    return res.json(data);
   }
 
   // If second argument is a string, we take that to mean it refers to a view.
@@ -58,7 +58,7 @@ module.exports = function notFound (data, options) {
 
   // If no second argument provided, try to serve the default view,
   // but fall back to sending JSON(P) if any errors occur.
-  else return res.view('homepage', function (err, html) {
+  else return res.view('homepage', {}, function (err, html) {
 
     // If a view error occured, fall back to JSON(P).
     if (err) {
@@ -72,7 +72,7 @@ module.exports = function notFound (data, options) {
       else {
         sails.log.warn('res.notFound() :: When attempting to render error page view, an error occured (sending JSON instead).  Details: ', err);
       }
-      return res.jsonx(data);
+      return res.json(data);
     }
 
     return res.send(html);

@@ -38,7 +38,7 @@ module.exports = function serverError(data, options) {
 
   // If the user-agent wants JSON, always respond with JSON
   if (req.wantsJSON) {
-    return res.jsonx(data);
+    return res.json(data);
   }
 
   // If second argument is a string, we take that to mean it refers to a view.
@@ -74,7 +74,7 @@ module.exports = function serverError(data, options) {
       else {
         sails.log.warn('res.serverError() :: When attempting to render error page view, an error occured (sending JSON instead).  Details: ', err);
       }
-      return res.jsonx(data);
+      return res.json(data);
     }
 
     return res.send(html);

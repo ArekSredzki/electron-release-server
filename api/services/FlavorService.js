@@ -19,10 +19,11 @@ FlavorService.destroy = (flavor, req) => {
     .destroy(flavor.name)
     .then(() => {
       if (sails.hooks.pubsub) {
-        Flavor.publishDestroy(
-          flavor.name, !req._sails.config.blueprints.mirror && req, {
+        Flavor.publish(
+          [flavor.name], {
+            verb: 'destroyed',
             previous: flavor
-          }
+          }, !req._sails.config.blueprints.mirror && req
         );
 
         if (req && req.isSocket) {

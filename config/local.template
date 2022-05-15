@@ -59,7 +59,7 @@ module.exports = {
     token_secret: 'INSERT_RANDOM_TOKEN_KEY'
   },
 
-  connections: {
+  datastores: {
     postgresql: {
       adapter: 'sails-postgresql',
       host: 'DATABASE_HOST',

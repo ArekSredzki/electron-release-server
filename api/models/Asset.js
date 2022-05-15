@@ -7,11 +7,12 @@
 
 module.exports = {
 
+  primaryKey: 'id',
+
   attributes: {
 
     id: {
       type: 'string',
-      primaryKey: true,
       unique: true
     },
 
@@ -22,7 +23,7 @@ module.exports = {
 
     platform: {
       type: 'string',
-      enum: ['linux_32', 'linux_64', 'osx_64', 'osx_arm64', 'windows_32', 'windows_64'],
+      isIn: ['linux_32', 'linux_64', 'osx_64', 'osx_arm64', 'windows_32', 'windows_64'],
       required: true
     },
 
@@ -36,12 +37,12 @@ module.exports = {
     },
 
     size: {
-      type: 'integer',
+      type: 'number',
       required: true
     },
 
     download_count: {
-      type: 'integer',
+      type: 'number',
       defaultsTo: 0
     },
 
@@ -56,8 +57,6 @@ module.exports = {
       required: true
     }
   },
-
-  autoPK: false,
 
   beforeCreate: (asset, proceed) => {
     const { version, platform, filetype } = asset;

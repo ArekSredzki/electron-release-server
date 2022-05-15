@@ -7,15 +7,14 @@
 
 module.exports = {
 
+  primaryKey: 'name',
+
   attributes: {
     name: {
       type: 'string',
-      primaryKey: true,
       unique: true,
       required: true
     }
   },
-
-  autoPK: false
 
 };
