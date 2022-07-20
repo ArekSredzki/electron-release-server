@@ -1,17 +1,20 @@
 .row.text-center
   .col-md-12
-    h2 Our Amazing Electron App
-      
-.row.text-center.padding-20-0
-  .col-md-4
-    i.fa.fa-5x.fa-diamond
-    h3 Polished
-  .col-md-4
-    i.fa.fa-5x.fa-magic
-    h3 Magic
-  .col-md-4
-    i.fa.fa-5x.fa-bomb
-    h3 TheBomb.com
+    h2 #{process.env.WEBSITE_TITLE || 'Our Amazing Electron App'}
+
+if process.env.WEBSITE_HOME_CONTENT 
+  div !{process.env.WEBSITE_HOME_CONTENT}
+else 
+  .row.text-center.padding-20-0
+    .col-md-4
+      i.fa.fa-5x.fa-diamond
+      h3 Polished
+    .col-md-4
+      i.fa.fa-5x.fa-magic
+      h3 Magic
+    .col-md-4
+      i.fa.fa-5x.fa-bomb
+      h3 TheBomb.com
     
 .row.text-center
   .col-md-12

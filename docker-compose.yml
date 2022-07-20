@@ -3,6 +3,10 @@ services:
   web:
     build: .
     environment:
+      WEBSITE_TITLE: 'Test Title'
+      WEBSITE_HOME_CONTENT: 'Test Content'
+      WEBSITE_NAV_LOGO: ''
+      WEBSITE_APP_TITLE: 'Test App Title'
       APP_USERNAME: username
       APP_PASSWORD: password
       DB_HOST: db
