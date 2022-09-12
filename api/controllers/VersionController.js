@@ -406,10 +406,6 @@ module.exports = {
 
             Array.prototype.unshift.apply(latestVersion.assets, deltaAssets);
 
-            latestVersion.assets.sort(function(a1, a2) {
-              return semver.compare(a1.version, a2.version);
-            });
-
             sails.log.debug('Latest Windows Version', latestVersion);
 
             // Change asset name to use full download link
