@@ -399,8 +399,8 @@ module.exports = {
                     function(asset) {
                       return asset.filetype === '.nupkg'
                         && _.includes(asset.name.toLowerCase(), '-delta')
-                        && semver.lte(version, asset.version)
-                        && semver.gt(latestVersion.name, asset.version);
+                        && semver.lte(version, newVersion.name)
+                        && semver.gt(latestVersion.name, newVersion.name);
                     }));
               }, []);
 
