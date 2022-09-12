@@ -60,9 +60,10 @@ module.exports = {
   autoPK: false,
 
   beforeCreate: (asset, proceed) => {
-    const { version, platform, filetype } = asset;
+    const { name, version, platform, filetype } = asset;
 
-    asset.id = `${version}_${platform}_${filetype.replace(/\./g, '')}`;
+    const delta = name && name.toLowerCase().includes('-delta') ? 'delta_' : '';
+    asset.id = `${version}_${platform}_${delta}${filetype.replace(/\./g, '')}`;
 
     return proceed();
   }
