@@ -14,6 +14,7 @@ If you host your project on your Github **and** do not need a UI for your app, t
 
 ## Advisory Notices
 **IMPORTANT:**
+- Version `2.0.0` updates many packages, most importantly to SailsJS 1.x.x. At a bare minimum, you must rename `connections` to `datastores` in your `config/local.js` file. You may need to make further changes depending on how significantly you have customized the project.
 - The release of Angular `1.6.0` has broken all `electron-release-server` versions prior to `1.4.2`. Please use the instructions under the `Maintenance` heading below to update your fork! Sorry for the inconvenience.
 - Since release `1.5.0` several models have changed to accommodate new features. Please use the instructions under [Migration](docs/database.md#migration) to update your database! Sorry for the inconvenience.
 
