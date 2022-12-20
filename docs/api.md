@@ -8,7 +8,7 @@ This private API is used by the Admin UI & is authenticated through LDAP by defa
 
 #### List versions:
 ```
-GET http://download.myapp.com/api/version
+GET http://download.myapp.com/versions/sorted
 ```
 
 #### Get details about specific version:
@@ -23,5 +23,5 @@ PUT http://download.myapp.com/version/availability/1.1.0_default/1574755200000
 
 #### List channels:
 ```
-GET http://download.myapp.com/api/channel
+GET http://download.myapp.com/channels/sorted
 ```

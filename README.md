@@ -24,6 +24,7 @@ If you host your project on your Github **and** do not need a UI for your app, t
     - Authenticates with LDAP, easy to modify to another authentication method if needed
 - :sparkles: Store assets on server disk, or Amazon S3 (with minor modifications)
     - Use pretty much any database for persistence, thanks to [Sails](http://sailsjs.org) & [Waterline](http://waterlinejs.org)
+- :sparkles: Code-less [app customization through env variables](docs/customization.md)
 - :sparkles: Simple but powerful download urls (**NOTE:** when no assets are uploaded, server returns `404` by default):
     - `/download/latest`
     - `/download/latest/:platform`
@@ -80,7 +81,7 @@ git rebase upstream/master
 ```
 
 ## Credit
-This project has been built from the Sails.js up by Arek Sredzki, with inspiration from [nuts](https://github.com/GitbookIO/nuts).
+This project has been built from Sails.js up by Arek Sredzki, with inspiration from [nuts](https://github.com/GitbookIO/nuts).
 
 ## License
 [MIT License](LICENSE.md)

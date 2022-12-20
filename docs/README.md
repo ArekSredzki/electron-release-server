@@ -9,6 +9,7 @@ There are questions that are asked quite often, [check this out before creating 
   - [Database setup](database.md)
   - [Admin authentication](authentication.md)
 - [Upload assets](assets.md)
+- [Customization](customization.md)
 - [Available URLs](urls.md)
 - [OS X Auto-Updater](update-osx.md)
 - [Windows Auto-Updater](update-windows.md)
