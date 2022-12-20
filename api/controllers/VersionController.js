@@ -404,16 +404,12 @@ module.exports = {
                     function(asset) {
                       return asset.filetype === '.nupkg'
                         && _.includes(asset.name.toLowerCase(), '-delta')
-                        && semver.lte(version, asset.version)
-                        && semver.gt(latestVersion.name, asset.version);
+                        && semver.lte(version, newVersion.name)
+                        && semver.gt(latestVersion.name, newVersion.name);
                     }));
               }, []);
 
             Array.prototype.unshift.apply(latestVersion.assets, deltaAssets);
-
-            latestVersion.assets.sort(function(a1, a2) {
-              return semver.compare(a1.version, a2.version);
-            });
 
             sails.log.debug('Latest Windows Version', latestVersion);
 
