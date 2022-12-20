@@ -404,15 +404,18 @@ module.exports = {
                     function(asset) {
                       return asset.filetype === '.nupkg'
                         && _.includes(asset.name.toLowerCase(), '-delta')
-                        && semver.lte(version, asset.version)
-                        && semver.gt(latestVersion.name, asset.version);
+                        && semver.lte(version, VersionService.clearAssetVersion(asset.version))
+                        && semver.gt(latestVersion.name, VersionService.clearAssetVersion(asset.version));
                     }));
               }, []);
 
             Array.prototype.unshift.apply(latestVersion.assets, deltaAssets);
 
             latestVersion.assets.sort(function(a1, a2) {
-              return semver.compare(a1.version, a2.version);
+              return semver.compare(
+                VersionService.clearAssetVersion(a1.version),
+                VersionService.clearAssetVersion(a2.version)
+              );
             });
 
             sails.log.debug('Latest Windows Version', latestVersion);
