@@ -14,6 +14,13 @@ services:
       DB_USERNAME: releaseserver
       DB_NAME: releaseserver
       DB_PASSWORD: secret
+      # DEKs should be 32 bytes long, and cryptographically random.
+      # You can generate such a key by running the following:
+      #   require('crypto').randomBytes(32).toString('base64')
+      # PLEASE ENSURE THAT YOU CHANGE THIS VALUE IN PRODUCTION
+      DATA_ENCRYPTION_KEY: oIh0YgyxQbShuMjw4/laYcZnGKzvC3UniWFsqL0t4Zs=
+      # Recommended: 63 random alpha-numeric characters
+      # Generate using: https://www.grc.com/passwords.htm
       TOKEN_SECRET: change_me_in_production
       APP_URL: 'localhost:5000'
       ASSETS_PATH: '/usr/src/electron-release-server/releases'

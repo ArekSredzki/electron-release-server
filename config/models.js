@@ -11,13 +11,10 @@
 
 module.exports.models = {
 
-  /***************************************************************************
-   *                                                                          *
-   * Your app's default connection. i.e. the name of one of your app's        *
-   * datastores (see `config/datastores.js`)                                  *
-   *                                                                          *
-   ***************************************************************************/
-  // datastore: 'localDiskDb',
+  // Your app's default datastore. i.e. the name of one of your app's datastores (see `config/datastores.js`)
+  // The former `connection` model setting is now `datastore`.  This sets the datastore
+  // that models will use, unless overridden directly in the model file in `api/models`.
+  datastore: 'postgresql',
 
   /***************************************************************************
    *                                                                          *
@@ -44,12 +41,6 @@ module.exports.models = {
   // uncomment the next line.
   // fetchRecordsOnDestroy: true,
 
-  // The former `connection` model setting is now `datastore`.  This sets the datastore
-  // that models will use, unless overridden directly in the model file in `api/models`.
-  // It defaults to a datastore called `default`, which (unless otherwise configured in
-  // the `config/datastores.js` file) uses the built-in `sails-disk` adapter.
-  datastore: 'default',
-
   // Because you can't have the old `connection` setting at the same time as the new
   // `datastore` setting, we'll set it to `null` here.  When you merge this file into your
   // existing `config/models.js` file, just remove any reference to `connection`.
@@ -66,22 +57,4 @@ module.exports.models = {
     createdAt: { type: 'string', autoCreatedAt: true, },
     updatedAt: { type: 'string', autoUpdatedAt: true, },
   },
-
-  /******************************************************************************
-  *                                                                             *
-  * The set of DEKs (data encryption keys) for at-rest encryption.              *
-  * i.e. when encrypting/decrypting data for attributes with `encrypt: true`.   *
-  *                                                                             *
-  * > The `default` DEK is used for all new encryptions, but multiple DEKs      *
-  * > can be configured to allow for key rotation.  In production, be sure to   *
-  * > manage these keys like you would any other sensitive credential.          *
-  *                                                                             *
-  * > For more info, see:                                                       *
-  * > https://sailsjs.com/docs/concepts/orm/model-settings#?dataEncryptionKeys  *
-  *                                                                             *
-  ******************************************************************************/
-  dataEncryptionKeys: {
-    default: 'DXWjEVS/hpdunftnkrxSMDBBrgTxYG5mV5+D7zUBcWs='
-  },
-
 };

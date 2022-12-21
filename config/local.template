@@ -59,6 +59,30 @@ module.exports = {
     token_secret: 'INSERT_RANDOM_TOKEN_KEY'
   },
 
+  models: {
+    datastore: 'postgresql',
+
+    /******************************************************************************
+    *                                                                             *
+    * The set of DEKs (data encryption keys) for at-rest encryption.              *
+    * i.e. when encrypting/decrypting data for attributes with `encrypt: true`.   *
+    *                                                                             *
+    * > The `default` DEK is used for all new encryptions, but multiple DEKs      *
+    * > can be configured to allow for key rotation.  In production, be sure to   *
+    * > manage these keys like you would any other sensitive credential.          *
+    *                                                                             *
+    * > For more info, see:                                                       *
+    * > https://sailsjs.com/docs/concepts/orm/model-settings#?dataEncryptionKeys  *
+    *                                                                             *
+    ******************************************************************************/
+    dataEncryptionKeys: {
+      // DEKs should be 32 bytes long, and cryptographically random.
+      // You can generate such a key by running the following:
+      //   require('crypto').randomBytes(32).toString('base64')
+      default: 'DATA_ENCRYPTION_KEY'
+    },
+  },
+
   datastores: {
     postgresql: {
       adapter: 'sails-postgresql',

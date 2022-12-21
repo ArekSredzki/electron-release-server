@@ -49,7 +49,7 @@ After completing this section, you should now have
 > Hint: You now need to ensure that these settings are reflected in the `config/local.js` file.
 
 ```
-    connections: {
+    datastores: {
         postgresql: {
             adapter: 'sails-postgresql',
             host: 'localhost',
