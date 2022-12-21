@@ -234,7 +234,12 @@ module.exports = {
                   fd: uploadedFile.fd,
                   size: uploadedFile.size
                 }, data);
+
+                // Due to an API change in Sails/Waterline, the primary key values must be specified directly.=
                 newAsset.version = newAsset.version.id;
+
+                const delta = newAsset.name && newAsset.name.toLowerCase().includes('-delta') ? 'delta_' : '';
+                newAsset.id = `${newAsset.version}_${newAsset.platform}_${delta}${newAsset.filetype.replace(/\./g, '')}`;
 
                 // Create new instance of model using data from params
                 Asset
