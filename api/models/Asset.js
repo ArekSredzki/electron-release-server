@@ -1,7 +1,7 @@
 /**
  * Asset.js
  *
- * @description :: TODO: You might write a short summary of how this model works and what it represents here.
+ * @description :: A software asset that can be used to install the app (ex. .exe, .dmg, .deb, etc.)
  * @docs        :: http://sailsjs.org/#!documentation/models
  */
 
@@ -13,7 +13,8 @@ module.exports = {
 
     id: {
       type: 'string',
-      unique: true
+      unique: true,
+      required: true
     },
 
     name: {
@@ -56,15 +57,6 @@ module.exports = {
       type: 'string',
       required: true
     }
-  },
-
-  beforeCreate: (asset, proceed) => {
-    const { name, version, platform, filetype } = asset;
-
-    const delta = name && name.toLowerCase().includes('-delta') ? 'delta_' : '';
-    asset.id = `${version}_${platform}_${delta}${filetype.replace(/\./g, '')}`;
-
-    return proceed();
   }
 
 };

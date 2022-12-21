@@ -138,6 +138,7 @@ angular.module('app.core.data.service', [
         var version_for_request = version;
         version_for_request.channel = version_for_request.channel.name;
         version_for_request.flavor = version_for_request.flavor.name;
+        version_for_request.id = `${version_for_request.name}_${version_for_request.flavor}`;
 
         return $http.post('/api/version', version_for_request)
           .then(function(response) {

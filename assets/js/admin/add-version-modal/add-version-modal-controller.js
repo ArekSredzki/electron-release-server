@@ -6,6 +6,7 @@ angular.module('app.admin.add-version-modal', [])
       $scope.availableFlavors = DataService.availableFlavors;
 
       $scope.version = {
+        id: '',
         name: '',
         notes: '',
         channel: {
@@ -34,6 +35,7 @@ angular.module('app.admin.add-version-modal', [])
         $scope.availableFlavors = DataService.availableFlavors;
 
         $scope.version = {
+          id: '',
           name: '',
           notes: '',
           channel: {

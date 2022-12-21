@@ -12,7 +12,8 @@ module.exports = {
   attributes: {
     id: {
       type: 'string',
-      unique: true
+      unique: true,
+      required: true
     },
 
     name: {
@@ -31,8 +32,7 @@ module.exports = {
     },
 
     availability: {
-      type: 'string',
-      columnType: 'datetime'
+      type: 'string'
     },
 
     flavor: {
