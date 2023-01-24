@@ -39,12 +39,14 @@ module.exports = {
 
     size: {
       type: 'number',
-      required: true
+      required: true,
+      columnType: 'integer'
     },
 
     download_count: {
       type: 'number',
-      defaultsTo: 0
+      defaultsTo: 0,
+      columnType: 'integer'
     },
 
     version: {
