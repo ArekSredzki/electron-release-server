@@ -96,7 +96,6 @@ module.exports = {
               // an lower version could be deleted then be created again,
               // thus it has newer `createdAt`.
               versions = versions.sort(UtilityService.compareVersion);
-              var version = versions[0];
               var version;
               for (var i = 0; i < versions.length; i++) {
                 version = versions[i];
@@ -204,6 +203,11 @@ module.exports = {
             }
 
             var uploadedFile = uploadedFiles[0];
+
+            if (uploadedFile.filename === 'RELEASES') {
+              return res.badRequest(
+                'The RELEASES file should not be uploaded since the release server will generate at request time');
+            }
 
             var fileExt = path.extname(uploadedFile.filename);
 
