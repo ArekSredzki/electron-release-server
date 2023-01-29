@@ -241,10 +241,13 @@ module.exports = {
             var latestVersion;
             sails.log.debug('Newer Versions', newerVersions);
 
+            // Generate the combined release notes for the newer versions while simultaneously filtering out
+            // inapplicable versions and finding the latest version.
             var releaseNotes = _.reduce(
               newerVersions,
               function(prevNotes, newVersion) {
-
+                // Filter out assets that are not zip files since we only
+                // support zip files for auto-updates.
                 newVersion.assets = _.filter(newVersion.assets, function(asset) {
                   return asset.filetype === '.zip';
                 });
@@ -255,6 +258,8 @@ module.exports = {
                   return prevNotes;
                 }
 
+                // If this is the first version we've found that is newer than
+                // the current version, then we will use it as the latest.
                 if (!latestVersion && semver.lt(version, newVersion.name)) {
                   latestVersion = newVersion;
                 }
@@ -267,8 +272,10 @@ module.exports = {
                 // If not the first changenote, prefix with new line
                 var newChangeNote = !prevNotes.length ? '' : '\n';
 
+                // Add the version name and notes
                 newChangeNote += '## ' + newVersion.name + '\n' + newVersion.notes;
 
+                // Add the new changenote to the previous ones
                 return prevNotes + newChangeNote;
               },
               '');
@@ -293,7 +300,7 @@ module.exports = {
               ),
               name: latestVersion.name,
               notes: releaseNotes,
-              pub_date: latestVersion.availability.toISOString()
+              pub_date: new Date(latestVersion.availability).toISOString()
             });
           });
       })
@@ -481,6 +488,9 @@ module.exports = {
           if (currentVersion.assets) {
             for (var j = 0; j < currentVersion.assets.length; j++) {
               var currentAsset = currentVersion.assets[j];
+              // Find the first asset that is a exe file and matches the desired platform.
+              // Note that only exe files are supported for win autoupdates through this API (not nupkg).
+              // Nupkg files are supported through the Squirrel.Windows API.
               if (currentAsset.filetype === '.exe' && _.includes(platforms, currentAsset.platform)) {
                 latestVersion = currentVersion;
                 asset = currentAsset;
@@ -496,7 +506,6 @@ module.exports = {
 
         if (latestVersion) {
           var downloadPath = url.resolve(
-            //sails.config.appUrl,
             "",
             `/download/flavor/${flavor}/${latestVersion.name}/${asset.platform}/` +
             asset.name
@@ -514,7 +523,7 @@ module.exports = {
                           + "\nsha512: " + sha512
                           + "\nsize: " + asset.size;
 
-          res.ok(latestYml);
+          res.send(latestYml);
         } else {
           res.notFound();
         }
@@ -568,6 +577,8 @@ module.exports = {
           if (currentVersion.assets) {
             for (var j = 0; j < currentVersion.assets.length; j++) {
               var currentAsset = currentVersion.assets[j];
+              // Find the first asset that is a zip file and matches the desired platform.
+              // Note that only zip files are supported for mac autoupdates.
               if (currentAsset.filetype === '.zip' && _.includes(platforms, currentAsset.platform)) {
                 latestVersion = currentVersion;
                 asset = currentAsset;
@@ -583,7 +594,6 @@ module.exports = {
 
         if (latestVersion) {
           var downloadPath = url.resolve(
-            //sails.config.appUrl,
             "",
             `/download/flavor/${flavor}/${latestVersion.name}/${asset.platform}/` +
             asset.name
@@ -600,7 +610,7 @@ module.exports = {
                           + "\npath: " + downloadPath
                           + "\nsha512: " + sha512
                           + "\nsize: " + asset.size;
-          res.ok(latestYml);
+          res.send(latestYml);
         } else {
           res.notFound();
         }
@@ -630,7 +640,7 @@ module.exports = {
           'application/json': function() {
             res.send({
               'notes': currentVersion.notes,
-              'pub_date': currentVersion.availability.toISOString()
+              'pub_date': new Date(currentVersion.availability).toISOString()
             });
           },
           'default': function() {
@@ -645,9 +655,6 @@ module.exports = {
    * Overloaded blueprint function
    * Changes:
    *  - Delete all associated assets & their files
-   * @param  {[type]} req [description]
-   * @param  {[type]} res [description]
-   * @return {[type]}     [description]
    */
   destroy: function(req, res) {
     var pk = actionUtil.requirePk(req);
