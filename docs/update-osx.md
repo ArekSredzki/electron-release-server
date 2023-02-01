@@ -28,6 +28,7 @@ var autoUpdater = require('electron').autoUpdater;
 
 var platform = os.platform() + '_' + os.arch();  // usually returns darwin_64
 var version = app.getVersion();
+var channel = 'stable';
 
-autoUpdater.setFeedURL('http://download.myapp.com/update/'+platform+'/'+version);
+autoUpdater.setFeedURL('http://download.myapp.com/update/' + platform + '/' + version + '/' + channel);
 ```
