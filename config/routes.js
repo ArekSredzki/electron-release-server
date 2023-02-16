@@ -30,18 +30,42 @@ module.exports.routes = {
   '/auth/logout': { view: 'homepage' },
 
   'PUT /version/availability/:version/:timestamp': 'VersionController.availability',
-
-  'GET /download/latest/:platform?/:filename?': 'AssetController.download',
-  'GET /download/channel/:channel/:platform?/:filename?': 'AssetController.download',
+  'GET /download/latest/:platform?/:filename?': {
+    controller: 'AssetController',
+    action: 'download',
+    // This is important since it allows matching with filenames.
+    skipAssets: false
+  },
+  'GET /download/channel/:channel/:platform?/:filename?': {
+    controller: 'AssetController',
+    action: 'download',
+    // This is important since it allows matching with filenames.
+    skipAssets: false
+  },
   'GET /download/:version/:platform?/:filename?': {
     controller: 'AssetController',
     action: 'download',
     // This is important since it allows matching with filenames.
     skipAssets: false
   },
-  'GET /download/flavor/:flavor/latest/:platform?/:filename?': 'AssetController.download',
-  'GET /download/flavor/:flavor/channel/:channel/:platform?/:filename?': 'AssetController.download',
-  'GET /download/flavor/:flavor/latest/channel/:channel/:platform?/:filename?': 'AssetController.download',
+  'GET /download/flavor/:flavor/latest/:platform?/:filename?': {
+    controller: 'AssetController',
+    action: 'download',
+    // This is important since it allows matching with filenames.
+    skipAssets: false
+  },
+  'GET /download/flavor/:flavor/channel/:channel/:platform?/:filename?': {
+    controller: 'AssetController',
+    action: 'download',
+    // This is important since it allows matching with filenames.
+    skipAssets: false
+  },
+  'GET /download/flavor/:flavor/latest/channel/:channel/:platform?/:filename?': {
+    controller: 'AssetController',
+    action: 'download',
+    // This is important since it allows matching with filenames.
+    skipAssets: false
+  },
   'GET /download/flavor/:flavor/:version/:platform?/:filename?': {
     controller: 'AssetController',
     action: 'download',
