@@ -41,6 +41,8 @@
 
 config/local.js
 database.json
+.env
+.history
 
 
 

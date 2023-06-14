@@ -18,12 +18,17 @@
  * `node app.js --silent --port=80 --prod`
  */
 
+// ENV SETUP for customizations 
+process.env.WEBSITE_APP_TITLE = "Weave Releases"
+process.env.WEBSITE_TITLE = "Weave Communications, Inc."
+process.env.WEBSITE_NAV_LOGO = "/images/weave-logo.png"
+
 // Ensure we're in the project directory, so relative paths work as expected
 // no matter where we actually lift from.
 process.chdir(__dirname);
 
 // Ensure a "sails" can be located:
-(function() {
+(function () {
   var sails;
   try {
     sails = require('sails');

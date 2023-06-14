@@ -3,10 +3,10 @@ services:
   web:
     build: .
     environment:
-      WEBSITE_TITLE: 'Test Title'
+      WEBSITE_TITLE: 'Weave Communications, Inc'
       WEBSITE_HOME_CONTENT: 'Test Content'
       WEBSITE_NAV_LOGO: ''
-      WEBSITE_APP_TITLE: 'Test App Title'
+      WEBSITE_APP_TITLE: 'Weave Releases'
       APP_USERNAME: username
       APP_PASSWORD: password
       DB_HOST: db
