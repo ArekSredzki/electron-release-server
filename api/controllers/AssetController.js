@@ -26,7 +26,7 @@ module.exports = {
    * (GET /download/flavor/:flavor/:version/:platform?/:filename?': 'AssetController.download')
    * (GET /download/flavor/:flavor/channel/:channel/:platform?': 'AssetController.download')
    */
-  download: function(req, res) {
+  download: function (req, res) {
     var channel = req.params.channel;
     var version = req.params.version || undefined;
     var filename = req.params.filename;
@@ -64,69 +64,69 @@ module.exports = {
       channel = channel || 'stable';
     }
 
-    new Promise(function(resolve, reject) {
-        var assetOptions = UtilityService.getTruthyObject({
-          platform: platforms,
-          filetype: filetype
-        });
+    new Promise(function (resolve, reject) {
+      var assetOptions = UtilityService.getTruthyObject({
+        platform: platforms,
+        filetype: filetype
+      });
 
-        sails.log.debug('Asset requested with options', assetOptions);
+      sails.log.debug('Asset requested with options', assetOptions);
 
-        if (version || channel) {
-          Version
-            .find(UtilityService.getTruthyObject({
-              name: version,
-              channel: channel,
-              flavor
-            }))
-            .sort([{
-              createdAt: 'desc'
-            }])
-            // the latest version maybe has no assets, for example
-            // the moment between creating a version and uploading assets,
-            // so find more than 1 version and use the one containing assets.
-            .limit(10)
-            .populate('assets', assetOptions)
-            .then(function(versions) {
-              if (!versions || !versions.length) {
-                return resolve();
+      if (version || channel) {
+        Version
+          .find(UtilityService.getTruthyObject({
+            name: version,
+            channel: channel,
+            flavor
+          }))
+          .sort([{
+            createdAt: 'desc'
+          }])
+          // the latest version maybe has no assets, for example
+          // the moment between creating a version and uploading assets,
+          // so find more than 1 version and use the one containing assets.
+          .limit(10)
+          .populate('assets', assetOptions)
+          .then(function (versions) {
+            if (!versions || !versions.length) {
+              return resolve();
+            }
+
+            // sort versions by `name` instead of `createdAt`,
+            // an lower version could be deleted then be created again,
+            // thus it has newer `createdAt`.
+            versions = versions.sort(UtilityService.compareVersion);
+            var version;
+            for (var i = 0; i < versions.length; i++) {
+              version = versions[i];
+              if (version.assets && version.assets.length) {
+                break;
               }
+            }
 
-              // sort versions by `name` instead of `createdAt`,
-              // an lower version could be deleted then be created again,
-              // thus it has newer `createdAt`.
-              versions = versions.sort(UtilityService.compareVersion);
-              var version;
-              for (var i = 0; i < versions.length; i++) {
-                version = versions[i];
-                if (version.assets && version.assets.length) {
-                  break;
-                }
-              }
+            if (!version.assets || !version.assets.length) {
+              return resolve();
+            }
 
-              if (!version.assets || !version.assets.length) {
-                return resolve();
-              }
-
-              // Sorting filename in ascending order prioritizes other files
-              // over zip archives is both are available and matched.
-              return resolve(_.orderBy(
-                version.assets, ['filetype', 'createdAt'], ['asc', 'desc']
-              )[0]);
-            })
-            .catch(reject);
-        } else {
-          Asset
-            .find(assetOptions)
-            .sort([{
-              createdAt: 'desc'
-            }])
-            .limit(1)
-            .then(resolve)
-            .catch(reject);
-        }
-      })
-      .then(function(asset) {
+            // Sorting filename in ascending order prioritizes other files
+            // over zip archives is both are available and matched.
+            return resolve(_.orderBy(
+              version.assets, ['filetype', 'createdAt'], ['asc', 'desc']
+            )[0]);
+          })
+          .catch(reject);
+      } else {
+        Asset
+          .find(assetOptions)
+          .sort([{
+            createdAt: 'desc'
+          }])
+          .limit(1)
+          .then(resolve)
+          .catch(reject);
+      }
+    })
+      .then(function (asset) {
         if (!asset || !asset.fd) {
           let noneFoundMessage = `The ${flavor} flavor has no download available`;
 
@@ -149,14 +149,15 @@ module.exports = {
         return AssetService.serveFile(req, res, asset);
       })
       // Catch any unhandled errors
-      .catch(res.negotiate);
+      .catch((err) => {
+        return res.view('500', { data: err });
+      })
   },
 
-  create: function(req, res) {
+  create: function (req, res) {
     // Create data object (monolithic combination of all parameters)
     // Omit the blacklisted params (like JSONP callback param, etc.)
     var data = actionUtil.parseValues(req);
-
     if (!data.version) {
       return res.badRequest('A version is required.');
     }
@@ -193,7 +194,7 @@ module.exports = {
         req.file('file').upload(sails.config.files,
           function whenDone(err, uploadedFiles) {
             if (err) {
-              return res.negotiate(err);
+              return res.view('500', { data: err });
             }
 
             // If an unexpected number of files were uploaded, respond with an
@@ -203,14 +204,12 @@ module.exports = {
             }
 
             var uploadedFile = uploadedFiles[0];
-
             if (uploadedFile.filename === 'RELEASES') {
               return res.badRequest(
                 'The RELEASES file should not be uploaded since the release server will generate at request time');
             }
 
             var fileExt = path.extname(uploadedFile.filename);
-
             sails.log.debug('Creating asset with name', data.name || uploadedFile.filename);
 
             var hashPromise;
@@ -228,9 +227,8 @@ module.exports = {
             } else {
               hashPromise = Promise.resolve('');
             }
-
             hashPromise
-              .then(function(fileHash) {
+              .then(function (fileHash) {
                 var newAsset = _.merge({
                   name: uploadedFile.filename,
                   hash: fileHash,
@@ -238,13 +236,11 @@ module.exports = {
                   fd: uploadedFile.fd,
                   size: uploadedFile.size
                 }, data);
-
                 // Due to an API change in Sails/Waterline, the primary key values must be specified directly.=
                 newAsset.version = newAsset.version.id;
 
                 const delta = newAsset.name && newAsset.name.toLowerCase().includes('-delta') ? 'delta_' : '';
                 newAsset.id = `${newAsset.version}_${newAsset.platform}_${delta}${newAsset.filetype.replace(/\./g, '')}`;
-
                 // Create new instance of model using data from params
                 Asset
                   .create(newAsset)
@@ -253,7 +249,7 @@ module.exports = {
                     // Differentiate between waterline-originated validation errors
                     // and serious underlying issues. Respond with badRequest if a
                     // validation error is encountered, w/ validation info.
-                    if (err) return res.negotiate(err);
+                    if (err) return res.view('500', { data: err });
 
                     // If we have the pubsub hook, use the model class's publish
                     // method to notify all subscribers about the created item.
@@ -268,17 +264,18 @@ module.exports = {
                         data: newInstance
                       }, !req.options.mirror && req);
                     }
-
                     // Send JSONP-friendly response if it's supported
                     res.ok(newInstance);
                   });
               })
-              .catch(res.negotiate);
+              .catch((err) => {
+                return res.view('500', { data: err });
+              });
           });
       });
   },
 
-  destroy: function(req, res) {
+  destroy: function (req, res) {
     var pk = actionUtil.requirePk(req);
 
     var query = Asset.findOne(pk);
@@ -291,14 +288,15 @@ module.exports = {
 
         // Delete the file & remove from db
         return Promise.join(
-            AssetService.destroy(record, req),
-            AssetService.deleteFile(record),
-            function() {})
+          AssetService.destroy(record, req),
+          AssetService.deleteFile(record),
+          function () { })
           .then(function success() {
             res.ok(record);
           });
+      }).error((err) => {
+        return res.view('500', { data: err });
       })
-      .error(res.negotiate);
   }
 
 };

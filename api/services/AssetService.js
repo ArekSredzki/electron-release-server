@@ -6,17 +6,29 @@
 
 var mime = require('mime');
 
-var fsx = require('fs-extra');
 var crypto = require('crypto');
 var Promise = require('bluebird');
 
-var SkipperDisk = require('skipper-disk');
+var SkipperDisk = require('skipper-s3');
+// var SkipperDisk = require('skipper-disk');
+/* s3 Bucket options */
+var s3Options = {
+  key: process.env.S3_API_KEY,
+  secret: process.env.S3_API_SECRET,
+  bucket: process.env.S3_BUCKET,
+  region: process.env.S3_REGION || undefined,
+  endpoint: process.env.S3_ENDPOINT || undefined,
+  token: process.env.S3_TOKEN || undefined
+}
+
+var fileAdapter = SkipperDisk(s3Options);
 
 var AssetService = {};
 
 AssetService.serveFile = function (req, res, asset) {
   // Stream the file to the user
-  fsx.createReadStream(asset.fd)
+  // fsx.createReadStream(asset.fd)
+  fileAdapter.read(asset.fd)
     .on('error', function (err) {
       res.serverError('An error occurred while accessing asset.', err);
       sails.log.error('Unable to access asset:', asset.fd);
@@ -45,29 +57,29 @@ AssetService.serveFile = function (req, res, asset) {
             .intercept(function (err) {
             });
 
-            // Early exit if the query was successful.
-            return;
-          } catch (err) {
+          // Early exit if the query was successful.
+          return;
+        } catch (err) {
+          sails.log.error(
+            'An error occurred while logging asset download', err
+          );
+        }
+      }
+
+      // Attempt to update the download count through the fallback mechanism.
+      // Note that this may be lossy since it is not atomic.
+      asset.download_count++;
+
+      Asset.update({
+        id: asset.id
+      }, asset)
+        .exec(function (err) {
+          if (err) {
             sails.log.error(
               'An error occurred while logging asset download', err
             );
           }
-        }
-
-        // Attempt to update the download count through the fallback mechanism.
-        // Note that this may be lossy since it is not atomic.
-        asset.download_count++;
-
-        Asset.update({
-          id: asset.id
-        }, asset)
-          .exec(function (err) {
-            if (err) {
-              sails.log.error(
-                'An error occurred while logging asset download', err
-              );
-            }
-          });
+        });
     })
     // Pipe to user
     .pipe(res);
@@ -80,13 +92,13 @@ AssetService.serveFile = function (req, res, asset) {
  * @param  {String} fd File descriptor of file to hash
  * @return {String}    Promise which is resolved with the hash once complete
  */
+
 AssetService.getHash = function (fd, type = "sha1", encoding = "hex") {
   return new Promise(function (resolve, reject) {
     var hash = crypto.createHash(type);
     hash.setEncoding(encoding);
 
-    fsx
-      .createReadStream(fd)
+    fileAdapter.read(fd)
       .on("error", function (err) {
         reject(err);
       })
@@ -145,8 +157,7 @@ AssetService.deleteFile = function (asset) {
   if (!asset.fd) {
     throw new Error('The provided asset does not have a file descriptor');
   }
-
-  var fileAdapter = SkipperDisk();
+  // var fileAdapter = SkipperDisk();
   var fileAdapterRmAsync = Promise.promisify(fileAdapter.rm);
 
   return fileAdapterRmAsync(asset.fd);

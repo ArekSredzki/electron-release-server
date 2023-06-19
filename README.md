@@ -83,3 +83,7 @@ This project has been built from Sails.js up by Arek Sredzki, with inspiration f
 
 ## License
 [MIT License](LICENSE.md)
+
+## Modification for s3 bucket
+
+[modification-docs-s3-bucket](https://github.com/ArekSredzki/electron-release-server/issues/15)

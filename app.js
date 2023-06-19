@@ -22,6 +22,12 @@
 process.env.WEBSITE_APP_TITLE = "Weave Releases"
 process.env.WEBSITE_TITLE = "Weave Communications, Inc."
 process.env.WEBSITE_NAV_LOGO = "/images/weave-logo.png"
+process.env.S3_API_KEY = "AKIA3UNO5OZJOY6D7YF2"
+process.env.S3_API_SECRET = "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"
+process.env.S3_BUCKET = "electron-release-server-poc"
+process.env.S3_REGION = "us-east-1"
+// process.env.S3_ENDPOINT = ""
+// process.env.S3_TOKEN = ""
 
 // Ensure we're in the project directory, so relative paths work as expected
 // no matter where we actually lift from.
