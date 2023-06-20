@@ -8,9 +8,8 @@ var mime = require('mime');
 
 var crypto = require('crypto');
 var Promise = require('bluebird');
-
 var SkipperDisk = require('skipper-s3');
-// var SkipperDisk = require('skipper-disk');
+
 /* s3 Bucket options */
 var s3Options = {
   key: process.env.S3_API_KEY,
@@ -22,12 +21,11 @@ var s3Options = {
 }
 
 var fileAdapter = SkipperDisk(s3Options);
-
 var AssetService = {};
 
 AssetService.serveFile = function (req, res, asset) {
+
   // Stream the file to the user
-  // fsx.createReadStream(asset.fd)
   fileAdapter.read(asset.fd)
     .on('error', function (err) {
       res.serverError('An error occurred while accessing asset.', err);
@@ -86,7 +84,7 @@ AssetService.serveFile = function (req, res, asset) {
 };
 
 /**
- * Asyncronously generates a SHA1 hash from a file
+ * Asynchronously generates a SHA1 hash from a file
  * Identical to:
  * https://github.com/electron-userland/electron-builder/blob/552f1a4ed6f4bb83c3c548ed962c21142f07a9b4/packages/electron-updater/src/DownloadedUpdateHelper.ts#L161
  * @param  {String} fd File descriptor of file to hash
@@ -157,9 +155,7 @@ AssetService.deleteFile = function (asset) {
   if (!asset.fd) {
     throw new Error('The provided asset does not have a file descriptor');
   }
-  // var fileAdapter = SkipperDisk();
   var fileAdapterRmAsync = Promise.promisify(fileAdapter.rm);
-
   return fileAdapterRmAsync(asset.fd);
 };
 
