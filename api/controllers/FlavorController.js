@@ -62,9 +62,7 @@ module.exports = {
                     .map(versions, version => destroyVersionAssetsAndFiles(version, req))
                     .then(destroyFlavor(flavor, req))
                     .then(res.ok(flavor.name))
-                    .error((err) => {
-                      return res.view('500', { data: err });
-                    })
+                    .error(res.negotiate);
                 }
               });
           }

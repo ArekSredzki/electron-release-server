@@ -6,6 +6,7 @@
   "dependencies": {
     "@sailshq/upgrade": "^1.0.9",
     "async": "^3.2.4",
+    "aws-sdk": "^2.1401.0",
     "bluebird": "^3.7.2",
     "bower": "^1.8.14",
     "compare-versions": "^4.1.4",
@@ -13,6 +14,7 @@
     "db-migrate": "^0.11.13",
     "db-migrate-pg": "^1.2.2",
     "express-useragent": "^1.0.15",
+    "flaverr": "^1.10.0",
     "fs-extra": "^11.1.0",
     "grunt": "^1.5.3",
     "grunt-contrib-coffee": "^2.1.0",

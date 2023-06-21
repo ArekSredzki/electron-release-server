@@ -149,15 +149,14 @@ module.exports = {
         return AssetService.serveFile(req, res, asset);
       })
       // Catch any unhandled errors
-      .catch((err) => {
-        return res.view('500', { data: err });
-      })
+      .catch(res.negotiate);
   },
 
   create: function (req, res) {
     // Create data object (monolithic combination of all parameters)
     // Omit the blacklisted params (like JSONP callback param, etc.)
     var data = actionUtil.parseValues(req);
+
     if (!data.version) {
       return res.badRequest('A version is required.');
     }
@@ -194,7 +193,7 @@ module.exports = {
         req.file('file').upload(sails.config.files,
           function whenDone(err, uploadedFiles) {
             if (err) {
-              return res.view('500', { data: err });
+              return res.negotiate(err);
             }
 
             // If an unexpected number of files were uploaded, respond with an
@@ -204,12 +203,14 @@ module.exports = {
             }
 
             var uploadedFile = uploadedFiles[0];
+
             if (uploadedFile.filename === 'RELEASES') {
               return res.badRequest(
                 'The RELEASES file should not be uploaded since the release server will generate at request time');
             }
 
             var fileExt = path.extname(uploadedFile.filename);
+
             sails.log.debug('Creating asset with name', data.name || uploadedFile.filename);
 
             var hashPromise;
@@ -227,6 +228,7 @@ module.exports = {
             } else {
               hashPromise = Promise.resolve('');
             }
+
             hashPromise
               .then(function (fileHash) {
                 var newAsset = _.merge({
@@ -236,11 +238,13 @@ module.exports = {
                   fd: uploadedFile.fd,
                   size: uploadedFile.size
                 }, data);
+
                 // Due to an API change in Sails/Waterline, the primary key values must be specified directly.=
                 newAsset.version = newAsset.version.id;
 
                 const delta = newAsset.name && newAsset.name.toLowerCase().includes('-delta') ? 'delta_' : '';
                 newAsset.id = `${newAsset.version}_${newAsset.platform}_${delta}${newAsset.filetype.replace(/\./g, '')}`;
+
                 // Create new instance of model using data from params
                 Asset
                   .create(newAsset)
@@ -249,7 +253,7 @@ module.exports = {
                     // Differentiate between waterline-originated validation errors
                     // and serious underlying issues. Respond with badRequest if a
                     // validation error is encountered, w/ validation info.
-                    if (err) return res.view('500', { data: err });
+                    if (err) return res.negotiate(err);
 
                     // If we have the pubsub hook, use the model class's publish
                     // method to notify all subscribers about the created item.
@@ -264,13 +268,12 @@ module.exports = {
                         data: newInstance
                       }, !req.options.mirror && req);
                     }
+
                     // Send JSONP-friendly response if it's supported
                     res.ok(newInstance);
                   });
               })
-              .catch((err) => {
-                return res.view('500', { data: err });
-              });
+              .catch(res.negotiate);
           });
       });
   },
@@ -294,9 +297,8 @@ module.exports = {
           .then(function success() {
             res.ok(record);
           });
-      }).error((err) => {
-        return res.view('500', { data: err });
       })
+      .error(res.negotiate);
   }
 
 };

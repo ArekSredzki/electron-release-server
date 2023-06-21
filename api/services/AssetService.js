@@ -5,10 +5,12 @@
  */
 
 var mime = require('mime');
-
 var crypto = require('crypto');
 var Promise = require('bluebird');
 var SkipperDisk = require('skipper-s3');
+
+/* Custom Delete Adapter we built */
+var deleteAdapter = require('./CustomDeleteAdapter');
 
 /* s3 Bucket options */
 var s3Options = {
@@ -20,8 +22,9 @@ var s3Options = {
   token: process.env.S3_TOKEN || undefined
 }
 
-var fileAdapter = SkipperDisk(s3Options);
 var AssetService = {};
+var fileAdapter = SkipperDisk(s3Options);
+var customFileAdapter = deleteAdapter(s3Options)
 
 AssetService.serveFile = function (req, res, asset) {
 
@@ -121,7 +124,6 @@ AssetService.destroy = function (asset, req) {
   if (!asset) {
     throw new Error('You must pass an asset');
   }
-
   return Asset.destroy(asset.id)
     .then(function destroyedRecord() {
       if (sails.hooks.pubsub) {
@@ -155,7 +157,8 @@ AssetService.deleteFile = function (asset) {
   if (!asset.fd) {
     throw new Error('The provided asset does not have a file descriptor');
   }
-  var fileAdapterRmAsync = Promise.promisify(fileAdapter.rm);
+
+  var fileAdapterRmAsync = Promise.promisify(customFileAdapter.remove);
   return fileAdapterRmAsync(asset.fd);
 };
 

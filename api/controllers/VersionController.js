@@ -55,10 +55,7 @@ module.exports = {
 
             res.send(updatedVersion);
           });
-      })
-      .catch((err) => {
-        return res.view('500', { data: err });
-      });
+      }).catch(res.negotiate);
   },
 
   /**
@@ -166,10 +163,7 @@ module.exports = {
       })
       .then(response => {
         res.send(response);
-      })
-      .catch((err) => {
-        return res.view('500', { data: err });
-      });
+      }).catch(res.negotiate);
   },
 
   /**
@@ -307,10 +301,7 @@ module.exports = {
               pub_date: new Date(latestVersion.availability).toISOString()
             });
           });
-      })
-      .catch((err) => {
-        return res.view('500', { data: err });
-      });
+      }).catch(res.negotiate);
   },
 
   /**
@@ -443,10 +434,7 @@ module.exports = {
             res.attachment('RELEASES');
             return res.send(output);
           });
-      })
-      .catch((err) => {
-        return res.view('500', { data: err });
-      });
+      }).catch(res.negotiate);
   },
 
   /**
@@ -655,11 +643,7 @@ module.exports = {
             res.send(currentVersion.notes);
           }
         });
-      })
-      .catch((err) => {
-        return res.view('500', { data: err });
-
-      });
+      }).catch(res.negotiate);
   },
 
   /**
@@ -710,10 +694,7 @@ module.exports = {
 
               return res.ok(record);
             });
-        })
-        .error((err) => {
-          return res.view('500', { data: err });
-        });
+        }).catch(res.negotiate);
     });
   }
 };

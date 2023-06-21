@@ -14,4 +14,6 @@ module.exports.files = {
   secret: process.env.S3_API_SECRET,
   bucket: process.env.S3_BUCKET,
   region: process.env.S3_REGION || undefined,
+  endpoint: process.env.S3_ENDPOINT || undefined,
+  token: process.env.S3_TOKEN || undefined
 };
