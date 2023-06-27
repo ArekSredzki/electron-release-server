@@ -55,15 +55,14 @@ module.exports = {
 
             res.send(updatedVersion);
           });
-      })
-      .catch(res.negotiate);
+      }).catch(res.negotiate);
   },
 
   /**
    * Redirect the update request to the appropriate endpoint
    * (GET /update)
    */
-  redirect: function(req, res) {
+  redirect: function (req, res) {
     var platform = req.param('platform');
     var version = req.param('version');
 
@@ -111,8 +110,8 @@ module.exports = {
                 name: version.channel
               })
             }))
-            .then(resolve)
-            .catch(reject)
+              .then(resolve)
+              .catch(reject)
           }),
           // load assets
           new Promise(function (resolve, reject) {
@@ -121,8 +120,8 @@ module.exports = {
                 version: version.id
               })
             }))
-            .then(resolve)
-            .catch(reject)
+              .then(resolve)
+              .catch(reject)
           }),
           // load flavors
           new Promise((resolve, reject) => Promise
@@ -131,41 +130,40 @@ module.exports = {
             .catch(reject)
           )
         ])
-        .then(function (results) {
-          response.items = response.items.map(function (item, index) {
-            return {
-              id: item.id,
-              channel: results[0][index],
-              assets: results[1][index].map(function (asset) {
-                return {
-                  id: asset.id,
-                  name: asset.name,
-                  platform: asset.platform,
-                  filetype: asset.filetype,
-                  hash: asset.hash,
-                  size: asset.size,
-                  download_count: asset.download_count,
-                  fd: asset.fd,
-                  createdAt: asset.createdAt,
-                  updatedAt: asset.updatedAt
-                }
-              }),
-              flavor: results[2][index],
-              name: item.name,
-              notes: item.notes,
-              createdAt: item.createdAt,
-              updatedAt: item.updatedAt,
-              availability: item.availability
-            }
-          })
+          .then(function (results) {
+            response.items = response.items.map(function (item, index) {
+              return {
+                id: item.id,
+                channel: results[0][index],
+                assets: results[1][index].map(function (asset) {
+                  return {
+                    id: asset.id,
+                    name: asset.name,
+                    platform: asset.platform,
+                    filetype: asset.filetype,
+                    hash: asset.hash,
+                    size: asset.size,
+                    download_count: asset.download_count,
+                    fd: asset.fd,
+                    createdAt: asset.createdAt,
+                    updatedAt: asset.updatedAt
+                  }
+                }),
+                flavor: results[2][index],
+                name: item.name,
+                notes: item.notes,
+                createdAt: item.createdAt,
+                updatedAt: item.updatedAt,
+                availability: item.availability
+              }
+            })
 
-          return response
-        })
+            return response
+          })
       })
       .then(response => {
         res.send(response);
-      })
-      .catch(res.negotiate);
+      }).catch(res.negotiate);
   },
 
   /**
@@ -176,7 +174,7 @@ module.exports = {
    * (GET /update/:platform/:version/:channel)
    * (GET /update/flavor/:flavor/:platform/:version/:channel?)
    */
-  general: function(req, res) {
+  general: function (req, res) {
     var platform = req.param('platform');
     var version = req.param('version');
     var channel = req.param('channel') || 'stable';
@@ -206,7 +204,7 @@ module.exports = {
         name: version,
         flavor
       })
-      .then(function(currentVersion) {
+      .then(function (currentVersion) {
 
         var applicableChannels, createdAtFilter;
 
@@ -233,7 +231,7 @@ module.exports = {
           .populate('assets', {
             platform: platforms
           })
-          .then(function(newerVersions) {
+          .then(function (newerVersions) {
             // Sort versions which were added after the current one by semver in
             // descending order.
             newerVersions.sort(UtilityService.compareVersion);
@@ -245,10 +243,10 @@ module.exports = {
             // inapplicable versions and finding the latest version.
             var releaseNotes = _.reduce(
               newerVersions,
-              function(prevNotes, newVersion) {
+              function (prevNotes, newVersion) {
                 // Filter out assets that are not zip files since we only
                 // support zip files for auto-updates.
-                newVersion.assets = _.filter(newVersion.assets, function(asset) {
+                newVersion.assets = _.filter(newVersion.assets, function (asset) {
                   return asset.filetype === '.zip';
                 });
 
@@ -303,8 +301,7 @@ module.exports = {
               pub_date: new Date(latestVersion.availability).toISOString()
             });
           });
-      })
-      .catch(res.negotiate);
+      }).catch(res.negotiate);
   },
 
   /**
@@ -315,7 +312,7 @@ module.exports = {
    * (GET /update/:platform/:version/:channel/RELEASES)
    * (GET /update/flavor/:flavor/:platform/:version/:channel/RELEASES)
    */
-  windows: function(req, res) {
+  windows: function (req, res) {
     var platform = req.param('platform');
     var version = req.param('version');
     var channel = req.param('channel') || 'stable';
@@ -345,7 +342,7 @@ module.exports = {
         name: version,
         flavor
       })
-      .then(function(currentVersion) {
+      .then(function (currentVersion) {
         var applicableChannels, createdAtFilter;
 
         applicableChannels = ChannelService.getApplicableChannels(channel);
@@ -371,26 +368,26 @@ module.exports = {
           .populate('assets', {
             platform: platforms
           })
-          .then(function(newerVersions) {
+          .then(function (newerVersions) {
             // Sort versions which were added after the current one by semver in
             // descending order.
             newerVersions.sort(UtilityService.compareVersion);
 
             var latestVersion = _.find(
               newerVersions,
-              function(newVersion) {
-                _.remove(newVersion.assets, function(o) {
+              function (newVersion) {
+                _.remove(newVersion.assets, function (o) {
                   return o.filetype !== '.nupkg' || !o.hash;
                 });
 
                 // Make sure the last version is a version with full asset
                 // so RELEASES contains at least one full asset (which is mandatory for Squirrel.Windows)
                 let v = _.filter(
-                    newVersion.assets,
-                    function(o) {
-                      return _.includes(o.name.toLowerCase(), '-full');
-                    }
-                  );
+                  newVersion.assets,
+                  function (o) {
+                    return _.includes(o.name.toLowerCase(), '-full');
+                  }
+                );
                 return v.length && semver.lte(
                   version, newVersion.name
                 );
@@ -404,11 +401,11 @@ module.exports = {
             // Add Delta assets from other versions
             var deltaAssets = _.reduce(
               newerVersions,
-              function(assets, newVersion) {
+              function (assets, newVersion) {
                 return assets.concat(
                   _.filter(
                     newVersion.assets,
-                    function(asset) {
+                    function (asset) {
                       return asset.filetype === '.nupkg'
                         && _.includes(asset.name.toLowerCase(), '-delta')
                         && semver.lte(version, newVersion.name)
@@ -421,7 +418,7 @@ module.exports = {
             sails.log.debug('Latest Windows Version', latestVersion);
 
             // Change asset name to use full download link
-            const assets = _.map(latestVersion.assets, function(asset) {
+            const assets = _.map(latestVersion.assets, function (asset) {
               asset.name = url.resolve(
                 sails.config.appUrl,
                 `/download/flavor/${flavor}/${latestVersion.name}/${asset.platform}/` +
@@ -437,8 +434,7 @@ module.exports = {
             res.attachment('RELEASES');
             return res.send(output);
           });
-      })
-      .catch(res.negotiate);
+      }).catch(res.negotiate);
   },
 
   /**
@@ -450,7 +446,7 @@ module.exports = {
    * (GET /update/flavor/:flavor/:platform/:channel.yml)
    * (GET /update/flavor/:flavor/:platform/:channel/latest.yml)
    */
-  electronUpdaterWin: function(req, res) {
+  electronUpdaterWin: function (req, res) {
     var platform = req.param('platform');
     var channel = req.param('channel') || 'stable';
     const flavor = req.params.flavor || 'default';
@@ -478,7 +474,7 @@ module.exports = {
         flavor
       })
       .populate('assets')
-      .then(function(versions) {
+      .then(function (versions) {
         // TODO: Implement method to get latest version with available asset
         var sortedVersions = versions.sort(UtilityService.compareVersion);
         var latestVersion = null;
@@ -514,14 +510,14 @@ module.exports = {
           const sha512 = asset.hash ? asset.hash : null;
 
           var latestYml = "version: " + latestVersion.name
-                          + "\nfiles:"
-                          + "\n  - url: " + downloadPath
-                          + "\n    sha512: " + sha512
-                          + "\n    size: " + asset.size
-                          + "\nreleaseDate: " + latestVersion.updatedAt
-                          + "\npath: " + downloadPath
-                          + "\nsha512: " + sha512
-                          + "\nsize: " + asset.size;
+            + "\nfiles:"
+            + "\n  - url: " + downloadPath
+            + "\n    sha512: " + sha512
+            + "\n    size: " + asset.size
+            + "\nreleaseDate: " + latestVersion.updatedAt
+            + "\npath: " + downloadPath
+            + "\nsha512: " + sha512
+            + "\nsize: " + asset.size;
 
           res.send(latestYml);
         } else {
@@ -539,7 +535,7 @@ module.exports = {
    * (GET /update/flavor/:flavor/:platform/:channel-mac.yml)
    * (GET /update/flavor/:flavor/:platform/:channel/latest-mac.yml)
    */
-  electronUpdaterMac: function(req, res) {
+  electronUpdaterMac: function (req, res) {
     var platform = req.param('platform');
     var channel = req.param('channel') || 'stable';
     const flavor = req.params.flavor || 'default';
@@ -567,7 +563,7 @@ module.exports = {
         flavor
       })
       .populate('assets')
-      .then(function(versions) {
+      .then(function (versions) {
         // TODO: Implement method to get latest version with available asset
         var sortedVersions = versions.sort(UtilityService.compareVersion);
         var latestVersion = null;
@@ -602,14 +598,14 @@ module.exports = {
           const sha512 = asset.hash ? asset.hash : null;
 
           var latestYml = "version: " + latestVersion.name
-                          + "\nfiles:"
-                          + "\n  - url: " + downloadPath
-                          + "\n    sha512: " + sha512
-                          + "\n    size: " + asset.size
-                          + "\nreleaseDate: " + latestVersion.updatedAt
-                          + "\npath: " + downloadPath
-                          + "\nsha512: " + sha512
-                          + "\nsize: " + asset.size;
+            + "\nfiles:"
+            + "\n  - url: " + downloadPath
+            + "\n    sha512: " + sha512
+            + "\n    size: " + asset.size
+            + "\nreleaseDate: " + latestVersion.updatedAt
+            + "\npath: " + downloadPath
+            + "\nsha512: " + sha512
+            + "\nsize: " + asset.size;
           res.send(latestYml);
         } else {
           res.notFound();
@@ -621,7 +617,7 @@ module.exports = {
    * Get release notes for a specific version
    * (GET /notes/:version/:flavor?)
    */
-  releaseNotes: function(req, res) {
+  releaseNotes: function (req, res) {
     var version = req.params.version;
     const flavor = req.params.flavor || 'default';
 
@@ -631,24 +627,23 @@ module.exports = {
         availability: availabilityFilter(),
         flavor
       })
-      .then(function(currentVersion) {
+      .then(function (currentVersion) {
         if (!currentVersion) {
           return res.notFound('The specified version does not exist');
         }
 
         return res.format({
-          'application/json': function() {
+          'application/json': function () {
             res.send({
               'notes': currentVersion.notes,
               'pub_date': new Date(currentVersion.availability).toISOString()
             });
           },
-          'default': function() {
+          'default': function () {
             res.send(currentVersion.notes);
           }
         });
-      })
-      .catch(res.negotiate);
+      }).catch(res.negotiate);
   },
 
   /**
@@ -656,7 +651,7 @@ module.exports = {
    * Changes:
    *  - Delete all associated assets & their files
    */
-  destroy: function(req, res) {
+  destroy: function (req, res) {
     var pk = actionUtil.requirePk(req);
 
     var query = Version.findOne(pk);
@@ -667,11 +662,11 @@ module.exports = {
         'No record found with the specified `name`.'
       );
 
-      var deletePromises = _.map(record.assets, function(asset) {
+      var deletePromises = _.map(record.assets, function (asset) {
         return Promise.join(
           AssetService.destroy(asset, req),
           AssetService.deleteFile(asset),
-          function() {
+          function () {
             sails.log.info('Destroyed asset: ', asset);
           });
       });
@@ -684,9 +679,9 @@ module.exports = {
               if (sails.hooks.pubsub) {
                 Version.publish(
                   [pk], {
-                    verb: 'destroyed',
-                    previous: record
-                  }, !req._sails.config.blueprints.mirror && req
+                  verb: 'destroyed',
+                  previous: record
+                }, !req._sails.config.blueprints.mirror && req
                 );
 
                 if (req.isSocket) {
@@ -699,8 +694,7 @@ module.exports = {
 
               return res.ok(record);
             });
-        })
-        .error(res.negotiate);
+        }).catch(res.negotiate);
     });
   }
 };

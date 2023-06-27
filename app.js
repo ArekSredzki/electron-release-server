@@ -23,6 +23,9 @@ process.env.WEBSITE_APP_TITLE = "Weave Releases"
 process.env.WEBSITE_TITLE = "Weave Communications, Inc."
 process.env.WEBSITE_NAV_LOGO = "/images/weave-logo.png"
 
+// process.env.S3_ENDPOINT = ""
+// process.env.S3_TOKEN = ""
+
 // Ensure we're in the project directory, so relative paths work as expected
 // no matter where we actually lift from.
 process.chdir(__dirname);
