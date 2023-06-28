@@ -7,7 +7,7 @@ module.exports.files = {
   // Defaults to 500MB
   maxBytes: 524288000,
   // The fs directory name at which files will be kept
-  // dirname: currently just using defaulted dirname /tmp/
+  // dirname: Dynamically setting dirname in AssetController.js on create func
   saveAs: function (__newFileStream, next) { return next(undefined, __newFileStream.filename); },
   adapter: require('skipper-s3'),
   key: process.env.S3_API_KEY,
