@@ -190,6 +190,11 @@ module.exports = {
         // Set upload request timeout to 10 minutes
         req.setTimeout(10 * 60 * 1000);
 
+        /* Adding customization to dynamically set the directory as the version number. */
+        if (data.version.id) {
+          sails.config.files.dirname = `release-v${data.version.id.replace(/_default/g, "")}`
+        }
+
         req.file('file').upload(sails.config.files,
           function whenDone(err, uploadedFiles) {
             if (err) {

@@ -87,3 +87,10 @@ This project has been built from Sails.js up by Arek Sredzki, with inspiration f
 ## Modification for s3 bucket
 
 [modification-docs-s3-bucket](https://github.com/ArekSredzki/electron-release-server/issues/15)
+
+## Weave Customizations
+
+1. Updated the file adapter in AssetService.js and README to use GCP bucket
+2. Updated UI to reflect Weave
+3. Added custom delete asset adapter to support GCP instead of AWS s3 bucket /services/CustomDeleteAdapter.js
+4. Updated AssetController.js create function to dynamically set the dirname to current version being uploaded ex: release-v1.0.0
