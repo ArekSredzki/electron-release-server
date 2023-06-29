@@ -94,3 +94,4 @@ This project has been built from Sails.js up by Arek Sredzki, with inspiration f
 2. Updated UI to reflect Weave
 3. Added custom delete asset adapter to support GCP instead of AWS s3 bucket /services/CustomDeleteAdapter.js
 4. Updated AssetController.js create function to dynamically set the dirname to current version being uploaded ex: release-v1.0.0
+5. Added dotenv package to load in my env variables

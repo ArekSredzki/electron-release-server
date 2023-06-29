@@ -13,6 +13,7 @@
     "consolidate": "^0.16.0",
     "db-migrate": "^0.11.13",
     "db-migrate-pg": "^1.2.2",
+    "dotenv": "^16.3.1",
     "express-useragent": "^1.0.15",
     "flaverr": "^1.10.0",
     "fs-extra": "^11.1.0",
