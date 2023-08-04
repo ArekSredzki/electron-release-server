@@ -91,7 +91,15 @@ This project has been built from Sails.js up by Arek Sredzki, with inspiration f
 ## Weave Customizations
 
 1. Updated the file adapter in AssetService.js and README to use GCP bucket
+
 2. Updated UI to reflect Weave
-3. Added custom delete asset adapter to support GCP instead of AWS s3 bucket /services/CustomDeleteAdapter.js
-4. Updated AssetController.js create function to dynamically set the dirname to current version being uploaded ex: release-v1.0.0
-5. Added dotenv package to load in my env variables
+
+3. Added custom delete asset adapter to support GCP instead of AWS s3 bucket /services/CustomGcpDisk.js
+
+4. Added getSignedUrl() method to the CustomGcpDisk.js so that we can pass the direct download url to autoUpdater so downloads directly to cut costs for egress.
+
+5. Updated VersionController.js to use getSignedUrl() & pass that back to autoUpdater instead of the download url however this is only setup for general updates
+
+5. Updated AssetController.js create function to dynamically set the dirname to current version being uploaded ex: release-v1.0.0
+
+6. Added dotenv package to load in my env variables
