@@ -11,6 +11,9 @@ var Promise = require('bluebird');
 var semver = require('semver');
 var compareVersions = require('compare-versions');
 
+/* Custom GCP Adapter we built */
+var customFileAdapter = require('../services/CustomFileAdapter');
+
 const availabilityFilter = () => ({ '<=': (new Date()).toISOString() });
 
 module.exports = {
@@ -291,11 +294,8 @@ module.exports = {
             sails.log.debug('Version candidate accepted');
 
             return res.ok({
-              url: url.resolve(
-                sails.config.appUrl,
-                `/download/flavor/${flavor}/${latestVersion.name}/` +
-                latestVersion.assets[0].platform + '?filetype=zip'
-              ),
+              /* We updated this to pass the GCP url directly back for egress costs to be cheaper */
+              url: customFileAdapter.getSignedURL(latestVersion.assets[0].fd),
               name: latestVersion.name,
               notes: releaseNotes,
               pub_date: new Date(latestVersion.availability).toISOString()

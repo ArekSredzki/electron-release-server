@@ -8,9 +8,8 @@ var mime = require('mime');
 var crypto = require('crypto');
 var Promise = require('bluebird');
 var SkipperDisk = require('skipper-s3');
-
-/* Custom Delete Adapter we built */
-var deleteAdapter = require('./CustomDeleteAdapter');
+/* Custom GCP Adapter we built */
+var customFileAdapter = require('./CustomFileAdapter');
 
 /* s3 Bucket options */
 var s3Options = {
@@ -24,7 +23,6 @@ var s3Options = {
 
 var AssetService = {};
 var fileAdapter = SkipperDisk(s3Options);
-var customFileAdapter = deleteAdapter(s3Options)
 
 AssetService.serveFile = function (req, res, asset) {
 
