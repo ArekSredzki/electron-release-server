@@ -88,10 +88,21 @@ This project has been built from Sails.js up by Arek Sredzki, with inspiration f
 
 [modification-docs-s3-bucket](https://github.com/ArekSredzki/electron-release-server/issues/15)
 
-## Weave Customizations
+### Weave Customizations
 
 1. Updated the file adapter in AssetService.js and README to use GCP bucket
+
 2. Updated UI to reflect Weave
-3. Added custom delete asset adapter to support GCP instead of AWS s3 bucket /services/CustomDeleteAdapter.js
-4. Updated AssetController.js create function to dynamically set the dirname to current version being uploaded ex: release-v1.0.0
-5. Added dotenv package to load in my env variables
+
+3. Created CustomFileAdapter.js - Created this to accommodate our needs using GCP bucket
+
+4. Added getSignedUrl() method to the CustomFileAdapter.js so that we can pass the direct download url to autoUpdater so downloads directly to cut costs for egress.
+
+5. Added remove() method to CustomFileAdapter.js - skipper-s3 uses multiDeletes() underneath the hood; GCP does not support multi deletes. This uses the deleteObject which lets us now delete from GCP.
+
+6. Updated VersionController.js to use getSignedUrl() & pass that back to autoUpdater instead of the download url
+
+7. Updated AssetController.js create function to dynamically set the dirname to current version being uploaded ex: release-v1.0.0
+
+8. Added dotenv package to load in my env variables
+
