@@ -317,7 +317,6 @@ module.exports = {
     var version = req.param('version');
     var channel = req.param('channel') || 'stable';
     const flavor = req.params.flavor || 'default';
-
     if (!version) {
       return res.badRequest('Requires `version` parameter');
     }
@@ -417,14 +416,11 @@ module.exports = {
 
             sails.log.debug('Latest Windows Version', latestVersion);
 
-            // Change asset name to use full download link
-            const assets = _.map(latestVersion.assets, function (asset) {
-              asset.name = url.resolve(
-                sails.config.appUrl,
-                `/download/flavor/${flavor}/${latestVersion.name}/${asset.platform}/` +
-                asset.name
-              );
 
+            // Change asset name to use full download link 
+            /* Updated the full download link to use direct GCP URL */
+            const assets = _.map(latestVersion.assets, function (asset) {
+              asset.name = customFileAdapter.getSignedURL(latestVersion.assets[0].fd)
               return asset;
             });
 

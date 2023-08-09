@@ -100,7 +100,7 @@ This project has been built from Sails.js up by Arek Sredzki, with inspiration f
 
 5. Added remove() method to CustomFileAdapter.js - skipper-s3 uses multiDeletes() underneath the hood; GCP does not support multi deletes. This uses the deleteObject which lets us now delete from GCP.
 
-6. Updated VersionController.js to use getSignedUrl() & pass that back to autoUpdater instead of the download url
+6. Updated VersionController.js to use getSignedUrl() & pass that back to autoUpdater instead of the download url on general updates and on Windows update
 
 7. Updated AssetController.js create function to dynamically set the dirname to current version being uploaded ex: release-v1.0.0
 
