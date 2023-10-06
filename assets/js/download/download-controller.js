@@ -19,7 +19,7 @@ angular.module('app.releases', [])
       self.platform = deviceDetector.os;
       if (self.platform === 'mac') {
         self.platform = 'osx';
-        self.archs = ['64', 'arm64'];
+        self.archs = ['64']; // ['64', 'arm64']; // Don't show the arm64 option
       } else {
         self.archs = ['32', '64'];
       }
