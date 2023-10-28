@@ -16,7 +16,7 @@
           ng-change='vm.getLatestReleases()'
           )
 .row.text-center.padding-top-20(ng-if="vm.latestReleases")
-  .col-md-12(ng-if="vm.platform === 'osx' && !vm.archs.includes('arm64')")
+  .col-md-12(ng-if="vm.platform === 'osx' && vm.latestReleases['64']")
     .jumbotron
       h4 OS X 
         span.text-muted 64 bit INTEL
@@ -36,7 +36,7 @@
         p.release-notes.text-muted(
           ng-bind="vm.latestReleases['64'].notes"
           )
-  .col-md-12(ng-if="vm.platform === 'osx' && vm.archs.includes('arm64')")
+  .col-md-12(ng-if="vm.platform === 'osx' && vm.latestReleases['arm64']")
     .jumbotron
       h4 OS X 
         span.text-muted 64 bit ARM
