@@ -31,7 +31,7 @@
     "passport-ldapauth": "^3.0.1",
     "pug": "^3.0.2",
     "rc": "~1.2.8",
-    "sails": "^1.5.3",
+    "sails": "^1.5.4",
     "sails-disk": "^2.1.2",
     "sails-hook-grunt": "^5.0.0",
     "sails-hook-orm": "^4.0.2",
