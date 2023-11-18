@@ -22,7 +22,7 @@ services:
       # Recommended: 63 random alpha-numeric characters
       # Generate using: https://www.grc.com/passwords.htm
       TOKEN_SECRET: change_me_in_production
-      APP_URL: 'localhost:8080'
+      APP_URL: 'http://localhost:8080'
       ASSETS_PATH: '/usr/src/electron-release-server/releases'
     depends_on:
       - db
