@@ -24,7 +24,7 @@ module.exports = {
 
     platform: {
       type: 'string',
-      isIn: ['linux_32', 'linux_64', 'osx_64', 'osx_arm64', 'windows_32', 'windows_64'],
+      isIn: ['linux_32', 'linux_64', 'linux_arm64', 'osx_64', 'osx_arm64', 'windows_32', 'windows_64', 'windows_arm64'],
       required: true
     },
 

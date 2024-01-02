@@ -21,7 +21,7 @@ angular.module('app.releases', [])
         self.platform = 'osx';
         self.archs = ['64', 'arm64'];
       } else {
-        self.archs = ['32', '64'];
+        self.archs = ['32', '64', 'arm64'];
       }
 
       self.setRouteParams = (channel, flavor) => {

@@ -2,14 +2,14 @@
   .col-md-12
     h2 Download our #{process.env.WEBSITE_APP_TITLE || 'Electron App'}
       small.pull-right
-        | Channel: 
+        | Channel:
         select(
           ng-model='vm.channel'
           ng-options='channel for channel in vm.availableChannels'
           ng-change='vm.getLatestReleases()'
           )
       small.pull-left
-        | Flavor: 
+        | Flavor:
         select(
           ng-model='vm.flavor'
           ng-options='flavor for flavor in vm.availableFlavors'
@@ -18,13 +18,13 @@
 .row.text-center.padding-top-20(ng-if="vm.latestReleases")
   .col-md-12(ng-if="vm.platform === 'osx' && vm.latestReleases['64']")
     .jumbotron
-      h4 OS X 
+      h4 OS X
         span.text-muted 64 bit INTEL
       a.btn.btn-success.btn-lg(
         ng-click="vm.download(vm.latestReleases['64'])"
         )
         i.fa.fa-download.fa-5x
-        h5 {{ vm.latestReleases['64'].version }} 
+        h5 {{ vm.latestReleases['64'].version }}
           label.label.label-info(
             ng-show="vm.latestReleases['64'].channel !== 'stable'"
             )
@@ -38,13 +38,13 @@
           )
   .col-md-12(ng-if="vm.platform === 'osx' && vm.latestReleases['arm64']")
     .jumbotron
-      h4 OS X 
+      h4 OS X
         span.text-muted 64 bit ARM
       a.btn.btn-success.btn-lg(
         ng-click="vm.download(vm.latestReleases['arm64'])"
         )
         i.fa.fa-download.fa-5x
-        h5 {{ vm.latestReleases['arm64'].version }} 
+        h5 {{ vm.latestReleases['arm64'].version }}
           label.label.label-info(
             ng-show="vm.latestReleases['arm64'].channel !== 'stable'"
             )
@@ -70,7 +70,7 @@
           ng-click="vm.download(vm.latestReleases['32'])"
           )
           i.fa.fa-download.fa-5x
-          h5 {{ vm.latestReleases['32'].version }} 
+          h5 {{ vm.latestReleases['32'].version }}
             label.label.label-info(
               ng-show="vm.latestReleases['32'].channel !== 'stable'"
               )
@@ -91,7 +91,7 @@
           ng-click="vm.download(vm.latestReleases['64'])"
           )
           i.fa.fa-download.fa-5x
-          h5 {{ vm.latestReleases['64'].version }} 
+          h5 {{ vm.latestReleases['64'].version }}
             label.label.label-info(
               ng-show="vm.latestReleases['64'].channel !== 'stable'"
               )
@@ -103,12 +103,33 @@
           p.release-notes.text-muted(
             ng-bind-html="vm.latestReleases['64'].notes"
             )
+      div(
+        ng-if="vm.latestReleases['arm64']",
+        ng-class="vm.latestReleases['32'] || vm.latestReleases['64'] ? 'col-sm-6' : 'col-sm-12'"
+        )
+        h5.text-muted 64 bit ARM
+        a.btn.btn-success.btn-lg(
+          ng-click="vm.download(vm.latestReleases['arm64'])"
+          )
+          i.fa.fa-download.fa-5x
+          h5 {{ vm.latestReleases['arm64'].version }}
+            label.label.label-info(
+              ng-show="vm.latestReleases['arm64'].channel !== 'stable'"
+              )
+              | {{ vm.latestReleases['arm64'].channel }}
+        .padding-top-20.text-muted
+          span.timestamp(am-time-ago="vm.latestReleases['arm64'].createdAt")
+        .padding-top-20(ng-show="vm.latestReleases['arm64'].notes")
+          h4 Change Notes
+          p.release-notes.text-muted(
+            ng-bind-html="vm.latestReleases['arm64'].notes"
+            )
 
 .row.text-center.padding-top-20(ng-if="!vm.latestReleases")
   .col-md-12
     h5.text-muted
       | The {{ vm.flavor }} flavor has no {{ vm.channel }} releases available for {{ vm.platform }}.
-      
+
 .row.text-center.padding-20-0
   .col-sm-8.col-sm-offset-2
     h5.pointer(
@@ -120,7 +141,7 @@
     div(ng-show="vm.showAllVersions")
       .jumbotron(ng-repeat='version in vm.versions')
         p.timestamp.text-muted(am-time-ago="version.createdAt")
-        h4 {{ version.name }} 
+        h4 {{ version.name }}
           label.label(
             ng-class="version.channel.name === 'stable' ? 'label-success' : 'label-info'"
             )
