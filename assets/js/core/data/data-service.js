@@ -26,19 +26,23 @@ angular.module('app.core.data.service', [
       self.availablePlatforms = {
         windows_64: 'Windows 64 bit',
         windows_32: 'Windows 32 bit',
+        windows_arm64: 'Windows 64 bit ARM',
         osx_64: 'OS X 64 bit Intel',
         osx_arm64: 'OS X 64 bit ARM',
         linux_64: 'Linux 64 bit',
-        linux_32: 'Linux 32 bit'
+        linux_32: 'Linux 32 bit',
+        linux_arm64: 'Linux 64 bit ARM'
       };
 
       self.filetypes = {
         windows_64: ['.exe', '.msi'],
         windows_32: ['.exe', '.msi'],
+        windows_arm64: ['.exe', '.msi'],
         osx_64: ['.dmg', '.pkg', '.mas'],
         osx_arm64: ['.dmg', '.pkg', '.mas'],
         linux_64: ['.deb', '.gz', '.rpm', '.AppImage'],
-        linux_32: ['.deb', '.gz', '.rpm', '.AppImage']
+        linux_32: ['.deb', '.gz', '.rpm', '.AppImage'],
+        linux_arm64: ['.deb', '.gz', '.rpm', '.AppImage']
       };
 
       /**

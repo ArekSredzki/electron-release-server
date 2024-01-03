@@ -9,6 +9,7 @@ var PlatformService = {
   LINUX: 'linux',
   LINUX_32: 'linux_32',
   LINUX_64: 'linux_64',
+  LINUX_ARM64: 'linux_arm64',
   OSX: 'osx',
   OSX_32: 'osx_32',
   OSX_64: 'osx_64',
@@ -16,6 +17,7 @@ var PlatformService = {
   WINDOWS: 'windows',
   WINDOWS_32: 'windows_32',
   WINDOWS_64: 'windows_64',
+  WINDOWS_ARM64: 'windows_arm64',
 };
 
 /**
@@ -37,9 +39,9 @@ PlatformService.detectFromRequest = function(req) {
   var source = req.headers['user-agent'];
   var ua = useragent.parse(source);
 
-  if (ua.isWindows) return [this.WINDOWS_32, this.WINDOWS_64];
+  if (ua.isWindows) return [this.WINDOWS_32, this.WINDOWS_64, this.WINDOWS_ARM64];
   if (ua.isMac) return [this.OSX_64, this.OSX_ARM64]; // this.OSX_ARM64 until a bug with arm64 useragent is fixed
-  if (ua.isLinux64) return [this.LINUX_64, this.LINUX_32];
+  if (ua.isLinux64) return [this.LINUX_64, this.LINUX_32, this.LINUX_ARM64];
   if (ua.isLinux) return [this.LINUX_32];
 };
 

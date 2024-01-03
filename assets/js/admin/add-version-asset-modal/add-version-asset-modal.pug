@@ -32,7 +32,7 @@ form(name='assetForm', role='form')
             ngf-change='updateAssetName()',
             ng-model='asset.file',
             name='file',
-            ngf-accept="'.dmg,.zip,.deb,.exe,.nupkg,.blockmap'",
+            ngf-accept="'.dmg,.zip,.deb,.exe,.nupkg,.blockmap,.AppImage'",
             ngf-max-size='500MB',
             required='',
             )
@@ -51,4 +51,4 @@ form(name='assetForm', role='form')
       button.btn.btn-danger(type='button', ng-click='closeModal()') Cancel
 
 
-    
+
