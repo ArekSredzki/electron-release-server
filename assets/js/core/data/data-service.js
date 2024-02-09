@@ -211,7 +211,7 @@ angular.module('app.core.data.service', [
         version_for_request.channel = version_for_request.channel.name;
         version_for_request.flavor = version_for_request.flavor.name;
 
-        return $http.post(
+        return $http.patch(
             '/api/version/' + version.id,
             version_for_request
           )
